@@ -268,7 +268,7 @@ $embed_value = 'embed' === $ex['custom_mode'] ? $ex['url'] : '';
 			<template id="ncs-custom-template">
 				<div class="ncs-custom-row">
 					<input type="hidden" name="cfg[native][custom][__i__][key]" value="">
-					<div class="ncs-field"><label><?php esc_html_e( 'Label', 'next-class-services' ); ?><input type="text" name="cfg[native][custom][__i__][label]" value=""></label></div>
+					<div class="ncs-field"><label><?php esc_html_e( 'Label', 'next-class-services' ); ?><input type="text" name="cfg[native][custom][__i__][label]" value="" placeholder="e.g. Team size"></label></div>
 					<div class="ncs-field"><label><?php esc_html_e( 'Type', 'next-class-services' ); ?>
 						<select name="cfg[native][custom][__i__][type]">
 							<option value="text"><?php esc_html_e( 'Text', 'next-class-services' ); ?></option>
@@ -340,7 +340,7 @@ $embed_value = 'embed' === $ex['custom_mode'] ? $ex['url'] : '';
 					<p class="ncs-help"><?php esc_html_e( 'Tests use the last saved settings and sample data. Save your changes first.', 'next-class-services' ); ?></p>
 					<div class="ncs-field">
 						<label for="ncs-test-to"><?php esc_html_e( 'Send test to', 'next-class-services' ); ?></label>
-						<input type="email" id="ncs-test-to" name="test_to" form="ncs-test-form" value="<?php echo esc_attr( wp_get_current_user()->user_email ); ?>">
+						<input type="email" id="ncs-test-to" name="test_to" form="ncs-test-form" placeholder="you@yourdomain.com" value="<?php echo esc_attr( wp_get_current_user()->user_email ); ?>">
 					</div>
 					<button type="submit" class="ncs-btn" name="kind" value="customer" form="ncs-test-form"><?php esc_html_e( 'Customer confirmation', 'next-class-services' ); ?></button>
 					<button type="submit" class="ncs-btn" name="kind" value="admin" form="ncs-test-form"><?php esc_html_e( 'Admin notification', 'next-class-services' ); ?></button>

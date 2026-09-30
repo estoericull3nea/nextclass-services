@@ -23,6 +23,7 @@ class Admin {
 	 */
 	public static function init() {
 		add_action( 'admin_menu', array( __CLASS__, 'menu' ) );
+		add_action( 'admin_head', array( __CLASS__, 'menu_css' ) );
 		add_filter( 'plugin_action_links_' . NCS_BASENAME, array( __CLASS__, 'action_links' ) );
 
 		Assessments::init();
@@ -51,6 +52,23 @@ class Admin {
 	}
 
 	/**
+	 * Graduation cap menu icon as a base64 SVG (WordPress recolors it to match the admin scheme).
+	 *
+	 * @return string
+	 */
+	private static function menu_icon() {
+		$svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#a7aaad" d="M12 3 1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>';
+		return 'data:image/svg+xml;base64,' . base64_encode( $svg ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
+	}
+
+	/**
+	 * Keep the menu label on one line.
+	 */
+	public static function menu_css() {
+		echo '<style>#adminmenu #toplevel_page_ncs-dashboard .wp-menu-name{white-space:nowrap;overflow:visible;padding-right:0;font-size:14px;letter-spacing:-0.03em}#adminmenu #toplevel_page_ncs-dashboard div.wp-menu-image.svg{background-size:20px auto;background-position:center}</style>';
+	}
+
+	/**
 	 * Register menu.
 	 */
 	public static function menu() {
@@ -61,7 +79,7 @@ class Admin {
 			$menu_cap,
 			'ncs-dashboard',
 			array( 'NextClassServices\Admin\Dashboard', 'render' ),
-			'none',
+			self::menu_icon(),
 			58
 		);
 		foreach ( self::pages() as $slug => $def ) {

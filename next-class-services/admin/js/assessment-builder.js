@@ -94,9 +94,38 @@
 	}
 
 	var fieldCounter = 0;
+	var examples = {};
+	examples[ t.text ] = 'e.g. How often does your team hold check-ins?';
+	examples[ t.help ] = 'e.g. Think about the last three months.';
+	examples[ t.section ] = 'e.g. Communication';
+	examples[ t.minLabel ] = 'e.g. Never';
+	examples[ t.maxLabel ] = 'e.g. Always';
+	examples[ t.numMin ] = 'e.g. 0';
+	examples[ t.numMax ] = 'e.g. 100';
+	examples[ t.value ] = 'e.g. Yes';
+	examples[ t.resultTitle ] = 'e.g. Strong Foundation';
+	examples[ t.minScore ] = 'e.g. 0';
+	examples[ t.maxScoreLabel ] = 'e.g. 25';
+	examples[ t.resultDesc ] = 'e.g. Your team communicates well and has solid habits.';
+	examples[ t.resultRec ] = 'e.g. Keep building on your strengths with regular coaching.';
+	examples[ t.ctaLabel ] = 'e.g. Book a consultation';
+	examples[ t.ctaUrl ] = 'https://yourdomain.com/book/';
+	examples[ t.cta2Label ] = 'e.g. Learn more';
+	examples[ t.cta2Url ] = 'https://yourdomain.com/programs/';
+	examples[ t.programName ] = 'e.g. Leadership Essentials';
+	examples[ t.programDesc ] = 'e.g. A 6 week program for new managers.';
+	examples[ t.programUrl ] = 'https://yourdomain.com/programs/leadership/';
+	examples[ t.programCta ] = 'e.g. View program';
+	examples[ t.label ] = 'e.g. Work email';
+	examples[ t.fieldPlaceholder ] = 'e.g. name@company.com';
+	examples[ t.fieldOptions ] = 'e.g. Option one\nOption two';
+
 	function labelled( label, control, help ) {
 		var id = 'ncs-b-' + ( ++fieldCounter );
 		control.id = id;
+		if ( examples[ label ] && ! control.getAttribute( 'placeholder' ) && control.tagName !== 'SELECT' ) {
+			control.setAttribute( 'placeholder', examples[ label ] );
+		}
 		return h( 'div', { 'class': 'ncs-field' },
 			h( 'label', { 'for': id, text: label } ),
 			control,

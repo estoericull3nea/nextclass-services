@@ -229,7 +229,7 @@ $lead      = $cfg['lead'];
 				<p class="ncs-help"><?php esc_html_e( 'Tests use the last saved settings and sample data. Save your changes first.', 'next-class-services' ); ?></p>
 				<div class="ncs-field">
 					<label for="ncs-test-to"><?php esc_html_e( 'Send test to', 'next-class-services' ); ?></label>
-					<input type="email" id="ncs-test-to" name="test_to" form="ncs-test-form" value="<?php echo esc_attr( wp_get_current_user()->user_email ); ?>">
+					<input type="email" id="ncs-test-to" name="test_to" form="ncs-test-form" placeholder="you@yourdomain.com" value="<?php echo esc_attr( wp_get_current_user()->user_email ); ?>">
 				</div>
 				<button type="submit" class="ncs-btn" name="kind" value="visitor" form="ncs-test-form"><?php esc_html_e( 'Send visitor email test', 'next-class-services' ); ?></button>
 				<button type="submit" class="ncs-btn" name="kind" value="admin" form="ncs-test-form"><?php esc_html_e( 'Send admin notification test', 'next-class-services' ); ?></button>
