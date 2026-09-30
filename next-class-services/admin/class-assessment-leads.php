@@ -199,45 +199,55 @@ class Assessment_Leads {
 		$consent  = json_decode( (string) $r['consent_snapshot'], true );
 		$custom   = json_decode( (string) $r['custom_fields'], true );
 
-		$summary = array(
-			__( 'Assessment', 'next-class-services' )          => $r['assessment_title'],
-			__( 'Submitted', 'next-class-services' )           => Helpers::format_utc( $r['created_at'] ),
-			__( 'Name', 'next-class-services' )                => $name,
-			__( 'Email', 'next-class-services' )               => $r['email'],
-			__( 'Phone', 'next-class-services' )               => $r['phone'],
-			__( 'Company', 'next-class-services' )             => $r['company'],
-			__( 'Job title', 'next-class-services' )           => $r['job_title'],
-			__( 'Company size', 'next-class-services' )        => $r['company_size'],
-			__( 'Raw score', 'next-class-services' )           => $r['raw_score'] . ' / ' . $r['max_score'],
-			__( 'Percentage', 'next-class-services' )          => round( (float) $r['percentage'], 1 ) . '%',
-			__( 'Result', 'next-class-services' )              => $r['result_title'],
-			__( 'Recommended programs', 'next-class-services' ) => is_array( $programs ) ? implode( ', ', $programs ) : '',
-			__( 'Privacy consent', 'next-class-services' )     => $r['consent_privacy'] ? __( 'Yes', 'next-class-services' ) : __( 'No', 'next-class-services' ),
-			__( 'Marketing consent', 'next-class-services' )   => $r['consent_marketing'] ? __( 'Yes', 'next-class-services' ) : __( 'No', 'next-class-services' ),
-			__( 'Consent recorded', 'next-class-services' )    => $r['consent_at'] ? Helpers::format_utc( $r['consent_at'] ) : '',
-			__( 'Result email sent', 'next-class-services' )   => $r['email_sent'] ? __( 'Yes', 'next-class-services' ) : __( 'No', 'next-class-services' ),
-			__( 'Page', 'next-class-services' )                => $r['page_url'],
+		$client = array(
+			__( 'Name', 'next-class-services' )         => $name,
+			__( 'Email', 'next-class-services' )        => $r['email'],
+			__( 'Phone', 'next-class-services' )        => $r['phone'],
+			__( 'Company', 'next-class-services' )      => $r['company'],
+			__( 'Job title', 'next-class-services' )    => $r['job_title'],
+			__( 'Company size', 'next-class-services' ) => $r['company_size'],
 		);
 		if ( is_array( $custom ) ) {
 			foreach ( $custom as $c ) {
-				$summary[ (string) $c['label'] ] = (string) $c['value'];
+				$client[ (string) $c['label'] ] = (string) $c['value'];
 			}
-		}
-		if ( is_array( $consent ) && ! empty( $consent['privacy'] ) ) {
-			$summary[ __( 'Privacy wording shown', 'next-class-services' ) ] = $consent['privacy'];
-		}
-		if ( is_array( $consent ) && ! empty( $consent['marketing'] ) ) {
-			$summary[ __( 'Marketing wording shown', 'next-class-services' ) ] = $consent['marketing'];
 		}
 
-		echo '<div class="ncs-grid-2"><div class="ncs-card"><h2 class="ncs-card-title">' . esc_html__( 'Lead and result', 'next-class-services' ) . '</h2><dl class="ncs-dl">';
-		foreach ( $summary as $label => $value ) {
-			if ( '' === trim( (string) $value ) ) {
-				continue;
+		$result = array(
+			__( 'Assessment', 'next-class-services' )           => $r['assessment_title'],
+			__( 'Submitted', 'next-class-services' )            => Helpers::format_utc( $r['created_at'] ),
+			__( 'Result', 'next-class-services' )               => $r['result_title'],
+			__( 'Raw score', 'next-class-services' )            => $r['raw_score'] . ' / ' . $r['max_score'],
+			__( 'Percentage', 'next-class-services' )           => round( (float) $r['percentage'], 1 ) . '%',
+			__( 'Recommended programs', 'next-class-services' ) => is_array( $programs ) ? implode( ', ', $programs ) : '',
+			__( 'Result email sent', 'next-class-services' )    => $r['email_sent'] ? __( 'Yes', 'next-class-services' ) : __( 'No', 'next-class-services' ),
+		);
+
+		$consent_rows = array(
+			__( 'Privacy consent', 'next-class-services' )   => $r['consent_privacy'] ? __( 'Yes', 'next-class-services' ) : __( 'No', 'next-class-services' ),
+			__( 'Marketing consent', 'next-class-services' ) => $r['consent_marketing'] ? __( 'Yes', 'next-class-services' ) : __( 'No', 'next-class-services' ),
+			__( 'Consent recorded', 'next-class-services' )  => $r['consent_at'] ? Helpers::format_utc( $r['consent_at'] ) : '',
+			__( 'Privacy wording shown', 'next-class-services' )   => is_array( $consent ) && ! empty( $consent['privacy'] ) ? $consent['privacy'] : '',
+			__( 'Marketing wording shown', 'next-class-services' ) => is_array( $consent ) && ! empty( $consent['marketing'] ) ? $consent['marketing'] : '',
+			__( 'Submitted from page', 'next-class-services' )     => $r['page_url'],
+		);
+
+		$card = function ( $title, array $rows ) {
+			echo '<div class="ncs-card"><h2 class="ncs-card-title">' . esc_html( $title ) . '</h2><dl class="ncs-dl">';
+			foreach ( $rows as $label => $value ) {
+				if ( '' === trim( (string) $value ) ) {
+					continue;
+				}
+				echo '<dt>' . esc_html( $label ) . '</dt><dd>' . esc_html( (string) $value ) . '</dd>';
 			}
-			echo '<dt>' . esc_html( $label ) . '</dt><dd>' . esc_html( (string) $value ) . '</dd>';
-		}
-		echo '</dl></div>';
+			echo '</dl></div>';
+		};
+
+		echo '<div class="ncs-grid-2">';
+		$card( __( 'Client information', 'next-class-services' ), $client );
+		$card( __( 'Lead and result', 'next-class-services' ), $result );
+		echo '</div>';
+		$card( __( 'Consent and source', 'next-class-services' ), $consent_rows );
 
 		echo '<div class="ncs-card"><h2 class="ncs-card-title">' . esc_html__( 'Answers', 'next-class-services' ) . '</h2>';
 		if ( empty( $answers ) ) {
@@ -250,7 +260,7 @@ class Assessment_Leads {
 			}
 			echo '</tbody></table>';
 		}
-		echo '</div></div>';
+		echo '</div>';
 		Admin::footer();
 	}
 
