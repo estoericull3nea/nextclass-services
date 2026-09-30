@@ -1,0 +1,3613 @@
+# Copyright (C) 2026 Next Class
+# This file is distributed under the GPL-2.0-or-later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Next Class Services 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/next-class-services\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-09-30T06:31:36+02:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: next-class-services\n"
+
+#. Plugin Name of the plugin
+#: next-class-services.php
+#: admin/class-admin.php:59
+#: admin/class-admin.php:60
+#: admin/class-admin.php:197
+#: admin/class-admin.php:198
+msgid "Next Class Services"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: next-class-services.php
+msgid "https://nextclass.com/"
+msgstr ""
+
+#. Description of the plugin
+#: next-class-services.php
+msgid "HR Diagnostic Assessment Tool and Online Booking System for Next Class. Build multi-step assessments with scoring, lead capture and personalized results, and offer bookings through Calendly, TidyCal, a custom embed, or native WordPress scheduling."
+msgstr ""
+
+#. Author of the plugin
+#: next-class-services.php
+msgid "Next Class"
+msgstr ""
+
+#: admin/class-admin.php:43
+#: admin/class-dashboard.php:32
+msgid "Dashboard"
+msgstr ""
+
+#: admin/class-admin.php:44
+#: admin/class-assessments.php:89
+msgid "HR Assessments"
+msgstr ""
+
+#: admin/class-admin.php:45
+msgid "Assessment Leads"
+msgstr ""
+
+#: admin/class-admin.php:46
+#: admin/class-booking-services.php:88
+msgid "Online Booking"
+msgstr ""
+
+#: admin/class-admin.php:47
+#: admin/class-appointments.php:100
+#: includes/class-privacy.php:153
+msgid "Appointments"
+msgstr ""
+
+#: admin/class-admin.php:48
+#: admin/class-analytics.php:167
+#: admin/class-settings.php:80
+msgid "Analytics"
+msgstr ""
+
+#: admin/class-admin.php:49
+#: admin/class-admin.php:81
+#: admin/class-settings.php:41
+msgid "Settings"
+msgstr ""
+
+#: admin/class-admin.php:118
+msgid "You do not have permission to do that."
+msgstr ""
+
+#: admin/class-admin.php:180
+msgid "Done."
+msgstr ""
+
+#: admin/class-admin.php:181
+msgid "Error."
+msgstr ""
+
+#: admin/class-admin.php:182
+#: admin/class-analytics.php:188
+msgid "Attention."
+msgstr ""
+
+#: admin/class-admin.php:183
+msgid "Note."
+msgstr ""
+
+#: admin/class-admin.php:259
+msgid "Pagination"
+msgstr ""
+
+#. translators: 1: current page, 2: total pages, 3: total items
+#: admin/class-admin.php:261
+#, php-format
+msgid "Page %1$d of %2$d (%3$d items)"
+msgstr ""
+
+#: admin/class-admin.php:263
+#: modules/assessments/class-assessment.php:37
+msgid "Previous"
+msgstr ""
+
+#: admin/class-admin.php:266
+#: modules/assessments/class-assessment.php:38
+msgid "Next"
+msgstr ""
+
+#: admin/class-admin.php:277
+#: admin/class-assessments.php:124
+#: admin/class-booking-services.php:103
+msgid "Shortcode"
+msgstr ""
+
+#: admin/class-admin.php:277
+#: includes/class-assets.php:186
+msgid "Copy"
+msgstr ""
+
+#: admin/class-analytics.php:56
+msgid "No data"
+msgstr ""
+
+#. translators: %d: id
+#: admin/class-analytics.php:70
+#, php-format
+msgid "Deleted item (%d)"
+msgstr ""
+
+#: admin/class-analytics.php:151
+#: admin/class-appointments.php:56
+#: admin/class-assessment-leads.php:82
+#: admin/class-assessments.php:61
+#: admin/class-booking-services.php:61
+#: admin/class-settings.php:38
+msgid "You do not have permission to view this page."
+msgstr ""
+
+#: admin/class-analytics.php:167
+#: admin/class-appointments.php:101
+#: admin/class-assessment-leads.php:108
+msgid "Export CSV"
+msgstr ""
+
+#: admin/class-analytics.php:170
+msgid "Date range"
+msgstr ""
+
+#: admin/class-analytics.php:172
+msgid "Today"
+msgstr ""
+
+#: admin/class-analytics.php:173
+msgid "Last 7 days"
+msgstr ""
+
+#: admin/class-analytics.php:174
+msgid "Last 30 days"
+msgstr ""
+
+#: admin/class-analytics.php:175
+msgid "This quarter"
+msgstr ""
+
+#: admin/class-analytics.php:176
+msgid "Custom range"
+msgstr ""
+
+#: admin/class-analytics.php:181
+#: admin/class-assessment-leads.php:123
+msgid "From"
+msgstr ""
+
+#: admin/class-analytics.php:182
+#: admin/class-assessment-leads.php:124
+msgid "To"
+msgstr ""
+
+#: admin/class-analytics.php:183
+msgid "Apply"
+msgstr ""
+
+#. translators: 1: start date, 2: end date
+#: admin/class-analytics.php:185
+#, php-format
+msgid "Showing %1$s to %2$s (site timezone)."
+msgstr ""
+
+#: admin/class-analytics.php:188
+msgid "First-party analytics are turned off in Settings. New events are not being recorded."
+msgstr ""
+
+#: admin/class-analytics.php:193
+msgid "No analytics data has been recorded for this period."
+msgstr ""
+
+#: admin/class-analytics.php:193
+#: admin/class-assessment-leads.php:136
+msgid "View assessments"
+msgstr ""
+
+#: admin/class-analytics.php:199
+#: admin/class-dashboard.php:49
+#: includes/class-post-types.php:43
+msgid "Assessments"
+msgstr ""
+
+#: admin/class-analytics.php:202
+#: admin/class-analytics.php:213
+#: admin/class-analytics.php:270
+msgid "Views"
+msgstr ""
+
+#: admin/class-analytics.php:203
+#: admin/class-analytics.php:213
+#: admin/class-analytics.php:270
+msgid "Starts"
+msgstr ""
+
+#: admin/class-analytics.php:204
+#: admin/class-analytics.php:213
+msgid "Completions"
+msgstr ""
+
+#: admin/class-analytics.php:205
+msgid "Leads captured"
+msgstr ""
+
+#: admin/class-analytics.php:206
+#: admin/class-analytics.php:213
+#: admin/class-dashboard.php:52
+msgid "Completion rate"
+msgstr ""
+
+#: admin/class-analytics.php:206
+msgid "Completions per start"
+msgstr ""
+
+#: admin/class-analytics.php:207
+msgid "Results viewed"
+msgstr ""
+
+#: admin/class-analytics.php:212
+msgid "By assessment"
+msgstr ""
+
+#: admin/class-analytics.php:213
+#: admin/class-analytics.php:233
+#: admin/class-assessment-leads.php:113
+#: admin/class-assessment-leads.php:143
+#: admin/class-assessment-leads.php:197
+#: admin/class-assessments.php:124
+#: admin/class-dashboard.php:128
+#: includes/class-privacy.php:81
+msgid "Assessment"
+msgstr ""
+
+#: admin/class-analytics.php:213
+msgid "Leads"
+msgstr ""
+
+#: admin/class-analytics.php:225
+msgid "Result distribution"
+msgstr ""
+
+#: admin/class-analytics.php:227
+msgid "No completed assessments in this period."
+msgstr ""
+
+#: admin/class-analytics.php:233
+#: admin/class-assessment-leads.php:143
+#: admin/class-assessment-leads.php:207
+#: admin/class-dashboard.php:128
+#: includes/class-privacy.php:88
+msgid "Result"
+msgstr ""
+
+#: admin/class-analytics.php:233
+msgid "Count"
+msgstr ""
+
+#: admin/class-analytics.php:233
+msgid "Share"
+msgstr ""
+
+#: admin/class-analytics.php:236
+msgid "No result category"
+msgstr ""
+
+#: admin/class-analytics.php:242
+#: admin/class-assessment-builder.php:144
+#: admin/class-assessment-leads.php:208
+#: admin/views/assessment-editor.php:120
+#: includes/class-assets.php:104
+msgid "Recommended programs"
+msgstr ""
+
+#: admin/class-analytics.php:244
+msgid "No program recommendations in this period."
+msgstr ""
+
+#: admin/class-analytics.php:246
+#: admin/class-assessment-builder.php:152
+msgid "Program"
+msgstr ""
+
+#: admin/class-analytics.php:246
+msgid "Times recommended"
+msgstr ""
+
+#: admin/class-analytics.php:255
+msgid "Online booking"
+msgstr ""
+
+#: admin/class-analytics.php:256
+msgid "Service views"
+msgstr ""
+
+#: admin/class-analytics.php:257
+msgid "Booking starts"
+msgstr ""
+
+#: admin/class-analytics.php:257
+msgid "Native flow only"
+msgstr ""
+
+#: admin/class-analytics.php:258
+msgid "External booking clicks"
+msgstr ""
+
+#: admin/class-analytics.php:258
+msgid "Interactions with Calendly, TidyCal or custom pages"
+msgstr ""
+
+#: admin/class-analytics.php:259
+msgid "Native bookings completed"
+msgstr ""
+
+#: admin/class-analytics.php:259
+msgid "Confirmed by this plugin"
+msgstr ""
+
+#: admin/class-analytics.php:260
+#: admin/class-analytics.php:270
+msgid "Cancellations"
+msgstr ""
+
+#: admin/class-analytics.php:261
+#: admin/class-analytics.php:270
+msgid "Reschedules"
+msgstr ""
+
+#: admin/class-analytics.php:262
+msgid "Native conversion rate"
+msgstr ""
+
+#: admin/class-analytics.php:262
+msgid "Completed per start"
+msgstr ""
+
+#: admin/class-analytics.php:263
+msgid "Scheduling signals"
+msgstr ""
+
+#: admin/class-analytics.php:263
+msgid "Reported by the provider in the visitor browser. Not verified, not counted as bookings."
+msgstr ""
+
+#: admin/class-analytics.php:265
+msgid "External bookings on Calendly or TidyCal are never counted as completed appointments because those providers do not send this site a reliable confirmation."
+msgstr ""
+
+#: admin/class-analytics.php:269
+msgid "By booking service"
+msgstr ""
+
+#: admin/class-analytics.php:270
+#: admin/class-appointments.php:107
+#: admin/class-appointments.php:138
+#: admin/class-appointments.php:181
+#: admin/class-booking-services.php:103
+#: admin/class-dashboard.php:104
+#: includes/class-assets.php:130
+#: includes/class-privacy.php:156
+msgid "Service"
+msgstr ""
+
+#: admin/class-analytics.php:270
+#: admin/class-booking-services.php:103
+msgid "Method"
+msgstr ""
+
+#: admin/class-analytics.php:270
+msgid "External clicks"
+msgstr ""
+
+#: admin/class-analytics.php:270
+msgid "Completed (native)"
+msgstr ""
+
+#: admin/class-analytics.php:270
+msgid "Conversion"
+msgstr ""
+
+#: admin/class-analytics.php:280
+msgid "Not available"
+msgstr ""
+
+#: admin/class-appointments.php:104
+msgid "This list shows native WordPress bookings. Appointments made through Calendly or TidyCal are managed in those tools."
+msgstr ""
+
+#: admin/class-appointments.php:107
+#: admin/class-booking-services.php:161
+msgid "All services"
+msgstr ""
+
+#: admin/class-appointments.php:112
+#: admin/class-appointments.php:138
+#: admin/class-appointments.php:203
+#: admin/class-appointments.php:216
+#: admin/class-assessments.php:124
+#: admin/class-booking-services.php:103
+#: admin/class-dashboard.php:104
+#: includes/class-assets.php:129
+#: includes/class-privacy.php:164
+msgid "Status"
+msgstr ""
+
+#: admin/class-appointments.php:112
+msgid "All statuses"
+msgstr ""
+
+#: admin/class-appointments.php:117
+msgid "From date"
+msgstr ""
+
+#: admin/class-appointments.php:118
+msgid "To date"
+msgstr ""
+
+#: admin/class-appointments.php:119
+#: admin/class-assessment-leads.php:125
+#: admin/class-assessments.php:115
+msgid "Search"
+msgstr ""
+
+#: admin/class-appointments.php:119
+#: admin/class-assessment-leads.php:125
+msgid "Name, email, company"
+msgstr ""
+
+#: admin/class-appointments.php:120
+msgid "Order"
+msgstr ""
+
+#: admin/class-appointments.php:120
+msgid "Latest first"
+msgstr ""
+
+#: admin/class-appointments.php:120
+msgid "Earliest first"
+msgstr ""
+
+#: admin/class-appointments.php:121
+#: admin/class-assessment-leads.php:126
+msgid "Filter"
+msgstr ""
+
+#: admin/class-appointments.php:123
+#: admin/class-assessment-leads.php:128
+msgid "Reset"
+msgstr ""
+
+#: admin/class-appointments.php:129
+msgid "No appointments match these filters."
+msgstr ""
+
+#: admin/class-appointments.php:131
+#: admin/class-dashboard.php:101
+msgid "No appointments have been made yet."
+msgstr ""
+
+#: admin/class-appointments.php:131
+msgid "View booking services"
+msgstr ""
+
+#: admin/class-appointments.php:138
+#: admin/class-appointments.php:185
+#: admin/class-dashboard.php:104
+msgid "Customer"
+msgstr ""
+
+#: admin/class-appointments.php:138
+#: admin/class-appointments.php:186
+#: admin/class-assessment-leads.php:143
+#: admin/class-assessment-leads.php:200
+#: admin/views/service-editor.php:225
+#: includes/class-privacy.php:83
+#: includes/class-privacy.php:158
+#: modules/assessments/class-leads.php:32
+#: modules/booking/class-booking-service.php:47
+msgid "Email"
+msgstr ""
+
+#: admin/class-appointments.php:138
+#: admin/class-appointments.php:187
+#: admin/class-assessment-leads.php:143
+#: admin/class-assessment-leads.php:201
+#: admin/views/service-editor.php:226
+#: includes/class-privacy.php:84
+#: includes/class-privacy.php:159
+#: modules/assessments/class-leads.php:33
+#: modules/booking/class-booking-service.php:48
+msgid "Phone"
+msgstr ""
+
+#: admin/class-appointments.php:138
+#: admin/class-appointments.php:188
+#: admin/class-assessment-leads.php:143
+#: admin/class-assessment-leads.php:202
+#: admin/views/service-editor.php:227
+#: includes/class-privacy.php:85
+#: includes/class-privacy.php:160
+#: modules/assessments/class-leads.php:34
+#: modules/booking/class-booking-service.php:49
+msgid "Company"
+msgstr ""
+
+#: admin/class-appointments.php:138
+#: admin/class-appointments.php:182
+#: admin/class-dashboard.php:128
+msgid "Date"
+msgstr ""
+
+#: admin/class-appointments.php:138
+#: admin/class-appointments.php:183
+msgid "Time"
+msgstr ""
+
+#: admin/class-appointments.php:138
+#: admin/class-appointments.php:184
+#: admin/views/service-editor.php:178
+#: includes/class-privacy.php:163
+msgid "Timezone"
+msgstr ""
+
+#: admin/class-appointments.php:138
+#: admin/class-appointments.php:190
+#: admin/views/service-editor.php:229
+#: includes/class-privacy.php:161
+#: modules/booking/class-booking-service.php:51
+msgid "Notes"
+msgstr ""
+
+#: admin/class-appointments.php:138
+#: admin/class-appointments.php:191
+msgid "Created"
+msgstr ""
+
+#: admin/class-appointments.php:169
+msgid "That appointment could not be found."
+msgstr ""
+
+#: admin/class-appointments.php:176
+msgid "All appointments"
+msgstr ""
+
+#: admin/class-appointments.php:176
+msgid "Permanently delete this appointment record?"
+msgstr ""
+
+#: admin/class-appointments.php:176
+#: admin/class-assessment-builder.php:93
+#: admin/class-assessments.php:154
+#: admin/class-booking-services.php:130
+msgid "Delete"
+msgstr ""
+
+#: admin/class-appointments.php:189
+#: admin/class-assessment-leads.php:143
+#: admin/class-assessment-leads.php:203
+#: admin/views/service-editor.php:228
+#: includes/class-privacy.php:86
+#: modules/assessments/class-leads.php:35
+#: modules/booking/class-booking-service.php:50
+msgid "Job title"
+msgstr ""
+
+#: admin/class-appointments.php:192
+msgid "Status changed"
+msgstr ""
+
+#: admin/class-appointments.php:193
+msgid "Times rescheduled"
+msgstr ""
+
+#: admin/class-appointments.php:194
+msgid "Booked from page"
+msgstr ""
+
+#: admin/class-appointments.php:202
+msgid "Appointment"
+msgstr ""
+
+#: admin/class-appointments.php:212
+msgid "Change status"
+msgstr ""
+
+#: admin/class-appointments.php:216
+msgid "Pending and confirmed bookings hold their time slot. Other statuses release it."
+msgstr ""
+
+#: admin/class-appointments.php:217
+msgid "Email the customer if the booking is cancelled"
+msgstr ""
+
+#: admin/class-appointments.php:218
+msgid "Update status"
+msgstr ""
+
+#: admin/class-appointments.php:232
+msgid "Invalid appointment or status."
+msgstr ""
+
+#: admin/class-appointments.php:236
+msgid "The status was not changed."
+msgstr ""
+
+#: admin/class-appointments.php:241
+msgid "That status cannot be applied because another active booking now uses this time."
+msgstr ""
+
+#: admin/class-appointments.php:253
+msgid "Appointment status updated."
+msgstr ""
+
+#: admin/class-appointments.php:264
+msgid "Appointment deleted."
+msgstr ""
+
+#: admin/class-assessment-builder.php:42
+#: admin/class-assessments.php:170
+msgid "That assessment could not be found."
+msgstr ""
+
+#: admin/class-assessment-builder.php:69
+#: admin/class-assessment-leads.php:113
+msgid "All assessments"
+msgstr ""
+
+#: admin/class-assessment-builder.php:71
+#: admin/class-assessments.php:151
+#: admin/class-booking-services.php:127
+#: admin/class-booking-services.php:163
+msgid "Preview"
+msgstr ""
+
+#: admin/class-assessment-builder.php:73
+msgid "Edit assessment"
+msgstr ""
+
+#: admin/class-assessment-builder.php:73
+#: admin/class-assessments.php:90
+#: admin/class-assessments.php:94
+#: admin/class-dashboard.php:126
+msgid "Create assessment"
+msgstr ""
+
+#: admin/class-assessment-builder.php:87
+msgid "Add question"
+msgstr ""
+
+#: admin/class-assessment-builder.php:88
+#: admin/class-assessment-leads.php:240
+msgid "Question"
+msgstr ""
+
+#: admin/class-assessment-builder.php:89
+msgid "Untitled question"
+msgstr ""
+
+#: admin/class-assessment-builder.php:90
+#: admin/class-assessments.php:150
+#: admin/class-booking-services.php:126
+msgid "Edit"
+msgstr ""
+
+#: admin/class-assessment-builder.php:91
+msgid "Close"
+msgstr ""
+
+#: admin/class-assessment-builder.php:92
+#: admin/class-assessments.php:152
+#: admin/class-booking-services.php:128
+msgid "Duplicate"
+msgstr ""
+
+#: admin/class-assessment-builder.php:94
+msgid "Move up"
+msgstr ""
+
+#: admin/class-assessment-builder.php:95
+msgid "Move down"
+msgstr ""
+
+#: admin/class-assessment-builder.php:96
+msgid "Drag to reorder"
+msgstr ""
+
+#: admin/class-assessment-builder.php:97
+msgid "Delete this item? This cannot be undone."
+msgstr ""
+
+#: admin/class-assessment-builder.php:98
+msgid "Question type"
+msgstr ""
+
+#: admin/class-assessment-builder.php:99
+msgid "Question text"
+msgstr ""
+
+#: admin/class-assessment-builder.php:100
+msgid "Help text (optional)"
+msgstr ""
+
+#: admin/class-assessment-builder.php:101
+msgid "Section name (used when questions are grouped)"
+msgstr ""
+
+#: admin/class-assessment-builder.php:102
+#: admin/views/service-editor.php:220
+#: admin/views/service-editor.php:243
+#: admin/views/service-editor.php:262
+#: admin/views/service-editor.php:279
+msgid "Required"
+msgstr ""
+
+#: admin/class-assessment-builder.php:103
+msgid "Optional"
+msgstr ""
+
+#: admin/class-assessment-builder.php:104
+#: admin/views/service-editor.php:220
+#: admin/views/service-editor.php:242
+msgid "Enabled"
+msgstr ""
+
+#: admin/class-assessment-builder.php:105
+msgid "Disabled"
+msgstr ""
+
+#: admin/class-assessment-builder.php:106
+msgid "Answer options"
+msgstr ""
+
+#: admin/class-assessment-builder.php:107
+msgid "Option label"
+msgstr ""
+
+#: admin/class-assessment-builder.php:108
+#: admin/class-assessment-leads.php:143
+#: admin/class-assessment-leads.php:240
+#: includes/class-assets.php:101
+#: includes/class-privacy.php:87
+msgid "Score"
+msgstr ""
+
+#: admin/class-assessment-builder.php:109
+msgid "Add option"
+msgstr ""
+
+#: admin/class-assessment-builder.php:110
+#: admin/views/service-editor.php:263
+#: admin/views/service-editor.php:280
+msgid "Remove"
+msgstr ""
+
+#: admin/class-assessment-builder.php:111
+msgid "Score weight"
+msgstr ""
+
+#: admin/class-assessment-builder.php:112
+msgid "Scale minimum"
+msgstr ""
+
+#: admin/class-assessment-builder.php:113
+msgid "Scale maximum"
+msgstr ""
+
+#: admin/class-assessment-builder.php:114
+msgid "Label for lowest value"
+msgstr ""
+
+#: admin/class-assessment-builder.php:115
+msgid "Label for highest value"
+msgstr ""
+
+#: admin/class-assessment-builder.php:116
+msgid "Use the rating value as the score"
+msgstr ""
+
+#: admin/class-assessment-builder.php:117
+msgid "Reverse scoring (lower rating scores higher)"
+msgstr ""
+
+#: admin/class-assessment-builder.php:118
+msgid "Minimum value"
+msgstr ""
+
+#: admin/class-assessment-builder.php:119
+msgid "Maximum value"
+msgstr ""
+
+#: admin/class-assessment-builder.php:120
+#: admin/class-assessment-builder.php:168
+msgid "Placeholder"
+msgstr ""
+
+#: admin/class-assessment-builder.php:121
+msgid "Conditional logic"
+msgstr ""
+
+#: admin/class-assessment-builder.php:122
+msgid "Use conditional logic for this question"
+msgstr ""
+
+#: admin/class-assessment-builder.php:123
+msgid "Action"
+msgstr ""
+
+#: admin/class-assessment-builder.php:124
+msgid "Match"
+msgstr ""
+
+#: admin/class-assessment-builder.php:125
+msgid "Condition"
+msgstr ""
+
+#: admin/class-assessment-builder.php:126
+msgid "Show this question if"
+msgstr ""
+
+#: admin/class-assessment-builder.php:127
+msgid "Skip this question if"
+msgstr ""
+
+#: admin/class-assessment-builder.php:128
+msgid "all conditions match"
+msgstr ""
+
+#: admin/class-assessment-builder.php:129
+msgid "any condition matches"
+msgstr ""
+
+#: admin/class-assessment-builder.php:130
+msgid "Add condition"
+msgstr ""
+
+#: admin/class-assessment-builder.php:131
+msgid "Choose a question"
+msgstr ""
+
+#: admin/class-assessment-builder.php:132
+msgid "Value"
+msgstr ""
+
+#: admin/class-assessment-builder.php:133
+msgid "Conditions can only use questions that come before this one."
+msgstr ""
+
+#: admin/class-assessment-builder.php:134
+msgid "No questions yet. Add your first question to begin."
+msgstr ""
+
+#: admin/class-assessment-builder.php:135
+#: admin/class-assessment-leads.php:209
+#: admin/class-assessment-leads.php:210
+#: admin/class-assessment-leads.php:212
+#: includes/class-privacy.php:89
+#: includes/class-privacy.php:90
+#: modules/assessments/class-question.php:115
+msgid "Yes"
+msgstr ""
+
+#: admin/class-assessment-builder.php:136
+#: admin/class-assessment-leads.php:209
+#: admin/class-assessment-leads.php:210
+#: admin/class-assessment-leads.php:212
+#: includes/class-privacy.php:89
+#: includes/class-privacy.php:90
+#: modules/assessments/class-question.php:120
+msgid "No"
+msgstr ""
+
+#: admin/class-assessment-builder.php:137
+msgid "Add result category"
+msgstr ""
+
+#: admin/class-assessment-builder.php:138
+#: admin/class-assessment-leads.php:118
+msgid "Result category"
+msgstr ""
+
+#: admin/class-assessment-builder.php:139
+msgid "Result title"
+msgstr ""
+
+#: admin/class-assessment-builder.php:140
+msgid "Minimum"
+msgstr ""
+
+#: admin/class-assessment-builder.php:141
+msgid "Maximum"
+msgstr ""
+
+#: admin/class-assessment-builder.php:142
+msgid "Result description"
+msgstr ""
+
+#: admin/class-assessment-builder.php:143
+msgid "Personalized recommendation"
+msgstr ""
+
+#: admin/class-assessment-builder.php:145
+msgid "Add programs in the list above to attach them to a result."
+msgstr ""
+
+#: admin/class-assessment-builder.php:146
+msgid "Primary button label"
+msgstr ""
+
+#: admin/class-assessment-builder.php:147
+msgid "Primary button URL"
+msgstr ""
+
+#: admin/class-assessment-builder.php:148
+msgid "Secondary button label (optional)"
+msgstr ""
+
+#: admin/class-assessment-builder.php:149
+msgid "Secondary button URL (optional)"
+msgstr ""
+
+#: admin/class-assessment-builder.php:150
+msgid "No result categories yet."
+msgstr ""
+
+#: admin/class-assessment-builder.php:151
+msgid "Add program"
+msgstr ""
+
+#: admin/class-assessment-builder.php:153
+msgid "Program name"
+msgstr ""
+
+#: admin/class-assessment-builder.php:154
+#: admin/views/service-editor.php:82
+msgid "Description"
+msgstr ""
+
+#: admin/class-assessment-builder.php:155
+msgid "URL"
+msgstr ""
+
+#: admin/class-assessment-builder.php:156
+#: admin/views/assessment-editor.php:207
+msgid "Button label"
+msgstr ""
+
+#: admin/class-assessment-builder.php:157
+msgid "No programs yet."
+msgstr ""
+
+#: admin/class-assessment-builder.php:158
+msgid "Range check"
+msgstr ""
+
+#: admin/class-assessment-builder.php:159
+msgid "Result ranges cover every score without overlap."
+msgstr ""
+
+#: admin/class-assessment-builder.php:160
+msgid "Add result categories to check coverage."
+msgstr ""
+
+#: admin/class-assessment-builder.php:161
+#, php-format
+msgid "Scores from %1$s to %2$s are not covered."
+msgstr ""
+
+#: admin/class-assessment-builder.php:162
+#, php-format
+msgid "Ranges \"%1$s\" and \"%2$s\" overlap."
+msgstr ""
+
+#: admin/class-assessment-builder.php:163
+#, php-format
+msgid "Scores below %s are not covered."
+msgstr ""
+
+#: admin/class-assessment-builder.php:164
+#, php-format
+msgid "Scores above %s are not covered."
+msgstr ""
+
+#: admin/class-assessment-builder.php:165
+#, php-format
+msgid "The minimum is greater than the maximum for \"%s\"."
+msgstr ""
+
+#: admin/class-assessment-builder.php:166
+#: admin/views/service-editor.php:220
+msgid "Field"
+msgstr ""
+
+#: admin/class-assessment-builder.php:167
+#: admin/views/service-editor.php:220
+#: admin/views/service-editor.php:241
+#: admin/views/service-editor.php:254
+#: admin/views/service-editor.php:271
+msgid "Label"
+msgstr ""
+
+#: admin/class-assessment-builder.php:169
+msgid "Choices (one per line)"
+msgstr ""
+
+#: admin/class-assessment-builder.php:170
+#: admin/views/service-editor.php:267
+msgid "Add custom field"
+msgstr ""
+
+#: admin/class-assessment-builder.php:171
+#: modules/assessments/class-leads.php:120
+msgid "Custom field"
+msgstr ""
+
+#: admin/class-assessment-builder.php:172
+msgid "Field type"
+msgstr ""
+
+#: admin/class-assessment-builder.php:173
+#: admin/views/service-editor.php:257
+#: admin/views/service-editor.php:274
+msgid "Text"
+msgstr ""
+
+#: admin/class-assessment-builder.php:174
+#: admin/views/service-editor.php:258
+#: admin/views/service-editor.php:275
+#: modules/assessments/class-question.php:35
+msgid "Long text"
+msgstr ""
+
+#: admin/class-assessment-builder.php:175
+#: admin/views/service-editor.php:259
+#: admin/views/service-editor.php:276
+#: modules/assessments/class-question.php:30
+msgid "Dropdown"
+msgstr ""
+
+#: admin/class-assessment-builder.php:176
+msgid "Email is always required so results can be delivered and leads identified."
+msgstr ""
+
+#: admin/class-assessment-builder.php:177
+msgid "Untitled result"
+msgstr ""
+
+#: admin/class-assessment-builder.php:178
+msgid "Untitled program"
+msgstr ""
+
+#: admin/class-assessment-builder.php:179
+#, php-format
+msgid "Maximum possible score: %s"
+msgstr ""
+
+#: admin/class-assessment-builder.php:180
+msgid "Scored"
+msgstr ""
+
+#: admin/class-assessment-builder.php:181
+msgid "Not scored"
+msgstr ""
+
+#: admin/class-assessment-builder.php:182
+msgid "Has logic"
+msgstr ""
+
+#: admin/class-assessment-builder.php:195
+msgid "That assessment no longer exists."
+msgstr ""
+
+#: admin/class-assessment-builder.php:203
+#: modules/assessments/class-assessment.php:332
+msgid "Untitled assessment"
+msgstr ""
+
+#: admin/class-assessment-builder.php:218
+msgid "The assessment could not be saved. Please try again."
+msgstr ""
+
+#: admin/class-assessment-builder.php:226
+msgid "Assessment updated."
+msgstr ""
+
+#: admin/class-assessment-builder.php:226
+msgid "Assessment published. Copy the shortcode to place it on a page."
+msgstr ""
+
+#: admin/class-assessment-builder.php:228
+#: admin/class-booking-services.php:233
+msgid "Saved as a draft. Fix these issues before publishing:"
+msgstr ""
+
+#: admin/class-assessment-builder.php:230
+#: admin/class-booking-services.php:235
+msgid "Draft saved."
+msgstr ""
+
+#: admin/class-assessment-builder.php:231
+#: admin/class-booking-services.php:237
+msgid "Issues to fix before publishing:"
+msgstr ""
+
+#: admin/class-assessment-builder.php:233
+msgid "Draft saved. It is ready to publish."
+msgstr ""
+
+#: admin/class-assessment-leads.php:107
+msgid "Assessment Results and Leads"
+msgstr ""
+
+#: admin/class-assessment-leads.php:118
+msgid "All results"
+msgstr ""
+
+#: admin/class-assessment-leads.php:134
+msgid "No submissions match these filters."
+msgstr ""
+
+#: admin/class-assessment-leads.php:136
+msgid "No assessment submissions have been received yet."
+msgstr ""
+
+#: admin/class-assessment-leads.php:143
+#: admin/class-assessment-leads.php:199
+#: admin/class-dashboard.php:128
+#: admin/views/service-editor.php:224
+#: includes/class-privacy.php:82
+#: includes/class-privacy.php:157
+#: modules/booking/class-booking-service.php:46
+msgid "Name"
+msgstr ""
+
+#: admin/class-assessment-leads.php:143
+msgid "Recommended program"
+msgstr ""
+
+#: admin/class-assessment-leads.php:143
+#: admin/class-assessment-leads.php:198
+#: includes/class-privacy.php:91
+msgid "Submitted"
+msgstr ""
+
+#: admin/class-assessment-leads.php:143
+#: admin/views/assessment-editor.php:171
+msgid "Consent"
+msgstr ""
+
+#: admin/class-assessment-leads.php:151
+msgid "Privacy"
+msgstr ""
+
+#: admin/class-assessment-leads.php:151
+msgid "None"
+msgstr ""
+
+#: admin/class-assessment-leads.php:153
+msgid "Marketing"
+msgstr ""
+
+#: admin/class-assessment-leads.php:156
+#: admin/class-dashboard.php:134
+msgid "Anonymous"
+msgstr ""
+
+#: admin/class-assessment-leads.php:179
+msgid "That submission could not be found."
+msgstr ""
+
+#: admin/class-assessment-leads.php:188
+msgid "Assessment submission"
+msgstr ""
+
+#: admin/class-assessment-leads.php:189
+msgid "All submissions"
+msgstr ""
+
+#: admin/class-assessment-leads.php:189
+msgid "Permanently delete this submission and its answers?"
+msgstr ""
+
+#: admin/class-assessment-leads.php:189
+msgid "Delete submission"
+msgstr ""
+
+#: admin/class-assessment-leads.php:204
+#: modules/assessments/class-leads.php:36
+msgid "Company size"
+msgstr ""
+
+#: admin/class-assessment-leads.php:205
+#: admin/views/assessment-editor.php:133
+msgid "Raw score"
+msgstr ""
+
+#: admin/class-assessment-leads.php:206
+#: includes/class-assets.php:102
+msgid "Percentage"
+msgstr ""
+
+#: admin/class-assessment-leads.php:209
+#: includes/class-privacy.php:89
+msgid "Privacy consent"
+msgstr ""
+
+#: admin/class-assessment-leads.php:210
+#: includes/class-privacy.php:90
+msgid "Marketing consent"
+msgstr ""
+
+#: admin/class-assessment-leads.php:211
+msgid "Consent recorded"
+msgstr ""
+
+#: admin/class-assessment-leads.php:212
+msgid "Result email sent"
+msgstr ""
+
+#: admin/class-assessment-leads.php:213
+msgid "Page"
+msgstr ""
+
+#: admin/class-assessment-leads.php:221
+msgid "Privacy wording shown"
+msgstr ""
+
+#: admin/class-assessment-leads.php:224
+msgid "Marketing wording shown"
+msgstr ""
+
+#: admin/class-assessment-leads.php:227
+msgid "Lead and result"
+msgstr ""
+
+#: admin/class-assessment-leads.php:236
+msgid "Answers"
+msgstr ""
+
+#: admin/class-assessment-leads.php:238
+msgid "No answers were stored for this submission."
+msgstr ""
+
+#: admin/class-assessment-leads.php:240
+msgid "Answer"
+msgstr ""
+
+#: admin/class-assessment-leads.php:309
+msgid "Submission deleted."
+msgstr ""
+
+#: admin/class-assessments.php:94
+msgid "No assessments have been created yet."
+msgstr ""
+
+#. translators: %d: count
+#: admin/class-assessments.php:101
+#, php-format
+msgid "All (%d)"
+msgstr ""
+
+#. translators: %d: count
+#: admin/class-assessments.php:102
+#, php-format
+msgid "Published (%d)"
+msgstr ""
+
+#. translators: %d: count
+#: admin/class-assessments.php:103
+#, php-format
+msgid "Draft (%d)"
+msgstr ""
+
+#: admin/class-assessments.php:114
+#: admin/class-assessments.php:115
+msgid "Search assessments"
+msgstr ""
+
+#: admin/class-assessments.php:118
+msgid "No assessments match your search."
+msgstr ""
+
+#: admin/class-assessments.php:124
+#: admin/views/assessment-editor.php:27
+#: admin/views/assessment-editor.php:109
+msgid "Questions"
+msgstr ""
+
+#: admin/class-assessments.php:124
+msgid "Submissions"
+msgstr ""
+
+#: admin/class-assessments.php:124
+#: admin/class-booking-services.php:103
+msgid "Actions"
+msgstr ""
+
+#: admin/class-assessments.php:144
+#: admin/class-booking-services.php:121
+#: admin/views/assessment-editor.php:246
+#: admin/views/service-editor.php:363
+msgid "Published"
+msgstr ""
+
+#: admin/class-assessments.php:144
+#: admin/class-booking-services.php:121
+#: admin/views/assessment-editor.php:246
+#: admin/views/service-editor.php:363
+msgid "Draft"
+msgstr ""
+
+#: admin/class-assessments.php:153
+#: admin/class-booking-services.php:129
+msgid "Unpublish"
+msgstr ""
+
+#: admin/class-assessments.php:153
+#: admin/class-booking-services.php:129
+#: admin/views/assessment-editor.php:31
+#: admin/views/assessment-editor.php:278
+#: admin/views/service-editor.php:28
+#: admin/views/service-editor.php:396
+msgid "Publish"
+msgstr ""
+
+#: admin/class-assessments.php:154
+msgid "Delete this assessment? Stored submissions are kept, but the assessment can no longer be edited or shown."
+msgstr ""
+
+#. translators: %s: assessment name
+#. translators: %s: service name
+#: admin/class-assessments.php:176
+#: admin/class-booking-services.php:184
+#, php-format
+msgid "Preview: %s"
+msgstr ""
+
+#: admin/class-assessments.php:177
+#: admin/class-booking-services.php:185
+msgid "Back to editor"
+msgstr ""
+
+#: admin/class-assessments.php:198
+msgid "Assessment duplicated. The copy is saved as a draft."
+msgstr ""
+
+#: admin/class-assessments.php:201
+msgid "The assessment could not be duplicated."
+msgstr ""
+
+#: admin/class-assessments.php:205
+msgid "Assessment deleted."
+msgstr ""
+
+#: admin/class-assessments.php:205
+msgid "The assessment could not be deleted."
+msgstr ""
+
+#: admin/class-assessments.php:209
+msgid "Assessment unpublished. It is now a draft."
+msgstr ""
+
+#: admin/class-assessments.php:217
+msgid "Assessment published."
+msgstr ""
+
+#: admin/class-assessments.php:219
+#: admin/class-booking-services.php:277
+msgid "It cannot be published yet:"
+msgstr ""
+
+#: admin/class-assessments.php:238
+#: admin/class-booking-services.php:299
+msgid "Enter a valid email address to send the test to."
+msgstr ""
+
+#: admin/class-assessments.php:243
+msgid "Save the assessment before sending a test email."
+msgstr ""
+
+#. translators: %s: email
+#: admin/class-assessments.php:247
+#: admin/class-booking-services.php:308
+#, php-format
+msgid "Test email sent to %s. It uses the last saved settings and sample data."
+msgstr ""
+
+#: admin/class-assessments.php:249
+#: admin/class-booking-services.php:310
+msgid "The test email could not be sent. Check your WordPress mail configuration."
+msgstr ""
+
+#: admin/class-booking-services.php:89
+#: admin/class-booking-services.php:94
+#: admin/class-booking-services.php:165
+#: admin/class-dashboard.php:101
+msgid "Create booking service"
+msgstr ""
+
+#: admin/class-booking-services.php:94
+msgid "No booking services have been created yet."
+msgstr ""
+
+#: admin/class-booking-services.php:96
+msgid "No booking services match your search."
+msgstr ""
+
+#: admin/class-booking-services.php:103
+msgid "Duration"
+msgstr ""
+
+#: admin/class-booking-services.php:103
+msgid "Upcoming"
+msgstr ""
+
+#. translators: %d: minutes
+#: admin/class-booking-services.php:120
+#, php-format
+msgid "%d min"
+msgstr ""
+
+#: admin/class-booking-services.php:122
+msgid "Tracked by provider"
+msgstr ""
+
+#: admin/class-booking-services.php:130
+msgid "Delete this booking service? Existing appointments are kept."
+msgstr ""
+
+#: admin/class-booking-services.php:146
+#: admin/class-booking-services.php:178
+msgid "That booking service could not be found."
+msgstr ""
+
+#: admin/class-booking-services.php:165
+msgid "Edit booking service"
+msgstr ""
+
+#: admin/class-booking-services.php:202
+msgid "That booking service no longer exists."
+msgstr ""
+
+#: admin/class-booking-services.php:210
+#: modules/booking/class-booking-service.php:498
+msgid "Untitled service"
+msgstr ""
+
+#: admin/class-booking-services.php:224
+msgid "The booking service could not be saved. Please try again."
+msgstr ""
+
+#: admin/class-booking-services.php:231
+msgid "Booking service updated."
+msgstr ""
+
+#: admin/class-booking-services.php:231
+msgid "Booking service published. Copy the shortcode to place it on a page."
+msgstr ""
+
+#: admin/class-booking-services.php:256
+msgid "Booking service duplicated. The copy is saved as a draft."
+msgstr ""
+
+#: admin/class-booking-services.php:259
+msgid "The booking service could not be duplicated."
+msgstr ""
+
+#: admin/class-booking-services.php:263
+msgid "Booking service deleted."
+msgstr ""
+
+#: admin/class-booking-services.php:263
+msgid "The booking service could not be deleted."
+msgstr ""
+
+#: admin/class-booking-services.php:267
+msgid "Booking service unpublished. It is now a draft."
+msgstr ""
+
+#: admin/class-booking-services.php:275
+msgid "Booking service published."
+msgstr ""
+
+#: admin/class-booking-services.php:304
+msgid "Save the service before sending a test email."
+msgstr ""
+
+#: admin/class-dashboard.php:41
+msgid "No data yet"
+msgstr ""
+
+#. translators: %d: count
+#: admin/class-dashboard.php:49
+#: admin/class-dashboard.php:53
+#, php-format
+msgid "%d published"
+msgstr ""
+
+#. translators: %d: count
+#: admin/class-dashboard.php:50
+#: includes/class-privacy.php:101
+msgid "Assessment submissions"
+msgstr ""
+
+#. translators: %d: count
+#: admin/class-dashboard.php:50
+msgid "All time"
+msgstr ""
+
+#: admin/class-dashboard.php:51
+msgid "Assessment leads"
+msgstr ""
+
+#: admin/class-dashboard.php:51
+msgid "Submissions with an email"
+msgstr ""
+
+#: admin/class-dashboard.php:52
+msgid "Last 30 days, completions per start"
+msgstr ""
+
+#: admin/class-dashboard.php:53
+#: includes/class-post-types.php:47
+msgid "Booking services"
+msgstr ""
+
+#. translators: %d: count
+#: admin/class-dashboard.php:54
+msgid "Upcoming appointments"
+msgstr ""
+
+#. translators: %d: count
+#: admin/class-dashboard.php:54
+msgid "Native bookings, pending or confirmed"
+msgstr ""
+
+#: admin/class-dashboard.php:70
+msgid "No assessment is published yet."
+msgstr ""
+
+#: admin/class-dashboard.php:70
+msgid "Open assessments"
+msgstr ""
+
+#: admin/class-dashboard.php:73
+msgid "No booking service is published yet."
+msgstr ""
+
+#: admin/class-dashboard.php:73
+msgid "Open booking services"
+msgstr ""
+
+#: admin/class-dashboard.php:76
+msgid "WP-Cron is disabled on this site. Data retention cleanup only runs if a server cron job calls wp-cron.php."
+msgstr ""
+
+#: admin/class-dashboard.php:79
+msgid "No default notification email is set, so the site admin email is used as the fallback recipient."
+msgstr ""
+
+#: admin/class-dashboard.php:79
+msgid "Open settings"
+msgstr ""
+
+#: admin/class-dashboard.php:82
+msgid "Setup checks"
+msgstr ""
+
+#: admin/class-dashboard.php:84
+msgid "Attention"
+msgstr ""
+
+#: admin/class-dashboard.php:96
+msgid "Recent appointments"
+msgstr ""
+
+#: admin/class-dashboard.php:99
+msgid "You do not have access to appointments."
+msgstr ""
+
+#: admin/class-dashboard.php:104
+#: includes/class-assets.php:128
+msgid "When"
+msgstr ""
+
+#: admin/class-dashboard.php:120
+msgid "Recent assessment submissions"
+msgstr ""
+
+#: admin/class-dashboard.php:122
+msgid "You do not have access to assessment submissions."
+msgstr ""
+
+#: admin/class-dashboard.php:126
+msgid "No assessment submissions yet."
+msgstr ""
+
+#: admin/class-form.php:43
+#: includes/class-assets.php:94
+msgid "(required)"
+msgstr ""
+
+#. translators: %s: timezone name
+#: admin/class-settings.php:46
+#, php-format
+msgid "WordPress site timezone (%s)"
+msgstr ""
+
+#: admin/class-settings.php:58
+msgid "Notifications and email"
+msgstr ""
+
+#: admin/class-settings.php:59
+msgid "Default notification email"
+msgstr ""
+
+#. translators: %s: email
+#: admin/class-settings.php:59
+#, php-format
+msgid "Used when an assessment or service has no recipient. Leave empty to use the site admin email (%s)."
+msgstr ""
+
+#: admin/class-settings.php:61
+msgid "Default sender name"
+msgstr ""
+
+#: admin/class-settings.php:61
+msgid "Optional. Overrides the WordPress default sender name on plugin emails."
+msgstr ""
+
+#: admin/class-settings.php:62
+msgid "Sender email address"
+msgstr ""
+
+#: admin/class-settings.php:62
+msgid "Optional. Use an address on your own domain so mail is not marked as spam. Many mail plugins override this."
+msgstr ""
+
+#: admin/class-settings.php:65
+msgid "Booking"
+msgstr ""
+
+#: admin/class-settings.php:66
+msgid "Default booking timezone"
+msgstr ""
+
+#: admin/class-settings.php:66
+msgid "Used by native services that do not choose their own timezone."
+msgstr ""
+
+#: admin/class-settings.php:67
+msgid "Share one calendar across all native booking services"
+msgstr ""
+
+#: admin/class-settings.php:67
+msgid "When on, a booking for one service blocks the same time for every other native service. Turn off if each service has separate staff. Change this before taking bookings."
+msgstr ""
+
+#: admin/class-settings.php:68
+msgid "Booking management page URL"
+msgstr ""
+
+#: admin/class-settings.php:68
+msgid "Optional fallback for cancel and reschedule links. By default the link returns to the page where the customer booked, which already contains the booking shortcode."
+msgstr ""
+
+#: admin/class-settings.php:69
+msgid "Allowed embed hosts"
+msgstr ""
+
+#: admin/class-settings.php:69
+msgid "Optional. Comma or line separated hostnames (for example booking.example.com). When set, custom iframe embeds must use one of these hosts. Empty allows any https host."
+msgstr ""
+
+#: admin/class-settings.php:72
+msgid "Frontend appearance"
+msgstr ""
+
+#: admin/class-settings.php:73
+msgid "Public assessments and booking forms inherit typography from your theme by default."
+msgstr ""
+
+#: admin/class-settings.php:74
+msgid "Use Poppins for plugin content on the public site"
+msgstr ""
+
+#: admin/class-settings.php:74
+msgid "Off by default. The font file is served from this plugin, not from a third party."
+msgstr ""
+
+#: admin/class-settings.php:76
+msgid "Primary button color"
+msgstr ""
+
+#: admin/class-settings.php:77
+msgid "Corner radius (pixels)"
+msgstr ""
+
+#: admin/class-settings.php:81
+msgid "Record first-party analytics"
+msgstr ""
+
+#: admin/class-settings.php:81
+msgid "Stores anonymous counts such as views, starts and completions. No cookies, IP addresses or visitor identifiers are stored."
+msgstr ""
+
+#: admin/class-settings.php:82
+msgid "Send events to Google Analytics 4 when it is already installed"
+msgstr ""
+
+#: admin/class-settings.php:82
+msgid "This plugin never installs Google Analytics. Events are sent only if gtag is available on the page. Event names: nc_assessment_viewed, nc_assessment_started, nc_assessment_completed, nc_lead_captured, nc_result_viewed, nc_booking_viewed, nc_booking_started, nc_booking_completed, nc_booking_external_click."
+msgstr ""
+
+#: admin/class-settings.php:85
+msgid "Data retention"
+msgstr ""
+
+#: admin/class-settings.php:88
+msgid "Keep personal data"
+msgstr ""
+
+#: admin/class-settings.php:90
+msgid "Indefinitely"
+msgstr ""
+
+#: admin/class-settings.php:91
+msgid "90 days"
+msgstr ""
+
+#: admin/class-settings.php:92
+msgid "180 days"
+msgstr ""
+
+#: admin/class-settings.php:93
+msgid "365 days"
+msgstr ""
+
+#: admin/class-settings.php:94
+msgid "Custom number of days"
+msgstr ""
+
+#: admin/class-settings.php:97
+msgid "A daily task removes older assessment submissions and past appointments. Upcoming and active appointments are never removed. Anonymous analytics counts are kept."
+msgstr ""
+
+#: admin/class-settings.php:99
+msgid "Custom retention (days)"
+msgstr ""
+
+#: admin/class-settings.php:102
+msgid "Uninstall and troubleshooting"
+msgstr ""
+
+#: admin/class-settings.php:103
+msgid "Delete all Next Class Services data when the plugin is uninstalled"
+msgstr ""
+
+#: admin/class-settings.php:103
+msgid "Off by default. Deactivating never deletes data. When on, deleting the plugin removes tables, options, scheduled tasks, assessments, booking services and capabilities."
+msgstr ""
+
+#: admin/class-settings.php:104
+msgid "Write technical errors to the PHP error log"
+msgstr ""
+
+#: admin/class-settings.php:104
+msgid "Only enable while troubleshooting. Visitors never see technical details."
+msgstr ""
+
+#: admin/class-settings.php:107
+#: admin/views/assessment-editor.php:272
+#: admin/views/service-editor.php:390
+msgid "You have unsaved changes."
+msgstr ""
+
+#: admin/class-settings.php:107
+msgid "Save settings"
+msgstr ""
+
+#: admin/class-settings.php:110
+msgid "Run retention cleanup now"
+msgstr ""
+
+#: admin/class-settings.php:111
+msgid "Applies the saved retention period immediately. This permanently deletes data older than the period."
+msgstr ""
+
+#: admin/class-settings.php:112
+msgid "Permanently delete personal data older than the retention period?"
+msgstr ""
+
+#: admin/class-settings.php:114
+msgid "Run cleanup"
+msgstr ""
+
+#: admin/class-settings.php:116
+msgid "Roles and capabilities"
+msgstr ""
+
+#: admin/class-settings.php:117
+msgid "Administrators receive every capability on activation. Use a role editor plugin to grant them to other roles."
+msgstr ""
+
+#: admin/class-settings.php:118
+msgid "Capability"
+msgstr ""
+
+#: admin/class-settings.php:118
+msgid "Allows"
+msgstr ""
+
+#: admin/class-settings.php:124
+msgid "Data stored by this plugin"
+msgstr ""
+
+#: admin/class-settings.php:126
+msgid "Assessment submissions: lead fields you enable (name, email, phone, company, job title, company size, custom fields), answers, score, result, recommended programs, consent status and wording, page URL, date."
+msgstr ""
+
+#: admin/class-settings.php:127
+msgid "Appointments: name, email, phone, company, job title, notes and custom fields you enable, time, timezone, status, page URL, date. Management links are stored as one-way hashes."
+msgstr ""
+
+#: admin/class-settings.php:128
+msgid "Analytics events: event type, assessment or service ID, a short context value and date. No IP address, cookie or device data."
+msgstr ""
+
+#: admin/class-settings.php:129
+msgid "Temporary rate limit counters use a one-way hash of the visitor IP for a few minutes and then expire."
+msgstr ""
+
+#: admin/class-settings.php:130
+msgid "Personal data is included in WordPress export and erase tools (Tools, Export Personal Data and Erase Personal Data)."
+msgstr ""
+
+#: admin/class-settings.php:174
+msgid "The default notification email was not valid and was not saved."
+msgstr ""
+
+#: admin/class-settings.php:177
+msgid "The sender email address was not valid and was not saved."
+msgstr ""
+
+#: admin/class-settings.php:180
+msgid "Calendar sharing changed. Existing bookings keep their original slot keys, so review upcoming appointments for overlaps."
+msgstr ""
+
+#: admin/class-settings.php:183
+msgid "Settings saved."
+msgstr ""
+
+#. translators: 1: submissions removed, 2: appointments removed
+#: admin/class-settings.php:197
+#, php-format
+msgid "Cleanup finished. Removed %1$d submissions and %2$d appointments."
+msgstr ""
+
+#: admin/views/assessment-editor.php:26
+#: admin/views/service-editor.php:24
+msgid "General"
+msgstr ""
+
+#: admin/views/assessment-editor.php:28
+msgid "Scoring and results"
+msgstr ""
+
+#: admin/views/assessment-editor.php:29
+msgid "Lead capture"
+msgstr ""
+
+#: admin/views/assessment-editor.php:30
+#: admin/views/service-editor.php:27
+msgid "Emails"
+msgstr ""
+
+#: admin/views/assessment-editor.php:49
+msgid "Assessment sections"
+msgstr ""
+
+#: admin/views/assessment-editor.php:58
+msgid "Titles and text"
+msgstr ""
+
+#: admin/views/assessment-editor.php:61
+msgid "Internal admin title"
+msgstr ""
+
+#: admin/views/assessment-editor.php:61
+#: admin/views/service-editor.php:77
+msgid "Only shown in the admin area."
+msgstr ""
+
+#: admin/views/assessment-editor.php:62
+msgid "Assessment title"
+msgstr ""
+
+#: admin/views/assessment-editor.php:62
+msgid "Shown to visitors."
+msgstr ""
+
+#: admin/views/assessment-editor.php:66
+msgid "Public description"
+msgstr ""
+
+#: admin/views/assessment-editor.php:66
+msgid "A short summary shown under the title. Basic formatting is allowed."
+msgstr ""
+
+#: admin/views/assessment-editor.php:67
+msgid "Introduction and instructions"
+msgstr ""
+
+#: admin/views/assessment-editor.php:67
+msgid "Shown on the start screen, for example how long it takes."
+msgstr ""
+
+#: admin/views/assessment-editor.php:68
+msgid "Show a start screen before the first question"
+msgstr ""
+
+#: admin/views/assessment-editor.php:73
+msgid "Buttons"
+msgstr ""
+
+#: admin/views/assessment-editor.php:76
+msgid "Start button text"
+msgstr ""
+
+#: admin/views/assessment-editor.php:77
+msgid "Previous button text"
+msgstr ""
+
+#: admin/views/assessment-editor.php:78
+msgid "Next button text"
+msgstr ""
+
+#: admin/views/assessment-editor.php:79
+msgid "Submit button text (last question)"
+msgstr ""
+
+#: admin/views/assessment-editor.php:79
+msgid "Used on the final question when lead capture is off."
+msgstr ""
+
+#: admin/views/assessment-editor.php:80
+msgid "Lead form submit button text"
+msgstr ""
+
+#: admin/views/assessment-editor.php:86
+msgid "Steps and progress"
+msgstr ""
+
+#: admin/views/assessment-editor.php:90
+msgid "Question layout"
+msgstr ""
+
+#: admin/views/assessment-editor.php:92
+msgid "One question per step"
+msgstr ""
+
+#: admin/views/assessment-editor.php:93
+msgid "Group questions by section name"
+msgstr ""
+
+#: admin/views/assessment-editor.php:96
+msgid "Grouped layout shows consecutive questions with the same section name on one step."
+msgstr ""
+
+#: admin/views/assessment-editor.php:98
+msgid "Show progress indicator"
+msgstr ""
+
+#: admin/views/assessment-editor.php:99
+msgid "Show progress percentage"
+msgstr ""
+
+#: admin/views/assessment-editor.php:100
+msgid "Completion message"
+msgstr ""
+
+#: admin/views/assessment-editor.php:100
+msgid "Shown on the result screen, and used when no result categories are defined."
+msgstr ""
+
+#: admin/views/assessment-editor.php:112
+msgid "Assign scores to answers to include a question in the score. Text and number answers are stored but not scored. Hidden or skipped questions never affect the score."
+msgstr ""
+
+#: admin/views/assessment-editor.php:121
+msgid "Create programs once, then attach one or more to each result category."
+msgstr ""
+
+#: admin/views/assessment-editor.php:126
+msgid "Result categories"
+msgstr ""
+
+#: admin/views/assessment-editor.php:130
+msgid "Result ranges are based on"
+msgstr ""
+
+#: admin/views/assessment-editor.php:132
+msgid "Percentage score (0 to 100)"
+msgstr ""
+
+#: admin/views/assessment-editor.php:136
+msgid "Percentage ranges stay valid when conditional logic skips questions. Ranges must cover every score without overlap, for example 0 to 25 then 26 to 50."
+msgstr ""
+
+#: admin/views/assessment-editor.php:144
+msgid "Result display"
+msgstr ""
+
+#: admin/views/assessment-editor.php:146
+msgid "Result heading"
+msgstr ""
+
+#: admin/views/assessment-editor.php:147
+msgid "Show the numerical score to visitors"
+msgstr ""
+
+#: admin/views/assessment-editor.php:147
+msgid "Off by default. When off, visitors only see the result category."
+msgstr ""
+
+#: admin/views/assessment-editor.php:148
+msgid "Show the percentage to visitors"
+msgstr ""
+
+#: admin/views/assessment-editor.php:149
+msgid "Show the personalized recommendation"
+msgstr ""
+
+#: admin/views/assessment-editor.php:150
+msgid "Show recommended programs"
+msgstr ""
+
+#: admin/views/assessment-editor.php:158
+msgid "Lead form"
+msgstr ""
+
+#: admin/views/assessment-editor.php:160
+msgid "Require the lead form before showing results"
+msgstr ""
+
+#: admin/views/assessment-editor.php:160
+msgid "The visitor flow is questions, then lead capture, then results. Turn this off to show results straight after the last question."
+msgstr ""
+
+#: admin/views/assessment-editor.php:161
+msgid "Form heading"
+msgstr ""
+
+#: admin/views/assessment-editor.php:162
+msgid "Form introduction"
+msgstr ""
+
+#: admin/views/assessment-editor.php:166
+msgid "Lead fields"
+msgstr ""
+
+#: admin/views/assessment-editor.php:167
+msgid "Choose which fields appear, their order, labels and whether they are required. Only collect what you need."
+msgstr ""
+
+#: admin/views/assessment-editor.php:172
+msgid "Consent checkboxes are never pre-checked. Consent status and the wording shown are stored with each submission."
+msgstr ""
+
+#: admin/views/assessment-editor.php:174
+msgid "Privacy policy URL"
+msgstr ""
+
+#: admin/views/assessment-editor.php:175
+msgid "Show a privacy consent checkbox"
+msgstr ""
+
+#: admin/views/assessment-editor.php:176
+msgid "Privacy consent is required"
+msgstr ""
+
+#: admin/views/assessment-editor.php:177
+msgid "Privacy consent text"
+msgstr ""
+
+#: admin/views/assessment-editor.php:177
+msgid "Links are allowed, for example a link to your privacy policy."
+msgstr ""
+
+#: admin/views/assessment-editor.php:178
+msgid "Show a marketing consent checkbox"
+msgstr ""
+
+#: admin/views/assessment-editor.php:179
+msgid "Marketing consent is required"
+msgstr ""
+
+#: admin/views/assessment-editor.php:180
+msgid "Marketing consent text"
+msgstr ""
+
+#: admin/views/assessment-editor.php:189
+msgid "Visitor result email"
+msgstr ""
+
+#: admin/views/assessment-editor.php:191
+msgid "Email each visitor their result"
+msgstr ""
+
+#: admin/views/assessment-editor.php:191
+msgid "Sent to the email address entered in the lead form."
+msgstr ""
+
+#: admin/views/assessment-editor.php:195
+#: admin/views/service-editor.php:296
+msgid "Sender name"
+msgstr ""
+
+#: admin/views/assessment-editor.php:195
+msgid "The sending address is set by WordPress or in Settings. Leave empty to use the default."
+msgstr ""
+
+#: admin/views/assessment-editor.php:196
+#: admin/views/service-editor.php:297
+msgid "Reply-to address"
+msgstr ""
+
+#: admin/views/assessment-editor.php:200
+#: admin/views/assessment-editor.php:221
+#: admin/views/service-editor.php:306
+#: admin/views/service-editor.php:315
+#: admin/views/service-editor.php:324
+#: admin/views/service-editor.php:333
+msgid "Subject"
+msgstr ""
+
+#: admin/views/assessment-editor.php:201
+msgid "Heading inside the email"
+msgstr ""
+
+#: admin/views/assessment-editor.php:202
+msgid "Introduction"
+msgstr ""
+
+#: admin/views/assessment-editor.php:203
+msgid "Result content"
+msgstr ""
+
+#: admin/views/assessment-editor.php:207
+msgid "If empty, the button from the visitor's result category is used."
+msgstr ""
+
+#: admin/views/assessment-editor.php:208
+msgid "Button URL"
+msgstr ""
+
+#: admin/views/assessment-editor.php:211
+msgid "Footer"
+msgstr ""
+
+#: admin/views/assessment-editor.php:212
+#: admin/views/service-editor.php:300
+msgid "Available placeholders:"
+msgstr ""
+
+#: admin/views/assessment-editor.php:216
+#: admin/views/service-editor.php:346
+msgid "Admin notification"
+msgstr ""
+
+#: admin/views/assessment-editor.php:219
+msgid "Notify me when an assessment is completed"
+msgstr ""
+
+#: admin/views/assessment-editor.php:220
+#: admin/views/service-editor.php:314
+msgid "Recipient email addresses"
+msgstr ""
+
+#: admin/views/assessment-editor.php:220
+msgid "Separate several addresses with commas. If empty, the default notification email from Settings is used."
+msgstr ""
+
+#: admin/views/assessment-editor.php:222
+#: admin/views/service-editor.php:307
+#: admin/views/service-editor.php:316
+#: admin/views/service-editor.php:325
+#: admin/views/service-editor.php:334
+msgid "Message"
+msgstr ""
+
+#: admin/views/assessment-editor.php:227
+#: admin/views/service-editor.php:338
+msgid "Send a test email"
+msgstr ""
+
+#: admin/views/assessment-editor.php:229
+#: admin/views/service-editor.php:340
+msgid "Tests use the last saved settings and sample data. Save your changes first."
+msgstr ""
+
+#: admin/views/assessment-editor.php:231
+#: admin/views/service-editor.php:342
+msgid "Send test to"
+msgstr ""
+
+#: admin/views/assessment-editor.php:234
+msgid "Send visitor email test"
+msgstr ""
+
+#: admin/views/assessment-editor.php:235
+msgid "Send admin notification test"
+msgstr ""
+
+#: admin/views/assessment-editor.php:237
+msgid "Save the assessment first to enable test emails."
+msgstr ""
+
+#: admin/views/assessment-editor.php:245
+#: admin/views/service-editor.php:362
+msgid "Status and shortcode"
+msgstr ""
+
+#: admin/views/assessment-editor.php:246
+#: admin/views/service-editor.php:363
+msgid "Status:"
+msgstr ""
+
+#: admin/views/assessment-editor.php:248
+msgid "Paste this shortcode into any page or post, or a page builder shortcode block:"
+msgstr ""
+
+#: admin/views/assessment-editor.php:250
+msgid "Preview assessment"
+msgstr ""
+
+#: admin/views/assessment-editor.php:252
+#: admin/views/service-editor.php:370
+msgid "The shortcode is created when you save."
+msgstr ""
+
+#: admin/views/assessment-editor.php:256
+#: admin/views/service-editor.php:374
+msgid "Publishing checklist"
+msgstr ""
+
+#: admin/views/assessment-editor.php:258
+#: admin/views/service-editor.php:378
+msgid "Ready"
+msgstr ""
+
+#: admin/views/assessment-editor.php:258
+msgid "This assessment passes all publishing checks."
+msgstr ""
+
+#: admin/views/assessment-editor.php:260
+#: admin/views/service-editor.php:376
+msgid "Save a draft to see which checks still need attention."
+msgstr ""
+
+#: admin/views/assessment-editor.php:264
+#: admin/views/service-editor.php:382
+msgid "Fix"
+msgstr ""
+
+#: admin/views/assessment-editor.php:274
+#: admin/views/service-editor.php:392
+msgid "Update"
+msgstr ""
+
+#: admin/views/assessment-editor.php:275
+#: admin/views/service-editor.php:393
+msgid "Unpublish and save as draft"
+msgstr ""
+
+#: admin/views/assessment-editor.php:277
+#: admin/views/service-editor.php:395
+msgid "Save draft"
+msgstr ""
+
+#: admin/views/service-editor.php:25
+#: admin/views/service-editor.php:84
+msgid "Booking method"
+msgstr ""
+
+#: admin/views/service-editor.php:26
+msgid "Booking form"
+msgstr ""
+
+#: admin/views/service-editor.php:39
+msgid "Monday"
+msgstr ""
+
+#: admin/views/service-editor.php:40
+msgid "Tuesday"
+msgstr ""
+
+#: admin/views/service-editor.php:41
+msgid "Wednesday"
+msgstr ""
+
+#: admin/views/service-editor.php:42
+msgid "Thursday"
+msgstr ""
+
+#: admin/views/service-editor.php:43
+msgid "Friday"
+msgstr ""
+
+#: admin/views/service-editor.php:44
+msgid "Saturday"
+msgstr ""
+
+#: admin/views/service-editor.php:45
+msgid "Sunday"
+msgstr ""
+
+#. translators: %s: timezone name
+#: admin/views/service-editor.php:50
+#, php-format
+msgid "Use the site timezone (%s)"
+msgstr ""
+
+#: admin/views/service-editor.php:65
+msgid "Booking service sections"
+msgstr ""
+
+#: admin/views/service-editor.php:74
+msgid "Service details"
+msgstr ""
+
+#: admin/views/service-editor.php:77
+msgid "Internal title"
+msgstr ""
+
+#: admin/views/service-editor.php:78
+msgid "Public service name"
+msgstr ""
+
+#: admin/views/service-editor.php:83
+msgid "Duration (minutes)"
+msgstr ""
+
+#: admin/views/service-editor.php:84
+msgid "Each service can use a different method. External providers manage their own calendars, confirmations and reminders."
+msgstr ""
+
+#: admin/views/service-editor.php:88
+#: admin/views/service-editor.php:132
+msgid "Display"
+msgstr ""
+
+#: admin/views/service-editor.php:90
+msgid "Show the description"
+msgstr ""
+
+#: admin/views/service-editor.php:91
+msgid "Show the duration"
+msgstr ""
+
+#: admin/views/service-editor.php:92
+msgid "Show the timezone (native bookings)"
+msgstr ""
+
+#: admin/views/service-editor.php:93
+msgid "Booking button text"
+msgstr ""
+
+#: admin/views/service-editor.php:93
+msgid "Used for the external booking link and the confirm button."
+msgstr ""
+
+#: admin/views/service-editor.php:101
+msgid "External booking"
+msgstr ""
+
+#: admin/views/service-editor.php:102
+msgid "Appointments made on an external provider are not confirmed by this plugin. Analytics count views and interactions, never completed appointments."
+msgstr ""
+
+#: admin/views/service-editor.php:107
+msgid "Custom booking type"
+msgstr ""
+
+#: admin/views/service-editor.php:109
+msgid "External booking URL"
+msgstr ""
+
+#: admin/views/service-editor.php:110
+msgid "Approved iframe embed"
+msgstr ""
+
+#: admin/views/service-editor.php:117
+msgid "Booking URL"
+msgstr ""
+
+#: admin/views/service-editor.php:117
+msgid "Must start with https. Calendly URLs must be on calendly.com and TidyCal URLs on tidycal.com."
+msgstr ""
+
+#: admin/views/service-editor.php:122
+msgid "Embed code or embed address"
+msgstr ""
+
+#: admin/views/service-editor.php:122
+msgid "Paste an iframe snippet or its address. Only the https address is kept and the plugin outputs its own sandboxed iframe. Scripts are never stored. Optionally restrict hosts in Settings."
+msgstr ""
+
+#: admin/views/service-editor.php:124
+#: modules/booking/class-booking-service.php:262
+msgid "Only site administrators can configure a custom embed."
+msgstr ""
+
+#: admin/views/service-editor.php:134
+msgid "Embed inline on the page"
+msgstr ""
+
+#: admin/views/service-editor.php:135
+msgid "Show a button that opens the booking page"
+msgstr ""
+
+#: admin/views/service-editor.php:138
+msgid "A link to the booking page is always shown as a fallback if embedding fails."
+msgstr ""
+
+#: admin/views/service-editor.php:140
+msgid "Embed height (pixels)"
+msgstr ""
+
+#: admin/views/service-editor.php:147
+msgid "Availability"
+msgstr ""
+
+#: admin/views/service-editor.php:148
+msgid "WordPress appointment data is the booking calendar. No external calendar (Google, Outlook) is synchronized."
+msgstr ""
+
+#: admin/views/service-editor.php:150
+msgid "Available working days"
+msgstr ""
+
+#: admin/views/service-editor.php:159
+msgid "Start time"
+msgstr ""
+
+#: admin/views/service-editor.php:160
+msgid "End time"
+msgstr ""
+
+#: admin/views/service-editor.php:161
+msgid "Slot interval (minutes)"
+msgstr ""
+
+#: admin/views/service-editor.php:161
+msgid "0 uses the appointment duration."
+msgstr ""
+
+#: admin/views/service-editor.php:166
+msgid "Buffer before (minutes)"
+msgstr ""
+
+#: admin/views/service-editor.php:167
+msgid "Buffer after (minutes)"
+msgstr ""
+
+#: admin/views/service-editor.php:168
+msgid "Maximum bookings per day"
+msgstr ""
+
+#: admin/views/service-editor.php:168
+msgid "0 means no limit."
+msgstr ""
+
+#: admin/views/service-editor.php:173
+msgid "Minimum booking notice (hours)"
+msgstr ""
+
+#: admin/views/service-editor.php:174
+msgid "Maximum advance booking (days)"
+msgstr ""
+
+#: admin/views/service-editor.php:174
+msgid "Cannot be shorter than the minimum notice."
+msgstr ""
+
+#: admin/views/service-editor.php:178
+msgid "Working hours are interpreted in this timezone and shown to visitors."
+msgstr ""
+
+#: admin/views/service-editor.php:181
+msgid "Blocked dates and holidays"
+msgstr ""
+
+#: admin/views/service-editor.php:185
+msgid "One per line. Use <code>2026-12-25 Holiday</code> for a day or <code>2026-12-24 to 2026-12-31 Closed</code> for a range."
+msgstr ""
+
+#: admin/views/service-editor.php:188
+msgid "Status of new bookings"
+msgstr ""
+
+#: admin/views/service-editor.php:189
+msgid "Confirmed automatically"
+msgstr ""
+
+#: admin/views/service-editor.php:190
+msgid "Pending until you confirm"
+msgstr ""
+
+#: admin/views/service-editor.php:195
+msgid "Cancellation and rescheduling"
+msgstr ""
+
+#: admin/views/service-editor.php:196
+msgid "Customers use a private link from their confirmation email. Links are random, are not based on database IDs, and stop working for changes once the appointment has started or is cancelled."
+msgstr ""
+
+#: admin/views/service-editor.php:198
+msgid "Allow customers to cancel"
+msgstr ""
+
+#: admin/views/service-editor.php:199
+msgid "Minimum notice to cancel (hours)"
+msgstr ""
+
+#: admin/views/service-editor.php:200
+msgid "Allow customers to reschedule"
+msgstr ""
+
+#: admin/views/service-editor.php:201
+msgid "Minimum notice to reschedule (hours)"
+msgstr ""
+
+#: admin/views/service-editor.php:205
+msgid "Confirmation"
+msgstr ""
+
+#: admin/views/service-editor.php:207
+msgid "Confirmation message"
+msgstr ""
+
+#: admin/views/service-editor.php:207
+msgid "Shown after booking. Placeholders such as {customer_name} and {appointment_date} are supported."
+msgstr ""
+
+#: admin/views/service-editor.php:208
+msgid "Redirect URL after booking (optional)"
+msgstr ""
+
+#: admin/views/service-editor.php:217
+msgid "Customer form"
+msgstr ""
+
+#: admin/views/service-editor.php:218
+msgid "Choose the fields for native bookings. Name and email are always required."
+msgstr ""
+
+#: admin/views/service-editor.php:249
+msgid "Custom fields"
+msgstr ""
+
+#: admin/views/service-editor.php:255
+#: admin/views/service-editor.php:272
+msgid "Type"
+msgstr ""
+
+#: admin/views/service-editor.php:261
+#: admin/views/service-editor.php:278
+msgid "Choices (one per line, dropdown only)"
+msgstr ""
+
+#: admin/views/service-editor.php:285
+msgid "External providers collect customer details on their own booking page. The form settings apply to native bookings only."
+msgstr ""
+
+#: admin/views/service-editor.php:293
+msgid "Sender"
+msgstr ""
+
+#: admin/views/service-editor.php:303
+msgid "Customer booking confirmation"
+msgstr ""
+
+#: admin/views/service-editor.php:305
+msgid "Send the customer a confirmation"
+msgstr ""
+
+#: admin/views/service-editor.php:311
+msgid "Admin new booking notification"
+msgstr ""
+
+#: admin/views/service-editor.php:313
+msgid "Notify staff of new bookings"
+msgstr ""
+
+#: admin/views/service-editor.php:314
+msgid "Separate several with commas. If empty, the default notification email from Settings is used."
+msgstr ""
+
+#: admin/views/service-editor.php:320
+msgid "Cancellation notification"
+msgstr ""
+
+#: admin/views/service-editor.php:322
+msgid "Send cancellation emails"
+msgstr ""
+
+#: admin/views/service-editor.php:323
+#: admin/views/service-editor.php:332
+msgid "Also notify staff"
+msgstr ""
+
+#: admin/views/service-editor.php:329
+msgid "Reschedule notification"
+msgstr ""
+
+#: admin/views/service-editor.php:331
+msgid "Send reschedule emails"
+msgstr ""
+
+#: admin/views/service-editor.php:345
+msgid "Customer confirmation"
+msgstr ""
+
+#: admin/views/service-editor.php:347
+msgid "Cancellation"
+msgstr ""
+
+#: admin/views/service-editor.php:348
+#: includes/class-assets.php:133
+msgid "Reschedule"
+msgstr ""
+
+#: admin/views/service-editor.php:350
+msgid "Save the service first to enable test emails."
+msgstr ""
+
+#: admin/views/service-editor.php:355
+msgid "Confirmation and reminder emails for external bookings are sent by the booking provider."
+msgstr ""
+
+#: admin/views/service-editor.php:365
+msgid "Paste this shortcode into any page or post:"
+msgstr ""
+
+#: admin/views/service-editor.php:367
+msgid "To let visitors choose between services, list several IDs, for example [next_class_booking id=\"12,15\"]."
+msgstr ""
+
+#: admin/views/service-editor.php:368
+msgid "Preview booking experience"
+msgstr ""
+
+#: admin/views/service-editor.php:378
+msgid "This service passes all publishing checks."
+msgstr ""
+
+#: includes/class-assets.php:90
+msgid "Step %1 of %2"
+msgstr ""
+
+#: includes/class-assets.php:91
+msgid "Please answer the highlighted question."
+msgstr ""
+
+#: includes/class-assets.php:92
+msgid "Please fix the highlighted fields."
+msgstr ""
+
+#: includes/class-assets.php:93
+#: public/class-assessment-handler.php:98
+msgid "This question is required."
+msgstr ""
+
+#: includes/class-assets.php:95
+msgid "Choose an option"
+msgstr ""
+
+#: includes/class-assets.php:96
+msgid "Read our privacy policy"
+msgstr ""
+
+#: includes/class-assets.php:97
+#: public/class-assessment-handler.php:122
+msgid "Please tick this box to continue."
+msgstr ""
+
+#: includes/class-assets.php:98
+msgid "Working..."
+msgstr ""
+
+#: includes/class-assets.php:99
+msgid "Something went wrong. Please check your connection and try again."
+msgstr ""
+
+#: includes/class-assets.php:100
+msgid "Try again"
+msgstr ""
+
+#: includes/class-assets.php:103
+msgid "Our recommendation"
+msgstr ""
+
+#: includes/class-assets.php:105
+msgid "Choose a service"
+msgstr ""
+
+#: includes/class-assets.php:106
+#, php-format
+msgid "%d minutes"
+msgstr ""
+
+#: includes/class-assets.php:107
+#, php-format
+msgid "Times are shown in %s."
+msgstr ""
+
+#: includes/class-assets.php:108
+msgid "Choose a date"
+msgstr ""
+
+#: includes/class-assets.php:109
+msgid "Choose a time"
+msgstr ""
+
+#: includes/class-assets.php:110
+msgid "Your details"
+msgstr ""
+
+#: includes/class-assets.php:111
+msgid "Review and confirm"
+msgstr ""
+
+#: includes/class-assets.php:112
+msgid "Confirm booking"
+msgstr ""
+
+#: includes/class-assets.php:113
+msgid "Back"
+msgstr ""
+
+#: includes/class-assets.php:114
+msgid "Continue"
+msgstr ""
+
+#: includes/class-assets.php:115
+msgid "Previous month"
+msgstr ""
+
+#: includes/class-assets.php:116
+msgid "Next month"
+msgstr ""
+
+#: includes/class-assets.php:117
+msgid "No times are available on this date. Please choose another date."
+msgstr ""
+
+#: includes/class-assets.php:118
+msgid "No dates are available this month."
+msgstr ""
+
+#: includes/class-assets.php:119
+msgid "Loading..."
+msgstr ""
+
+#: includes/class-assets.php:120
+msgid "available"
+msgstr ""
+
+#: includes/class-assets.php:121
+msgid "unavailable"
+msgstr ""
+
+#: includes/class-assets.php:122
+msgid "Open the booking page in a new tab"
+msgstr ""
+
+#: includes/class-assets.php:123
+msgid "Booking calendar"
+msgstr ""
+
+#: includes/class-assets.php:124
+msgid "Having trouble loading the calendar?"
+msgstr ""
+
+#: includes/class-assets.php:125
+#: modules/booking/class-booking-email.php:121
+#: modules/booking/class-booking-email.php:232
+msgid "Booking received"
+msgstr ""
+
+#: includes/class-assets.php:126
+msgid "This is a preview, so nothing was saved."
+msgstr ""
+
+#: includes/class-assets.php:127
+msgid "Save this private link to cancel or reschedule your booking:"
+msgstr ""
+
+#: includes/class-assets.php:131
+#: modules/booking/class-booking-email.php:102
+msgid "Manage your booking"
+msgstr ""
+
+#: includes/class-assets.php:132
+msgid "Cancel booking"
+msgstr ""
+
+#: includes/class-assets.php:134
+msgid "Are you sure you want to cancel this booking?"
+msgstr ""
+
+#: includes/class-assets.php:135
+msgid "Yes, cancel booking"
+msgstr ""
+
+#: includes/class-assets.php:136
+msgid "Keep booking"
+msgstr ""
+
+#: includes/class-assets.php:137
+msgid "Choose a new time"
+msgstr ""
+
+#: includes/class-assets.php:138
+msgid "Confirm new time"
+msgstr ""
+
+#: includes/class-assets.php:139
+#: public/class-booking-handler.php:361
+#: public/class-booking-handler.php:395
+msgid "We could not find that booking."
+msgstr ""
+
+#: includes/class-assets.php:140
+msgid "selected"
+msgstr ""
+
+#: includes/class-assets.php:141
+msgid "Mon"
+msgstr ""
+
+#: includes/class-assets.php:141
+msgid "Tue"
+msgstr ""
+
+#: includes/class-assets.php:141
+msgid "Wed"
+msgstr ""
+
+#: includes/class-assets.php:141
+msgid "Thu"
+msgstr ""
+
+#: includes/class-assets.php:141
+msgid "Fri"
+msgstr ""
+
+#: includes/class-assets.php:141
+msgid "Sat"
+msgstr ""
+
+#: includes/class-assets.php:141
+msgid "Sun"
+msgstr ""
+
+#: includes/class-assets.php:184
+msgid "This cannot be undone. Continue?"
+msgstr ""
+
+#: includes/class-assets.php:185
+msgid "Copied"
+msgstr ""
+
+#: includes/class-capabilities.php:48
+msgid "Manage assessments"
+msgstr ""
+
+#: includes/class-capabilities.php:49
+msgid "View and export assessment submissions"
+msgstr ""
+
+#: includes/class-capabilities.php:50
+msgid "Manage booking services"
+msgstr ""
+
+#: includes/class-capabilities.php:51
+msgid "Manage appointments"
+msgstr ""
+
+#: includes/class-capabilities.php:52
+msgid "View analytics"
+msgstr ""
+
+#: includes/class-capabilities.php:53
+msgid "Manage plugin settings"
+msgstr ""
+
+#: includes/class-privacy.php:39
+#: includes/class-privacy.php:57
+msgid "Next Class Services assessment submissions"
+msgstr ""
+
+#: includes/class-privacy.php:43
+#: includes/class-privacy.php:61
+msgid "Next Class Services appointments"
+msgstr ""
+
+#: includes/class-privacy.php:162
+msgid "Appointment time (UTC)"
+msgstr ""
+
+#: includes/class-privacy.php:200
+msgid "Upcoming active appointments were kept so scheduling is not broken. Cancel them first, then run the eraser again."
+msgstr ""
+
+#: includes/class-privacy.php:212
+msgid "Assessments and bookings (Next Class Services)"
+msgstr ""
+
+#: includes/class-privacy.php:213
+msgid "When you complete a diagnostic assessment we store your answers, your calculated score and result, and the contact details you enter in the lead form (which may include name, email, phone, company, job title and company size). We also store whether you agreed to the privacy and marketing consent statements and when. We do not store your IP address with your submission."
+msgstr ""
+
+#: includes/class-privacy.php:214
+msgid "When you book an appointment using the built-in scheduler we store your name, email, phone, company, job title and notes if provided, the chosen time and timezone, and the booking status. If you book with an external provider such as Calendly or TidyCal, that provider handles your data under its own privacy policy."
+msgstr ""
+
+#: includes/class-privacy.php:215
+msgid "We record anonymous interaction counts (for example views, starts and completions) without cookies, fingerprinting or visitor identifiers. If Google Analytics 4 is already installed on this site and the option is enabled, matching events are also sent to it."
+msgstr ""
+
+#: modules/assessments/class-assessment-email.php:96
+#: public/class-assessment-handler.php:307
+msgid "Learn more"
+msgstr ""
+
+#: modules/assessments/class-assessment-email.php:137
+msgid "New assessment completed"
+msgstr ""
+
+#: modules/assessments/class-assessment-email.php:140
+msgid "New assessment submission"
+msgstr ""
+
+#: modules/assessments/class-assessment.php:36
+msgid "Start the assessment"
+msgstr ""
+
+#: modules/assessments/class-assessment.php:39
+msgid "See my results"
+msgstr ""
+
+#: modules/assessments/class-assessment.php:40
+msgid "Show my results"
+msgstr ""
+
+#: modules/assessments/class-assessment.php:45
+msgid "Thank you for completing the assessment."
+msgstr ""
+
+#: modules/assessments/class-assessment.php:47
+msgid "Your result"
+msgstr ""
+
+#: modules/assessments/class-assessment.php:57
+msgid "Where should we send your results?"
+msgstr ""
+
+#: modules/assessments/class-assessment.php:58
+msgid "Enter your details to see your personalized result."
+msgstr ""
+
+#: modules/assessments/class-assessment.php:63
+msgid "I agree to the privacy policy and to being contacted about my results."
+msgstr ""
+
+#: modules/assessments/class-assessment.php:68
+msgid "I would like to receive news and updates."
+msgstr ""
+
+#: modules/assessments/class-assessment.php:76
+msgid "Your {assessment_name} results"
+msgstr ""
+
+#: modules/assessments/class-assessment.php:77
+msgid "Your results are ready"
+msgstr ""
+
+#: modules/assessments/class-assessment.php:78
+msgid "Hi {first_name}, thank you for completing the {assessment_name}."
+msgstr ""
+
+#: modules/assessments/class-assessment.php:79
+msgid ""
+"Your result: {result_title}\n"
+"\n"
+"{result_description}\n"
+"\n"
+"{recommendation}\n"
+"\n"
+"Recommended programs: {programs}"
+msgstr ""
+
+#: modules/assessments/class-assessment.php:87
+msgid "New assessment completed: {assessment_name}"
+msgstr ""
+
+#: modules/assessments/class-assessment.php:88
+msgid ""
+"A new assessment was completed.\n"
+"\n"
+"Assessment: {assessment_name}\n"
+"Name: {full_name}\n"
+"Email: {email}\n"
+"Company: {company}\n"
+"Score: {score} ({percentage}%)\n"
+"Result: {result_title}\n"
+"Recommended programs: {programs}"
+msgstr ""
+
+#: modules/assessments/class-assessment.php:235
+msgid "The privacy policy URL was not valid and was removed."
+msgstr ""
+
+#: modules/assessments/class-assessment.php:255
+#: modules/booking/class-booking-service.php:339
+msgid "The reply-to address was not a valid email and was removed."
+msgstr ""
+
+#: modules/assessments/class-assessment.php:285
+msgid "Add at least one enabled question before publishing."
+msgstr ""
+
+#. translators: %d: question number
+#: modules/assessments/class-assessment.php:290
+#, php-format
+msgid "Question %d needs question text."
+msgstr ""
+
+#. translators: %d: question number
+#: modules/assessments/class-assessment.php:294
+#, php-format
+msgid "Question %d needs at least two answer options."
+msgstr ""
+
+#: modules/assessments/class-assessment.php:298
+msgid "Enter a public assessment title."
+msgstr ""
+
+#: modules/assessments/class-assessment.php:304
+msgid "The visitor result email needs a subject."
+msgstr ""
+
+#: modules/assessments/class-assessment.php:307
+msgid "Admin notifications are enabled but no valid recipient email is set."
+msgstr ""
+
+#: modules/assessments/class-assessment.php:317
+msgid "Lead capture requires the email field."
+msgstr ""
+
+#. translators: %s: assessment name
+#. translators: %s: service name
+#: modules/assessments/class-assessment.php:384
+#: modules/booking/class-booking-service.php:550
+#, php-format
+msgid "%s (copy)"
+msgstr ""
+
+#: modules/assessments/class-conditional-logic.php:29
+msgid "equals"
+msgstr ""
+
+#: modules/assessments/class-conditional-logic.php:30
+msgid "does not equal"
+msgstr ""
+
+#: modules/assessments/class-conditional-logic.php:31
+msgid "contains"
+msgstr ""
+
+#: modules/assessments/class-conditional-logic.php:32
+msgid "does not contain"
+msgstr ""
+
+#: modules/assessments/class-conditional-logic.php:33
+msgid "is greater than"
+msgstr ""
+
+#: modules/assessments/class-conditional-logic.php:34
+msgid "is less than"
+msgstr ""
+
+#: modules/assessments/class-leads.php:29
+msgid "First name"
+msgstr ""
+
+#: modules/assessments/class-leads.php:30
+msgid "Last name"
+msgstr ""
+
+#: modules/assessments/class-leads.php:31
+msgid "Full name"
+msgstr ""
+
+#. translators: %s: field label
+#: modules/assessments/class-leads.php:200
+#: modules/booking/class-native-booking.php:53
+#, php-format
+msgid "%s is required."
+msgstr ""
+
+#: modules/assessments/class-leads.php:206
+#: modules/booking/class-native-booking.php:59
+msgid "Please enter a valid email address."
+msgstr ""
+
+#: modules/assessments/class-leads.php:208
+#: modules/booking/class-native-booking.php:61
+msgid "Please enter a valid phone number."
+msgstr ""
+
+#: modules/assessments/class-leads.php:210
+#: modules/assessments/class-question.php:229
+#: modules/booking/class-native-booking.php:63
+msgid "Please choose one of the available options."
+msgstr ""
+
+#: modules/assessments/class-question.php:28
+msgid "Single choice"
+msgstr ""
+
+#: modules/assessments/class-question.php:29
+msgid "Multiple choice"
+msgstr ""
+
+#: modules/assessments/class-question.php:31
+msgid "Rating scale"
+msgstr ""
+
+#: modules/assessments/class-question.php:32
+msgid "Yes / No"
+msgstr ""
+
+#: modules/assessments/class-question.php:33
+msgid "Number"
+msgstr ""
+
+#: modules/assessments/class-question.php:34
+msgid "Short text"
+msgstr ""
+
+#: modules/assessments/class-question.php:238
+msgid "Please choose a rating."
+msgstr ""
+
+#: modules/assessments/class-question.php:242
+msgid "Please choose a rating within the scale."
+msgstr ""
+
+#: modules/assessments/class-question.php:252
+msgid "Please enter a valid number."
+msgstr ""
+
+#. translators: %s: minimum
+#: modules/assessments/class-question.php:257
+#, php-format
+msgid "Please enter a number of %s or more."
+msgstr ""
+
+#. translators: %s: maximum
+#: modules/assessments/class-question.php:261
+#, php-format
+msgid "Please enter a number of %s or less."
+msgstr ""
+
+#: modules/assessments/class-results.php:140
+msgid "A scored assessment needs at least one result category."
+msgstr ""
+
+#: modules/assessments/class-results.php:146
+msgid "Every result category needs a title."
+msgstr ""
+
+#. translators: %s: result title
+#: modules/assessments/class-results.php:153
+#, php-format
+msgid "Result \"%s\": the minimum score is greater than the maximum."
+msgstr ""
+
+#. translators: %s: lowest score covered
+#: modules/assessments/class-results.php:168
+#, php-format
+msgid "Scores below %s are not covered by any result category."
+msgstr ""
+
+#. translators: 1: result title, 2: result title
+#: modules/assessments/class-results.php:176
+#, php-format
+msgid "Result ranges for \"%1$s\" and \"%2$s\" overlap."
+msgstr ""
+
+#. translators: 1: from score, 2: to score
+#: modules/assessments/class-results.php:179
+#, php-format
+msgid "Scores from %1$s to %2$s are not covered by any result category."
+msgstr ""
+
+#. translators: %s: highest possible score
+#: modules/assessments/class-results.php:185
+#, php-format
+msgid "Scores above %s are not covered by any result category."
+msgstr ""
+
+#: modules/booking/class-appointment.php:29
+msgid "Pending"
+msgstr ""
+
+#: modules/booking/class-appointment.php:30
+msgid "Confirmed"
+msgstr ""
+
+#: modules/booking/class-appointment.php:31
+msgid "Completed"
+msgstr ""
+
+#: modules/booking/class-appointment.php:32
+msgid "Cancelled"
+msgstr ""
+
+#: modules/booking/class-appointment.php:33
+msgid "No show"
+msgstr ""
+
+#: modules/booking/class-booking-email.php:136
+#: modules/booking/class-booking-email.php:222
+msgid "New booking"
+msgstr ""
+
+#: modules/booking/class-booking-email.php:152
+#: modules/booking/class-booking-email.php:154
+#: modules/booking/class-booking-email.php:225
+msgid "Booking cancelled"
+msgstr ""
+
+#: modules/booking/class-booking-email.php:173
+#: modules/booking/class-booking-email.php:175
+#: modules/booking/class-booking-email.php:228
+msgid "Booking rescheduled"
+msgstr ""
+
+#: modules/booking/class-booking-service.php:32
+msgid "Calendly"
+msgstr ""
+
+#: modules/booking/class-booking-service.php:33
+msgid "TidyCal"
+msgstr ""
+
+#: modules/booking/class-booking-service.php:34
+msgid "Custom embed or URL"
+msgstr ""
+
+#: modules/booking/class-booking-service.php:35
+msgid "Native WordPress booking"
+msgstr ""
+
+#: modules/booking/class-booking-service.php:71
+msgid "Book a time"
+msgstr ""
+
+#: modules/booking/class-booking-service.php:81
+msgid "Thank you, {customer_name}. Your booking for {service_name} on {appointment_date} at {appointment_time} ({timezone}) has been received. A confirmation email is on its way."
+msgstr ""
+
+#: modules/booking/class-booking-service.php:108
+msgid "Your booking is confirmed: {service_name}"
+msgstr ""
+
+#: modules/booking/class-booking-service.php:109
+msgid ""
+"Hi {customer_name},\n"
+"\n"
+"Your booking has been received.\n"
+"\n"
+"Service: {service_name}\n"
+"Date: {appointment_date}\n"
+"Time: {appointment_time} ({timezone})\n"
+"Status: {booking_status}\n"
+"\n"
+"Need to make a change? Use this link to cancel or reschedule:\n"
+"{manage_link}"
+msgstr ""
+
+#: modules/booking/class-booking-service.php:114
+msgid "New booking: {service_name} with {customer_name}"
+msgstr ""
+
+#: modules/booking/class-booking-service.php:115
+msgid ""
+"A new booking was made.\n"
+"\n"
+"Service: {service_name}\n"
+"Customer: {customer_name}\n"
+"Email: {customer_email}\n"
+"Phone: {customer_phone}\n"
+"Company: {company}\n"
+"Date: {appointment_date}\n"
+"Time: {appointment_time} ({timezone})\n"
+"Status: {booking_status}\n"
+"Notes: {notes}"
+msgstr ""
+
+#: modules/booking/class-booking-service.php:120
+msgid "Booking cancelled: {service_name}"
+msgstr ""
+
+#: modules/booking/class-booking-service.php:121
+msgid ""
+"Hi {customer_name},\n"
+"\n"
+"Your booking for {service_name} on {appointment_date} at {appointment_time} ({timezone}) has been cancelled."
+msgstr ""
+
+#: modules/booking/class-booking-service.php:126
+msgid "Booking rescheduled: {service_name}"
+msgstr ""
+
+#: modules/booking/class-booking-service.php:127
+msgid ""
+"Hi {customer_name},\n"
+"\n"
+"Your booking for {service_name} has been moved.\n"
+"\n"
+"Previous time: {previous_date} at {previous_time}\n"
+"New time: {appointment_date} at {appointment_time} ({timezone})\n"
+"\n"
+"Manage your booking:\n"
+"{manage_link}"
+msgstr ""
+
+#: modules/booking/class-booking-service.php:299
+msgid "The timezone was not recognised and the site timezone will be used."
+msgstr ""
+
+#. translators: %s: invalid lines
+#: modules/booking/class-booking-service.php:305
+#, php-format
+msgid "These blocked date lines were ignored because the format was not valid: %s"
+msgstr ""
+
+#: modules/booking/class-booking-service.php:463
+msgid "Enter a public service name."
+msgstr ""
+
+#: modules/booking/class-booking-service.php:466
+msgid "External booking services need a valid booking URL."
+msgstr ""
+
+#: modules/booking/class-booking-service.php:471
+msgid "Select at least one available working day."
+msgstr ""
+
+#: modules/booking/class-booking-service.php:478
+msgid "The end time must be later than the start time."
+msgstr ""
+
+#: modules/booking/class-booking-service.php:480
+msgid "The available hours are shorter than the appointment duration."
+msgstr ""
+
+#: modules/booking/class-booking-service.php:483
+msgid "The maximum advance booking period cannot be shorter than the minimum notice."
+msgstr ""
+
+#: modules/booking/class-calendly.php:34
+msgid "Enter your Calendly booking URL."
+msgstr ""
+
+#: modules/booking/class-calendly.php:38
+msgid "The Calendly URL must be a valid https address."
+msgstr ""
+
+#: modules/booking/class-calendly.php:42
+msgid "The URL must be on calendly.com."
+msgstr ""
+
+#: modules/booking/class-custom-booking.php:34
+msgid "Enter the booking URL."
+msgstr ""
+
+#: modules/booking/class-custom-booking.php:38
+msgid "The booking URL must be a valid https address."
+msgstr ""
+
+#: modules/booking/class-custom-booking.php:52
+msgid "Paste the embed code or the embed address."
+msgstr ""
+
+#: modules/booking/class-custom-booking.php:57
+msgid "Only iframe embeds are supported. Scripts and other markup are not accepted."
+msgstr ""
+
+#: modules/booking/class-custom-booking.php:63
+msgid "The embed address must be a valid https URL."
+msgstr ""
+
+#: modules/booking/class-custom-booking.php:66
+msgid "That host is not on the embed allowlist in Settings."
+msgstr ""
+
+#: modules/booking/class-native-booking.php:221
+#: modules/booking/class-native-booking.php:243
+msgid "This booking is no longer active."
+msgstr ""
+
+#: modules/booking/class-native-booking.php:224
+msgid "Online cancellation is not available for this service. Please contact us."
+msgstr ""
+
+#. translators: %d: hours
+#: modules/booking/class-native-booking.php:229
+#, php-format
+msgid "Cancellations need at least %d hours notice. Please contact us."
+msgstr ""
+
+#: modules/booking/class-native-booking.php:246
+msgid "Online rescheduling is not available for this service. Please contact us."
+msgstr ""
+
+#. translators: %d: hours
+#: modules/booking/class-native-booking.php:251
+#, php-format
+msgid "Rescheduling needs at least %d hours notice. Please contact us."
+msgstr ""
+
+#: modules/booking/class-tidycal.php:31
+msgid "Enter your TidyCal booking URL."
+msgstr ""
+
+#: modules/booking/class-tidycal.php:35
+msgid "The TidyCal URL must be a valid https address."
+msgstr ""
+
+#: modules/booking/class-tidycal.php:39
+msgid "The URL must be on tidycal.com."
+msgstr ""
+
+#. translators: 1: PHP version, 2: WordPress version
+#: next-class-services.php:47
+#, php-format
+msgid "Next Class Services requires PHP %1$s or newer and WordPress %2$s or newer. The plugin has not been loaded."
+msgstr ""
+
+#: public/class-assessment-handler.php:51
+#: public/class-assessment-handler.php:58
+msgid "This assessment is not available."
+msgstr ""
+
+#: public/class-assessment-handler.php:65
+msgid "Please take a moment to review your answers and try again."
+msgstr ""
+
+#: public/class-assessment-handler.php:128
+#: public/class-booking-handler.php:216
+msgid "Please review the highlighted fields and try again."
+msgstr ""
+
+#: public/class-assessment-handler.php:140
+msgid "We could not save your submission. Please try again shortly."
+msgstr ""
+
+#: public/class-assessment-shortcode.php:53
+msgid "Next Class Services: this assessment could not be found. Check the shortcode ID."
+msgstr ""
+
+#: public/class-assessment-shortcode.php:67
+msgid "Next Class Services: this assessment has no enabled questions yet."
+msgstr ""
+
+#: public/class-booking-handler.php:98
+#: public/class-booking-handler.php:148
+msgid "Too many requests. Please wait a moment."
+msgstr ""
+
+#: public/class-booking-handler.php:102
+#: public/class-booking-handler.php:152
+#: public/class-booking-handler.php:208
+msgid "This service is not available."
+msgstr ""
+
+#: public/class-booking-handler.php:106
+msgid "Invalid month."
+msgstr ""
+
+#: public/class-booking-handler.php:156
+msgid "Invalid date."
+msgstr ""
+
+#: public/class-booking-handler.php:187
+msgid "The booking system is busy. Please try again in a moment."
+msgstr ""
+
+#: public/class-booking-handler.php:189
+msgid "Sorry, that time is no longer available. Please choose another time."
+msgstr ""
+
+#: public/class-booking-handler.php:219
+#: public/class-booking-handler.php:405
+msgid "Please choose a date and time."
+msgstr ""
+
+#: public/class-booking-handler.php:315
+msgid "We could not find that booking. The link may be incorrect."
+msgstr ""
+
+#: public/class-booking-handler.php:369
+msgid "We could not cancel this booking. Please contact us."
+msgstr ""
+
+#: public/class-booking-handler.php:374
+msgid "Your booking has been cancelled."
+msgstr ""
+
+#: public/class-booking-handler.php:415
+msgid "Your booking has been rescheduled."
+msgstr ""
+
+#: public/class-booking-shortcode.php:52
+msgid "Next Class Services: add a service ID to the booking shortcode."
+msgstr ""
+
+#: public/class-booking-shortcode.php:76
+msgid "Next Class Services: no matching booking service was found or it is not published."
+msgstr ""
+
+#: public/class-front.php:106
+msgid "Too many requests."
+msgstr ""
+
+#: public/class-front.php:158
+msgid "Too many requests. Please wait a moment and try again."
+msgstr ""
+
+#: public/class-front.php:161
+msgid "Your session has expired. Please refresh the page and try again."
+msgstr ""
+
+#: public/class-front.php:166
+msgid "We could not process this request."
+msgstr ""
+
+#: templates/assessment/container.php:20
+msgid "Preview mode. Submissions are not saved and no emails are sent."
+msgstr ""
+
+#: templates/assessment/container.php:24
+msgid "Loading assessment..."
+msgstr ""
+
+#: templates/assessment/container.php:27
+msgid "JavaScript is required to take this assessment. Please enable JavaScript and reload the page."
+msgstr ""
+
+#: templates/booking/container.php:21
+msgid "Preview mode. Native bookings made here are not saved and no emails are sent."
+msgstr ""
+
+#: templates/booking/container.php:25
+msgid "Loading booking options..."
+msgstr ""
+
+#: templates/booking/container.php:29
+msgid "Open the booking page"
+msgstr ""
+
+#: templates/booking/container.php:31
+msgid "JavaScript is required to book online. Please enable JavaScript and reload the page."
+msgstr ""
