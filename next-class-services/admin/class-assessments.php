@@ -216,7 +216,7 @@ class Assessments {
 						Assessment::set_status( $id, 'publish' );
 						Admin::flash( 'success', __( 'Assessment published.', 'next-class-services' ) );
 					} else {
-						Admin::flash( 'error', __( 'It cannot be published yet:', 'next-class-services' ) . '<br>' . implode( '<br>', array_map( 'esc_html', $errors ) ) );
+						Admin::flash( 'error', __( 'It cannot be published yet:', 'next-class-services' ) . '<br>' . Admin::error_list( $errors, 'ncs-assessments', $id ) );
 						$back = Admin::url( 'ncs-assessments', array( 'action' => 'edit', 'id' => $id ) );
 					}
 				}

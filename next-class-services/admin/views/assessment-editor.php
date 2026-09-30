@@ -255,13 +255,13 @@ $lead      = $cfg['lead'];
 		<div class="ncs-card">
 			<h2 class="ncs-card-title"><?php esc_html_e( 'Publishing checklist', 'next-class-services' ); ?></h2>
 			<?php if ( empty( $errors ) && $id ) : ?>
-				<p><?php echo Admin::badge( __( 'Ready', 'next-class-services' ), 'ok' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> <?php esc_html_e( 'This assessment passes all publishing checks.', 'next-class-services' ); ?></p>
+				<p class="ncs-notice ncs-notice-success"><strong class="ncs-notice-label"><?php esc_html_e( 'Done.', 'next-class-services' ); ?></strong> <?php esc_html_e( 'This assessment passes all publishing checks.', 'next-class-services' ); ?></p>
 			<?php elseif ( ! $id ) : ?>
 				<p class="ncs-muted"><?php esc_html_e( 'Save a draft to see which checks still need attention.', 'next-class-services' ); ?></p>
 			<?php else : ?>
-				<ul class="ncs-list">
+				<ul class="ncs-list ncs-check-list">
 					<?php foreach ( $errors as $err ) : ?>
-						<li><?php echo Admin::badge( __( 'Fix', 'next-class-services' ), 'bad' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> <?php echo esc_html( $err ); ?></li>
+						<li class="ncs-notice ncs-notice-error"><strong class="ncs-notice-label"><?php esc_html_e( 'Error.', 'next-class-services' ); ?></strong> <?php echo Admin::error_list( array( $err ), 'ncs-assessments', $id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></li>
 					<?php endforeach; ?>
 				</ul>
 			<?php endif; ?>

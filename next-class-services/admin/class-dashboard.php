@@ -79,9 +79,9 @@ class Dashboard {
 			$checks[] = array( __( 'No default notification email is set, so the site admin email is used as the fallback recipient.', 'next-class-services' ), Admin::url( 'ncs-settings' ), __( 'Open settings', 'next-class-services' ) );
 		}
 		if ( ! empty( $checks ) ) {
-			echo '<div class="ncs-card"><h2 class="ncs-card-title">' . esc_html__( 'Setup checks', 'next-class-services' ) . '</h2><ul class="ncs-list">';
+			echo '<div class="ncs-card"><h2 class="ncs-card-title">' . esc_html__( 'Setup checks', 'next-class-services' ) . '</h2><ul class="ncs-list ncs-check-list">';
 			foreach ( $checks as $check ) {
-				echo '<li>' . Admin::badge( __( 'Attention', 'next-class-services' ), 'warn' ) . ' ' . esc_html( $check[0] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				echo '<li class="ncs-notice ncs-notice-warning"><strong class="ncs-notice-label">' . esc_html__( 'Attention.', 'next-class-services' ) . '</strong> ' . esc_html( $check[0] );
 				if ( $check[1] ) {
 					echo ' <a href="' . esc_url( $check[1] ) . '">' . esc_html( $check[2] ) . '</a>';
 				}

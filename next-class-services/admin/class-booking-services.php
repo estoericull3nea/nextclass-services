@@ -230,11 +230,11 @@ class Booking_Services {
 		if ( 'publish' === $status ) {
 			Admin::flash( 'success', 'publish' === $was ? __( 'Booking service updated.', 'next-class-services' ) : __( 'Booking service published. Copy the shortcode to place it on a page.', 'next-class-services' ) );
 		} elseif ( ( 'publish' === $button || 'update' === $button ) && ! empty( $errors ) ) {
-			Admin::flash( 'error', __( 'Saved as a draft. Fix these issues before publishing:', 'next-class-services' ) . '<br>' . implode( '<br>', array_map( 'esc_html', $errors ) ) );
+			Admin::flash( 'error', __( 'Saved as a draft. Fix these issues before publishing:', 'next-class-services' ) . '<br>' . Admin::error_list( $errors, 'ncs-booking', $new_id ) );
 		} else {
 			Admin::flash( 'success', __( 'Draft saved.', 'next-class-services' ) );
 			if ( ! empty( $errors ) ) {
-				Admin::flash( 'info', __( 'Issues to fix before publishing:', 'next-class-services' ) . '<br>' . implode( '<br>', array_map( 'esc_html', $errors ) ) );
+				Admin::flash( 'info', __( 'Issues to fix before publishing:', 'next-class-services' ) . '<br>' . Admin::error_list( $errors, 'ncs-booking', $new_id ) );
 			}
 		}
 		$tab = isset( $post['tab'] ) ? sanitize_key( $post['tab'] ) : 'general';
@@ -274,7 +274,7 @@ class Booking_Services {
 						Booking_Service::set_status( $id, 'publish' );
 						Admin::flash( 'success', __( 'Booking service published.', 'next-class-services' ) );
 					} else {
-						Admin::flash( 'error', __( 'It cannot be published yet:', 'next-class-services' ) . '<br>' . implode( '<br>', array_map( 'esc_html', $errors ) ) );
+						Admin::flash( 'error', __( 'It cannot be published yet:', 'next-class-services' ) . '<br>' . Admin::error_list( $errors, 'ncs-booking', $id ) );
 						$back = Admin::url( 'ncs-booking', array( 'action' => 'edit', 'id' => $id ) );
 					}
 				}

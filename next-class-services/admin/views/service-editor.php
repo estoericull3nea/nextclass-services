@@ -146,7 +146,7 @@ $embed_value = 'embed' === $ex['custom_mode'] ? $ex['url'] : '';
 			<div class="ncs-card">
 				<h2 class="ncs-card-title"><?php esc_html_e( 'Availability', 'next-class-services' ); ?></h2>
 				<p class="ncs-help"><?php esc_html_e( 'WordPress appointment data is the booking calendar. No external calendar (Google, Outlook) is synchronized.', 'next-class-services' ); ?></p>
-				<fieldset class="ncs-fieldset">
+				<fieldset class="ncs-fieldset" id="ncs-native-days">
 					<legend><?php esc_html_e( 'Available working days', 'next-class-services' ); ?></legend>
 					<div class="ncs-inline-checks">
 						<?php foreach ( $weekdays as $num => $day_label ) : ?>
@@ -375,11 +375,11 @@ $embed_value = 'embed' === $ex['custom_mode'] ? $ex['url'] : '';
 			<?php if ( ! $id ) : ?>
 				<p class="ncs-muted"><?php esc_html_e( 'Save a draft to see which checks still need attention.', 'next-class-services' ); ?></p>
 			<?php elseif ( empty( $errors ) ) : ?>
-				<p><?php echo Admin::badge( __( 'Ready', 'next-class-services' ), 'ok' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> <?php esc_html_e( 'This service passes all publishing checks.', 'next-class-services' ); ?></p>
+				<p class="ncs-notice ncs-notice-success"><strong class="ncs-notice-label"><?php esc_html_e( 'Done.', 'next-class-services' ); ?></strong> <?php esc_html_e( 'This service passes all publishing checks.', 'next-class-services' ); ?></p>
 			<?php else : ?>
-				<ul class="ncs-list">
+				<ul class="ncs-list ncs-check-list">
 					<?php foreach ( $errors as $err ) : ?>
-						<li><?php echo Admin::badge( __( 'Fix', 'next-class-services' ), 'bad' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> <?php echo esc_html( $err ); ?></li>
+						<li class="ncs-notice ncs-notice-error"><strong class="ncs-notice-label"><?php esc_html_e( 'Error.', 'next-class-services' ); ?></strong> <?php echo Admin::error_list( array( $err ), 'ncs-booking', $id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></li>
 					<?php endforeach; ?>
 				</ul>
 			<?php endif; ?>

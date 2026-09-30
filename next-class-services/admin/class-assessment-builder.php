@@ -104,6 +104,7 @@ class Assessment_Builder {
 			'enabled'          => __( 'Enabled', 'next-class-services' ),
 			'disabled'         => __( 'Disabled', 'next-class-services' ),
 			'options'          => __( 'Answer options', 'next-class-services' ),
+			'optionsHelp'      => __( 'To mark the best or correct answer, give it the highest score (for example 10) and give weaker answers lower scores (for example 5 or 0). Leave every score at 0 if the question should not count toward the result.', 'next-class-services' ),
 			'optionLabel'      => __( 'Option label', 'next-class-services' ),
 			'score'            => __( 'Score', 'next-class-services' ),
 			'addOption'        => __( 'Add option', 'next-class-services' ),
@@ -225,10 +226,10 @@ class Assessment_Builder {
 		if ( 'publish' === $status ) {
 			Admin::flash( 'success', 'publish' === $was ? __( 'Assessment updated.', 'next-class-services' ) : __( 'Assessment published. Copy the shortcode to place it on a page.', 'next-class-services' ) );
 		} elseif ( ( 'publish' === $button || 'update' === $button ) && ! empty( $errors ) ) {
-			Admin::flash( 'error', __( 'Saved as a draft. Fix these issues before publishing:', 'next-class-services' ) . '<br>' . implode( '<br>', array_map( 'esc_html', $errors ) ) );
+			Admin::flash( 'error', __( 'Saved as a draft. Fix these issues before publishing:', 'next-class-services' ) . '<br>' . Admin::error_list( $errors, 'ncs-assessments', $new_id ) );
 		} elseif ( ! empty( $errors ) ) {
 			Admin::flash( 'success', __( 'Draft saved.', 'next-class-services' ) );
-			Admin::flash( 'info', __( 'Issues to fix before publishing:', 'next-class-services' ) . '<br>' . implode( '<br>', array_map( 'esc_html', $errors ) ) );
+			Admin::flash( 'info', __( 'Issues to fix before publishing:', 'next-class-services' ) . '<br>' . Admin::error_list( $errors, 'ncs-assessments', $new_id ) );
 		} else {
 			Admin::flash( 'success', __( 'Draft saved. It is ready to publish.', 'next-class-services' ) );
 		}

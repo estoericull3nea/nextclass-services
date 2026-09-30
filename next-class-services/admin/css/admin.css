@@ -311,3 +311,11 @@
 .ncs-admin .ncs-notice-warning { background: #fff6cf; border-color: #ecd98a; border-style: solid; }
 .ncs-admin .ncs-notice-info { background: #ffffff; }
 .ncs-admin .ncs-notice-error .ncs-notice-label { text-decoration: none; }
+
+.ncs-admin .ncs-fix-link { margin-left: 6px; padding: 1px 10px; border: 1px solid rgba(0, 0, 0, 0.35); border-radius: 999px; background: #ffffff; font-size: 12px; font-weight: 500; white-space: nowrap; }
+.ncs-admin .ncs-fix-link:hover { background: #000000; color: #ffffff; opacity: 1; }
+.ncs-admin .ncs-jump { outline: 3px solid #000000; outline-offset: 4px; border-radius: 8px; }
+
+.ncs-admin .ncs-check-list { list-style: none; margin: 0; padding: 0; }
+.ncs-admin .ncs-check-list li.ncs-notice { margin: 0 0 8px; }
+.ncs-admin p.ncs-notice { margin: 0; }

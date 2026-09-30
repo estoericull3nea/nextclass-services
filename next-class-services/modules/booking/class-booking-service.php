@@ -460,27 +460,51 @@ class Booking_Service {
 	public static function validate( array $c ) {
 		$errors = array();
 		if ( '' === $c['title'] ) {
-			$errors[] = __( 'Enter a public service name.', 'next-class-services' );
+			$errors[] = array(
+				'message' => __( 'Enter a public service name.', 'next-class-services' ),
+				'tab'     => 'general',
+				'field'   => 'ncs-cfg-title',
+			);
 		}
 		if ( in_array( $c['method'], array( 'calendly', 'tidycal', 'custom' ), true ) && '' === $c['external']['url'] ) {
-			$errors[] = __( 'External booking services need a valid booking URL.', 'next-class-services' );
+			$errors[] = array(
+				'message' => __( 'External booking services need a valid booking URL.', 'next-class-services' ),
+				'tab'     => 'method',
+				'field'   => 'ncs-cfg-external-url',
+			);
 		}
 		if ( 'native' === $c['method'] ) {
 			$n = $c['native'];
 			if ( empty( $n['days'] ) ) {
-				$errors[] = __( 'Select at least one available working day.', 'next-class-services' );
+				$errors[] = array(
+				'message' => __( 'Select at least one available working day.', 'next-class-services' ),
+				'tab'     => 'method',
+				'field'   => 'ncs-native-days',
+			);
 			}
 			list( $sh, $sm ) = array_map( 'intval', explode( ':', $n['start'] ) );
 			list( $eh, $em ) = array_map( 'intval', explode( ':', $n['end'] ) );
 			$start_min       = $sh * 60 + $sm;
 			$end_min         = $eh * 60 + $em;
 			if ( $end_min <= $start_min ) {
-				$errors[] = __( 'The end time must be later than the start time.', 'next-class-services' );
+				$errors[] = array(
+				'message' => __( 'The end time must be later than the start time.', 'next-class-services' ),
+				'tab'     => 'method',
+				'field'   => 'ncs-cfg-native-end',
+			);
 			} elseif ( $end_min - $start_min < $c['duration'] ) {
-				$errors[] = __( 'The available hours are shorter than the appointment duration.', 'next-class-services' );
+				$errors[] = array(
+				'message' => __( 'The available hours are shorter than the appointment duration.', 'next-class-services' ),
+				'tab'     => 'method',
+				'field'   => 'ncs-cfg-native-end',
+			);
 			}
 			if ( $n['max_advance_days'] * 24 < $n['min_notice_hours'] ) {
-				$errors[] = __( 'The maximum advance booking period cannot be shorter than the minimum notice.', 'next-class-services' );
+				$errors[] = array(
+				'message' => __( 'The maximum advance booking period cannot be shorter than the minimum notice.', 'next-class-services' ),
+				'tab'     => 'method',
+				'field'   => 'ncs-cfg-native-max-advance-days',
+			);
 			}
 		}
 		return $errors;

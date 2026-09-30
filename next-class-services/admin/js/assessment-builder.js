@@ -603,6 +603,7 @@
 
 	function optionsEditor( q ) {
 		var wrap = h( 'div', { 'class': 'ncs-subblock' }, h( 'h3', { 'class': 'ncs-subtitle', text: t.options } ) );
+		wrap.appendChild( h( 'p', { 'class': 'ncs-help', text: t.optionsHelp } ) );
 		var fixed = q.type === 'yesno';
 		var list = h( 'div', { 'class': 'ncs-option-list' } );
 		q.options.forEach( function ( o, oi ) {

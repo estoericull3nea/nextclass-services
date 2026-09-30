@@ -282,29 +282,59 @@ class Assessment {
 			}
 		);
 		if ( 0 === count( $enabled ) ) {
-			$errors[] = __( 'Add at least one enabled question before publishing.', 'next-class-services' );
+			$errors[] = array(
+				'message' => __( 'Add at least one enabled question before publishing.', 'next-class-services' ),
+				'tab'     => 'questions',
+				'field'   => 'ncs-questions-root',
+			);
 		}
 		foreach ( $enabled as $i => $q ) {
 			if ( '' === $q['text'] ) {
 				/* translators: %d: question number */
-				$errors[] = sprintf( __( 'Question %d needs question text.', 'next-class-services' ), $i + 1 );
+				$errors[] = array(
+				'message' => sprintf( __( 'Question %d needs question text.', 'next-class-services' ), $i + 1 ),
+				'tab'     => 'questions',
+				'field'   => 'ncs-questions-root',
+			);
 			}
 			if ( in_array( $q['type'], array( 'single', 'multiple', 'dropdown' ), true ) && count( $q['options'] ) < 2 ) {
 				/* translators: %d: question number */
-				$errors[] = sprintf( __( 'Question %d needs at least two answer options.', 'next-class-services' ), $i + 1 );
+				$errors[] = array(
+				'message' => sprintf( __( 'Question %d needs at least two answer options.', 'next-class-services' ), $i + 1 ),
+				'tab'     => 'questions',
+				'field'   => 'ncs-questions-root',
+			);
 			}
 		}
 		if ( '' === $c['title'] ) {
-			$errors[] = __( 'Enter a public assessment title.', 'next-class-services' );
+			$errors[] = array(
+				'message' => __( 'Enter a public assessment title.', 'next-class-services' ),
+				'tab'     => 'general',
+				'field'   => 'ncs-cfg-title',
+			);
 		}
 		if ( Scoring::has_scoring( $c['questions'] ) || ! empty( $c['results'] ) ) {
-			$errors = array_merge( $errors, Results::validate( $c ) );
+			foreach ( Results::validate( $c ) as $range_error ) {
+				$errors[] = array(
+					'message' => $range_error,
+					'tab'     => 'results',
+					'field'   => 'ncs-results-root',
+				);
+			}
 		}
 		if ( $c['email']['enabled'] && '' === trim( $c['email']['subject'] ) ) {
-			$errors[] = __( 'The visitor result email needs a subject.', 'next-class-services' );
+			$errors[] = array(
+				'message' => __( 'The visitor result email needs a subject.', 'next-class-services' ),
+				'tab'     => 'emails',
+				'field'   => 'ncs-cfg-email-subject',
+			);
 		}
 		if ( $c['admin_notify']['enabled'] && '' === $c['admin_notify']['recipients'] ) {
-			$errors[] = __( 'Admin notifications are enabled but no valid recipient email is set.', 'next-class-services' );
+			$errors[] = array(
+				'message' => __( 'Admin notifications are enabled but no valid recipient email is set.', 'next-class-services' ),
+				'tab'     => 'emails',
+				'field'   => 'ncs-cfg-admin-notify-recipients',
+			);
 		}
 		if ( $c['lead']['enabled'] ) {
 			$has_email = false;
@@ -314,7 +344,11 @@ class Assessment {
 				}
 			}
 			if ( ! $has_email ) {
-				$errors[] = __( 'Lead capture requires the email field.', 'next-class-services' );
+				$errors[] = array(
+				'message' => __( 'Lead capture requires the email field.', 'next-class-services' ),
+				'tab'     => 'lead',
+				'field'   => 'ncs-leadfields-root',
+			);
 			}
 		}
 		return $errors;

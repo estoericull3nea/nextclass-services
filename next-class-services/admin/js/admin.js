@@ -151,3 +151,41 @@
 		}
 	} );
 }() );
+
+/**
+ * Jump to a setting when the URL has a hash (used by the "Fix this" links in error notices).
+ */
+( function () {
+	'use strict';
+
+	function jump() {
+		var id = window.location.hash.replace( '#', '' );
+		if ( ! id ) {
+			return;
+		}
+		var target = document.getElementById( id );
+		if ( ! target ) {
+			return;
+		}
+		var panel = target.closest( '[role="tabpanel"]' );
+		if ( panel && panel.hidden ) {
+			var tab = document.getElementById( panel.getAttribute( 'aria-labelledby' ) );
+			if ( tab ) {
+				tab.click();
+			}
+		}
+		target.scrollIntoView( { block: 'center' } );
+		var focusable = /^(INPUT|SELECT|TEXTAREA|BUTTON)$/.test( target.tagName ) ? target : target.querySelector( 'input, select, textarea, button' );
+		if ( focusable ) {
+			focusable.focus( { preventScroll: true } );
+		}
+		target.classList.add( 'ncs-jump' );
+		setTimeout( function () {
+			target.classList.remove( 'ncs-jump' );
+		}, 3000 );
+	}
+
+	window.addEventListener( 'load', function () {
+		setTimeout( jump, 100 );
+	} );
+}() );

@@ -166,6 +166,28 @@ class Admin {
 	}
 
 	/**
+	 * Build an HTML list of validation errors, each with a link to the setting to fix.
+	 *
+	 * @param array  $errors Errors: arrays with message, tab, field (or plain strings).
+	 * @param string $page   Admin page slug of the editor.
+	 * @param int    $id     Item id.
+	 * @return string Safe HTML.
+	 */
+	public static function error_list( array $errors, $page, $id ) {
+		$out = array();
+		foreach ( $errors as $e ) {
+			$msg = is_array( $e ) ? $e['message'] : $e;
+			$row = esc_html( $msg );
+			if ( is_array( $e ) && $id && ! empty( $e['tab'] ) ) {
+				$url = self::url( $page, array( 'action' => 'edit', 'id' => (int) $id, 'tab' => $e['tab'] ) ) . '#' . preg_replace( '/[^a-z0-9\-_]/i', '', (string) $e['field'] );
+				$row .= ' <a class="ncs-fix-link" href="' . esc_url( $url ) . '">' . esc_html__( 'Fix this', 'next-class-services' ) . '</a>';
+			}
+			$out[] = $row;
+		}
+		return implode( '<br>', $out );
+	}
+
+	/**
 	 * Render and clear queued notices (scoped to plugin pages).
 	 */
 	public static function notices() {
@@ -182,7 +204,7 @@ class Admin {
 				esc_attr( $type ),
 				'error' === $type ? 'alert' : 'status',
 				esc_html( self::notice_label( $type ) ),
-				wp_kses( $n['message'], array( 'br' => array(), 'strong' => array(), 'code' => array() ) )
+				wp_kses( $n['message'], array( 'br' => array(), 'strong' => array(), 'code' => array(), 'a' => array( 'href' => array(), 'class' => array() ) ) )
 			);
 		}
 	}
