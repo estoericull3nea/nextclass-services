@@ -307,6 +307,30 @@ class Leads {
 	}
 
 	/**
+	 * Counts for the at a glance cards.
+	 *
+	 * @return array total, week, month, optin
+	 */
+	public static function glance() {
+		global $wpdb;
+		$table = Database::table( 'submissions' );
+		$week  = gmdate( 'Y-m-d H:i:s', time() - ( 7 * DAY_IN_SECONDS ) );
+		$month = gmdate( 'Y-m-d H:i:s', time() - ( 30 * DAY_IN_SECONDS ) );
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$total = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table}" );
+		$w     = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$table} WHERE created_at >= %s", $week ) );
+		$mo    = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$table} WHERE created_at >= %s", $month ) );
+		$optin = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table} WHERE consent_marketing = 1" );
+		// phpcs:enable
+		return array(
+			'total' => $total,
+			'week'  => $w,
+			'month' => $mo,
+			'optin' => $optin,
+		);
+	}
+
+	/**
 	 * Distinct result titles for a filter dropdown.
 	 *
 	 * @param int $assessment_id Optional assessment.

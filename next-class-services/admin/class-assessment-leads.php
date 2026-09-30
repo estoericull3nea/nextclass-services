@@ -109,6 +109,18 @@ class Assessment_Leads {
 		);
 
 		$options = self::assessment_options();
+		$glance = Leads::glance();
+		echo '<div class="ncs-cards">';
+		foreach ( array(
+			array( __( 'Total submissions', 'next-class-services' ), $glance['total'], __( 'All time', 'next-class-services' ) ),
+			array( __( 'Last 7 days', 'next-class-services' ), $glance['week'], __( 'New submissions', 'next-class-services' ) ),
+			array( __( 'Last 30 days', 'next-class-services' ), $glance['month'], __( 'New submissions', 'next-class-services' ) ),
+			array( __( 'Marketing opt-ins', 'next-class-services' ), $glance['optin'], __( 'Agreed to marketing emails', 'next-class-services' ) ),
+		) as $card ) {
+			echo '<div class="ncs-card ncs-stat"><span class="ncs-stat-label">' . esc_html( $card[0] ) . '</span><span class="ncs-stat-value">' . esc_html( (string) $card[1] ) . '</span><span class="ncs-stat-note">' . esc_html( $card[2] ) . '</span></div>';
+		}
+		echo '</div>';
+
 		echo '<form method="get" class="ncs-filters"><input type="hidden" name="page" value="ncs-leads">';
 		echo '<div class="ncs-filter"><label for="ncs-f-a">' . esc_html__( 'Assessment', 'next-class-services' ) . '</label><select id="ncs-f-a" name="assessment_id"><option value="">' . esc_html__( 'All assessments', 'next-class-services' ) . '</option>';
 		foreach ( $options as $oid => $otitle ) {
@@ -140,27 +152,21 @@ class Assessment_Leads {
 		}
 
 		echo '<div class="ncs-table-wrap"><table class="ncs-table"><thead><tr>';
-		$heads = array( __( 'Name', 'next-class-services' ), __( 'Email', 'next-class-services' ), __( 'Phone', 'next-class-services' ), __( 'Company', 'next-class-services' ), __( 'Job title', 'next-class-services' ), __( 'Assessment', 'next-class-services' ), __( 'Score', 'next-class-services' ), __( 'Result', 'next-class-services' ), __( 'Recommended program', 'next-class-services' ), __( 'Submitted', 'next-class-services' ), __( 'Consent', 'next-class-services' ) );
+		$heads = array( __( 'Lead', 'next-class-services' ), __( 'Assessment', 'next-class-services' ), __( 'Result', 'next-class-services' ), __( 'Submitted', 'next-class-services' ), __( 'Action', 'next-class-services' ) );
 		foreach ( $heads as $h ) {
 			echo '<th scope="col">' . esc_html( $h ) . '</th>';
 		}
 		echo '</tr></thead><tbody>';
 		foreach ( $rows as $r ) {
-			$name     = Leads::display_name( $r );
-			$programs = json_decode( (string) $r['recommended_programs'], true );
-			$consent  = $r['consent_privacy'] ? __( 'Privacy', 'next-class-services' ) : __( 'None', 'next-class-services' );
-			if ( $r['consent_marketing'] ) {
-				$consent .= ', ' . __( 'Marketing', 'next-class-services' );
-			}
+			$name = Leads::display_name( $r );
+			$view = Admin::url( 'ncs-leads', array( 'action' => 'view', 'id' => $r['id'] ) );
+			$shown = '' !== $name ? $name : __( 'Anonymous', 'next-class-services' );
 			echo '<tr>';
-			echo '<td><a class="ncs-row-title" href="' . esc_url( Admin::url( 'ncs-leads', array( 'action' => 'view', 'id' => $r['id'] ) ) ) . '">' . esc_html( '' !== $name ? $name : __( 'Anonymous', 'next-class-services' ) ) . '</a></td>';
-			echo '<td>' . esc_html( $r['email'] ) . '</td><td>' . esc_html( $r['phone'] ) . '</td><td>' . esc_html( $r['company'] ) . '</td><td>' . esc_html( $r['job_title'] ) . '</td>';
+			echo '<td><span class="ncs-row-title">' . esc_html( $shown ) . '</span><br><span class="ncs-muted">' . esc_html( $r['email'] ) . '</span></td>';
 			echo '<td>' . esc_html( $r['assessment_title'] ) . '</td>';
-			echo '<td>' . esc_html( rtrim( rtrim( number_format( (float) $r['raw_score'], 2, '.', '' ), '0' ), '.' ) . ' / ' . rtrim( rtrim( number_format( (float) $r['max_score'], 2, '.', '' ), '0' ), '.' ) ) . '<br><span class="ncs-muted">' . esc_html( round( (float) $r['percentage'] ) . '%' ) . '</span></td>';
-			echo '<td>' . esc_html( $r['result_title'] ) . '</td>';
-			echo '<td>' . esc_html( is_array( $programs ) ? implode( ', ', $programs ) : '' ) . '</td>';
+			echo '<td>' . esc_html( $r['result_title'] ) . '<br><span class="ncs-muted">' . esc_html( round( (float) $r['percentage'] ) . '%' ) . '</span></td>';
 			echo '<td>' . esc_html( Helpers::format_utc( $r['created_at'] ) ) . '</td>';
-			echo '<td>' . esc_html( $consent ) . '</td>';
+			echo '<td><a class="ncs-btn ncs-btn-small" href="' . esc_url( $view ) . '" aria-label="' . esc_attr( sprintf( /* translators: %s: lead name */ __( 'View submission from %s', 'next-class-services' ), $shown ) ) . '">' . esc_html__( 'View', 'next-class-services' ) . '</a></td>';
 			echo '</tr>';
 		}
 		echo '</tbody></table></div>';

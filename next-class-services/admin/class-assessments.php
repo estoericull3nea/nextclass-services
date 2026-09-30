@@ -121,7 +121,7 @@ class Assessments {
 		}
 
 		echo '<div class="ncs-table-wrap ncs-overflow-visible"><table class="ncs-table"><thead><tr>';
-		foreach ( array( __( 'Assessment', 'next-class-services' ), __( 'Status', 'next-class-services' ), __( 'Publish date', 'next-class-services' ), __( 'Questions', 'next-class-services' ), __( 'Submissions', 'next-class-services' ), __( 'Shortcode', 'next-class-services' ), __( 'Actions', 'next-class-services' ) ) as $h ) {
+		foreach ( array( __( 'Assessment', 'next-class-services' ), __( 'Status', 'next-class-services' ), __( 'Questions', 'next-class-services' ), __( 'Submissions', 'next-class-services' ), __( 'Shortcode', 'next-class-services' ), __( 'Publish date', 'next-class-services' ), __( 'Actions', 'next-class-services' ) ) as $h ) {
 			echo '<th scope="col">' . esc_html( $h ) . '</th>';
 		}
 		echo '</tr></thead><tbody>';
@@ -143,12 +143,13 @@ class Assessments {
 			echo '</td>';
 			echo '<td>' . Admin::badge( $published ? __( 'Published', 'next-class-services' ) : __( 'Draft', 'next-class-services' ), $published ? 'ok' : 'muted' ) . '</td>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			$pub_date = $published && ! empty( $post->post_date_gmt ) && '0000-00-00 00:00:00' !== $post->post_date_gmt ? Helpers::format_utc( $post->post_date_gmt, get_option( 'date_format' ) ) : '';
-			echo '<td>' . ( '' !== $pub_date ? esc_html( $pub_date ) : '<span class="ncs-muted">' . esc_html__( 'Not published', 'next-class-services' ) . '</span>' ) . '</td>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo '<td>' . esc_html( (string) $enabled ) . '</td>';
 			echo '<td>' . esc_html( (string) ( isset( $subs[ $post->ID ] ) ? $subs[ $post->ID ] : 0 ) ) . '</td>';
 			echo '<td>';
 			Admin::shortcode_box( Assessment::shortcode( $post->ID ) );
-			echo '</td><td class="ncs-actions">';
+			echo '</td>';
+			echo '<td>' . ( '' !== $pub_date ? esc_html( $pub_date ) : '<span class="ncs-muted">' . esc_html__( 'Not published', 'next-class-services' ) . '</span>' ) . '</td>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo '<td class="ncs-actions">';
 			Admin::action_menu(
 				array(
 					array( __( 'Edit', 'next-class-services' ), Admin::url( 'ncs-assessments', array( 'action' => 'edit', 'id' => $post->ID ) ), '', '' ),

@@ -199,7 +199,7 @@
 
 		function progressPercent( index, total ) {
 			var totalSteps = total + ( cfg.lead.enabled ? 1 : 0 );
-			return totalSteps ? Math.round( ( index / totalSteps ) * 100 ) : 0;
+			return totalSteps ? Math.min( 100, Math.round( ( ( index + 1 ) / totalSteps ) * 100 ) ) : 0;
 		}
 
 		function focusTarget( el ) {

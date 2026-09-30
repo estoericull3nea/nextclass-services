@@ -105,26 +105,26 @@ class Booking_Service {
 				'reply_to'   => '',
 				'customer'   => array(
 					'enabled' => true,
-					'subject' => __( 'Your booking is confirmed: {service_name}', 'next-class-services' ),
-					'body'    => __( "Hi {customer_name},\n\nYour booking has been received.\n\nService: {service_name}\nDate: {appointment_date}\nTime: {appointment_time} ({timezone})\nStatus: {booking_status}\n\nNeed to make a change? Use this link to cancel or reschedule:\n{manage_link}", 'next-class-services' ),
+					'subject' => __( "Your booking is confirmed: {service_name}", 'next-class-services' ),
+					'body'    => __( "Dear {customer_name},\n\nThank you for booking with us. Your appointment details are below.\n\nService: {service_name}\nDate: {appointment_date}\nTime: {appointment_time} ({timezone})\nStatus: {booking_status}\n\nIf your plans change, you can cancel or reschedule using this secure link:\n{manage_link}\n\nWe look forward to speaking with you.\n\nKind regards,\nThe Next Class Team", 'next-class-services' ),
 				),
 				'admin'      => array(
 					'enabled'    => true,
 					'recipients' => '',
 					'subject'    => __( 'New booking: {service_name} with {customer_name}', 'next-class-services' ),
-					'body'       => __( "A new booking was made.\n\nService: {service_name}\nCustomer: {customer_name}\nEmail: {customer_email}\nPhone: {customer_phone}\nCompany: {company}\nDate: {appointment_date}\nTime: {appointment_time} ({timezone})\nStatus: {booking_status}\nNotes: {notes}", 'next-class-services' ),
+					'body'       => __( "Hello,\n\nA new booking has been made on your website.\n\nService: {service_name}\nCustomer: {customer_name}\nEmail: {customer_email}\nPhone: {customer_phone}\nCompany: {company}\nDate: {appointment_date}\nTime: {appointment_time} ({timezone})\nStatus: {booking_status}\nNotes: {notes}\n\nYou can manage this appointment in the WordPress admin under Next Class Services, Appointments.", 'next-class-services' ),
 				),
 				'cancel'     => array(
 					'enabled'      => true,
 					'notify_admin' => true,
-					'subject'      => __( 'Booking cancelled: {service_name}', 'next-class-services' ),
-					'body'         => __( "Hi {customer_name},\n\nYour booking for {service_name} on {appointment_date} at {appointment_time} ({timezone}) has been cancelled.", 'next-class-services' ),
+					'subject'      => __( "Your booking has been cancelled: {service_name}", 'next-class-services' ),
+					'body'         => __( "Dear {customer_name},\n\nThis is to confirm that your booking has been cancelled.\n\nService: {service_name}\nWas scheduled for: {appointment_date} at {appointment_time} ({timezone})\n\nIf this was a mistake, or you would like to book a new time, please visit our website or reply to this email and we will be happy to help.\n\nKind regards,\nThe Next Class Team", 'next-class-services' ),
 				),
 				'reschedule' => array(
 					'enabled'      => true,
 					'notify_admin' => true,
-					'subject'      => __( 'Booking rescheduled: {service_name}', 'next-class-services' ),
-					'body'         => __( "Hi {customer_name},\n\nYour booking for {service_name} has been moved.\n\nPrevious time: {previous_date} at {previous_time}\nNew time: {appointment_date} at {appointment_time} ({timezone})\n\nManage your booking:\n{manage_link}", 'next-class-services' ),
+					'subject'      => __( "Your booking has been rescheduled: {service_name}", 'next-class-services' ),
+					'body'         => __( "Dear {customer_name},\n\nYour booking for {service_name} has been moved to a new time.\n\nPrevious time: {previous_date} at {previous_time}\nNew time: {appointment_date} at {appointment_time} ({timezone})\n\nYou can cancel or reschedule again using this secure link:\n{manage_link}\n\nKind regards,\nThe Next Class Team", 'next-class-services' ),
 				),
 			),
 		);

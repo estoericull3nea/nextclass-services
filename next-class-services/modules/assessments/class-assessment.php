@@ -75,17 +75,17 @@ class Assessment {
 				'reply_to'  => '',
 				'subject'   => __( 'Your {assessment_name} results', 'next-class-services' ),
 				'heading'   => __( 'Your results are ready', 'next-class-services' ),
-				'intro'     => __( 'Hi {first_name}, thank you for completing the {assessment_name}.', 'next-class-services' ),
-				'body'      => __( "Your result: {result_title}\n\n{result_description}\n\n{recommendation}\n\nRecommended programs: {programs}", 'next-class-services' ),
+				'intro'     => __( "Dear {first_name},\n\nThank you for completing the {assessment_name}. We have reviewed your responses and prepared your personalized results below.", 'next-class-services' ),
+				'body'      => __( "Your result: {result_title}\n\n{result_description}\n\nOur recommendation:\n{recommendation}\n\nRecommended programs: {programs}\n\nIf you would like to talk through your results, simply reply to this email and a member of our team will be glad to help.\n\nKind regards,\nThe Next Class Team", 'next-class-services' ),
 				'cta_label' => '',
 				'cta_url'   => '',
-				'footer'    => '',
+				'footer'    => __( "You are receiving this email because you completed an assessment on our website.", 'next-class-services' ),
 			),
 			'admin_notify'         => array(
 				'enabled'    => false,
 				'recipients' => '',
 				'subject'    => __( 'New assessment completed: {assessment_name}', 'next-class-services' ),
-				'message'    => __( "A new assessment was completed.\n\nAssessment: {assessment_name}\nName: {full_name}\nEmail: {email}\nCompany: {company}\nScore: {score} ({percentage}%)\nResult: {result_title}\nRecommended programs: {programs}", 'next-class-services' ),
+				'message'    => __( "Hello,\n\nA new assessment has just been completed on your website.\n\nAssessment: {assessment_name}\nName: {full_name}\nEmail: {email}\nPhone: {phone}\nCompany: {company}\nJob title: {job_title}\nScore: {score} ({percentage}%)\nResult: {result_title}\nRecommended programs: {programs}\n\nThe full submission, including every answer, is available in the WordPress admin under Next Class Services, Assessment Leads.", 'next-class-services' ),
 			),
 		);
 	}
