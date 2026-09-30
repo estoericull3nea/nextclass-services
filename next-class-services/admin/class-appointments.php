@@ -103,6 +103,18 @@ class Appointments {
 
 		echo '<p class="ncs-help">' . esc_html__( 'This list shows native WordPress bookings. Appointments made through Calendly or TidyCal are managed in those tools.', 'next-class-services' ) . '</p>';
 
+		$glance = Appointment::glance();
+		echo '<div class="ncs-cards">';
+		foreach ( array(
+			array( __( 'Upcoming', 'next-class-services' ), $glance['upcoming'], __( 'Pending or confirmed', 'next-class-services' ) ),
+			array( __( 'Today', 'next-class-services' ), $glance['today'], __( 'Active appointments today', 'next-class-services' ) ),
+			array( __( 'Pending', 'next-class-services' ), $glance['pending'], __( 'Waiting for confirmation', 'next-class-services' ) ),
+			array( __( 'Cancelled or no show', 'next-class-services' ), $glance['lost'], __( 'Last 30 days', 'next-class-services' ) ),
+		) as $card ) {
+			echo '<div class="ncs-card ncs-stat"><span class="ncs-stat-label">' . esc_html( $card[0] ) . '</span><span class="ncs-stat-value">' . esc_html( (string) $card[1] ) . '</span><span class="ncs-stat-note">' . esc_html( $card[2] ) . '</span></div>';
+		}
+		echo '</div>';
+
 		echo '<form method="get" class="ncs-filters"><input type="hidden" name="page" value="ncs-appointments">';
 		echo '<div class="ncs-filter"><label for="ncs-f-svc">' . esc_html__( 'Service', 'next-class-services' ) . '</label><select id="ncs-f-svc" name="service_id"><option value="">' . esc_html__( 'All services', 'next-class-services' ) . '</option>';
 		foreach ( Booking_Service::options() as $sid => $stitle ) {
@@ -135,22 +147,20 @@ class Appointments {
 		}
 
 		echo '<div class="ncs-table-wrap"><table class="ncs-table"><thead><tr>';
-		foreach ( array( __( 'Customer', 'next-class-services' ), __( 'Email', 'next-class-services' ), __( 'Phone', 'next-class-services' ), __( 'Company', 'next-class-services' ), __( 'Service', 'next-class-services' ), __( 'Date', 'next-class-services' ), __( 'Time', 'next-class-services' ), __( 'Timezone', 'next-class-services' ), __( 'Status', 'next-class-services' ), __( 'Notes', 'next-class-services' ), __( 'Created', 'next-class-services' ) ) as $h ) {
+		foreach ( array( __( 'Customer', 'next-class-services' ), __( 'Service', 'next-class-services' ), __( 'Date and time', 'next-class-services' ), __( 'Status', 'next-class-services' ), __( 'Action', 'next-class-services' ) ) as $h ) {
 			echo '<th scope="col">' . esc_html( $h ) . '</th>';
 		}
 		echo '</tr></thead><tbody>';
 		$date_fmt = get_option( 'date_format' );
 		$time_fmt = get_option( 'time_format' );
 		foreach ( $rows as $a ) {
+			$view = Admin::url( 'ncs-appointments', array( 'action' => 'view', 'id' => $a['id'] ) );
 			echo '<tr>';
-			echo '<td><a class="ncs-row-title" href="' . esc_url( Admin::url( 'ncs-appointments', array( 'action' => 'view', 'id' => $a['id'] ) ) ) . '">' . esc_html( $a['customer_name'] ) . '</a></td>';
-			echo '<td>' . esc_html( $a['customer_email'] ) . '</td><td>' . esc_html( $a['customer_phone'] ) . '</td><td>' . esc_html( $a['company'] ) . '</td><td>' . esc_html( $a['service_title'] ) . '</td>';
-			echo '<td>' . esc_html( Helpers::format_utc( $a['start_utc'], $date_fmt, $a['timezone'] ) ) . '</td>';
-			echo '<td>' . esc_html( Helpers::format_utc( $a['start_utc'], $time_fmt, $a['timezone'] ) ) . '</td>';
-			echo '<td>' . esc_html( $a['timezone'] ) . '</td>';
+			echo '<td><span class="ncs-row-title">' . esc_html( $a['customer_name'] ) . '</span><br><span class="ncs-muted">' . esc_html( $a['customer_email'] ) . '</span></td>';
+			echo '<td>' . esc_html( $a['service_title'] ) . '</td>';
+			echo '<td>' . esc_html( Helpers::format_utc( $a['start_utc'], $date_fmt, $a['timezone'] ) ) . '<br><span class="ncs-muted">' . esc_html( Helpers::format_utc( $a['start_utc'], $time_fmt, $a['timezone'] ) . ' (' . $a['timezone'] . ')' ) . '</span></td>';
 			echo '<td>' . self::status_badge( $a['status'] ) . '</td>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			echo '<td>' . esc_html( Helpers::truncate( (string) $a['notes'], 80 ) ) . '</td>';
-			echo '<td>' . esc_html( Helpers::format_utc( $a['created_at'] ) ) . '</td>';
+			echo '<td><a class="ncs-btn ncs-btn-small" href="' . esc_url( $view ) . '" aria-label="' . esc_attr( sprintf( /* translators: %s: customer name */ __( 'View appointment for %s', 'next-class-services' ), $a['customer_name'] ) ) . '">' . esc_html__( 'View', 'next-class-services' ) . '</a></td>';
 			echo '</tr>';
 		}
 		echo '</tbody></table></div>';

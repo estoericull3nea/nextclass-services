@@ -380,7 +380,7 @@
 						type: 'button',
 						'class': 'ncs-slot' + ( selected ? ' is-selected' : '' ),
 						'aria-pressed': selected ? 'true' : 'false',
-						text: slot.label + ( selected ? ' (' + ( I18N.selected || 'selected' ) + ')' : '' ),
+						text: slot.label,
 						onclick: function () {
 							st.time = slot.time;
 							st.label = slot.label;

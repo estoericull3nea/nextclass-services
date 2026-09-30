@@ -309,6 +309,31 @@ class Appointment {
 	}
 
 	/**
+	 * Counts for the at a glance cards.
+	 *
+	 * @return array upcoming, today, pending, lost
+	 */
+	public static function glance() {
+		global $wpdb;
+		$table = Database::table( 'appointments' );
+		$now   = Helpers::now_utc();
+		$today = ( new \DateTimeImmutable( 'now', wp_timezone() ) )->format( 'Y-m-d' );
+		$since = gmdate( 'Y-m-d H:i:s', time() - ( 30 * DAY_IN_SECONDS ) );
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$upcoming = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$table} WHERE status IN ('pending','confirmed') AND start_utc >= %s", $now ) );
+		$today_n  = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$table} WHERE status IN ('pending','confirmed') AND local_date = %s", $today ) );
+		$pending  = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$table} WHERE status = 'pending' AND start_utc >= %s", $now ) );
+		$lost     = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$table} WHERE status IN ('cancelled','no_show') AND status_changed_at >= %s", $since ) );
+		// phpcs:enable
+		return array(
+			'upcoming' => $upcoming,
+			'today'    => $today_n,
+			'pending'  => $pending,
+			'lost'     => $lost,
+		);
+	}
+
+	/**
 	 * Management link for a customer.
 	 *
 	 * @param array  $appt  Appointment row.
