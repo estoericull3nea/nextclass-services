@@ -40,7 +40,7 @@ class Helpers {
 			'retention_custom_days'      => 730,
 			'ga4_enabled'                => 0,
 			'analytics_enabled'          => 1,
-			'frontend_primary_color'     => '#ff954f',
+			'frontend_primary_color'     => '#393939',
 			'frontend_poppins'           => 0,
 			'frontend_radius'            => 4,
 			'shared_calendar'            => 1,

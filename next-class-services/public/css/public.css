@@ -2,7 +2,7 @@
  * Next Class Services: public styles.
  * Every rule is scoped under .ncs-root so the active theme is not affected.
  * Typography inherits from the theme unless the administrator enables Poppins.
- * Palette: #ff954f orange, #393939 charcoal, #ffffff white, #f1efe7 warm neutral, #ffe972 yellow.
+ * Palette: #393939 charcoal, #ffffff white, #f1efe7 warm neutral only.
  * Solid colors only.
  */
 
@@ -10,8 +10,8 @@
 	--ncs-charcoal: #393939;
 	--ncs-white: #ffffff;
 	--ncs-warm: #f1efe7;
-	--ncs-yellow: #ffe972;
-	--ncs-primary: #ff954f;
+	--ncs-yellow: #f1efe7;
+	--ncs-primary: #393939;
 	--ncs-radius: 4px;
 	box-sizing: border-box;
 	width: 100%;
@@ -872,3 +872,15 @@
 .ncs-root .ncs-summary { border: 1px solid rgba(57, 57, 57, 0.14); }
 .ncs-root .ncs-embed { border-radius: 12px; border-color: rgba(57, 57, 57, 0.14); }
 .ncs-root .ncs-preview-banner, .ncs-root .ncs-notice { border-radius: 10px; border-width: 1px; }
+
+/* Frontend palette: charcoal #393939, white #ffffff, warm neutral #f1efe7 only. */
+
+.ncs-root .ncs-btn-primary { background-color: var(--ncs-charcoal); border-color: var(--ncs-charcoal); color: var(--ncs-white); }
+.ncs-root a.ncs-btn-primary { color: var(--ncs-white); }
+.ncs-root .ncs-btn-primary:hover, .ncs-root a.ncs-btn-primary:hover { background-color: var(--ncs-white); color: var(--ncs-charcoal); }
+.ncs-root .ncs-btn-primary:active { background-color: var(--ncs-warm); color: var(--ncs-charcoal); }
+.ncs-root .ncs-btn:hover { background-color: var(--ncs-warm); }
+.ncs-root .ncs-cal-day.is-available:hover, .ncs-root .ncs-slot:hover, .ncs-root .ncs-service-btn:hover, .ncs-root .ncs-rating-item input:hover + label { background-color: var(--ncs-warm); }
+.ncs-root a:hover { background-color: var(--ncs-warm); }
+.ncs-root a:focus-visible, .ncs-root button:focus-visible, .ncs-root input:focus-visible, .ncs-root select:focus-visible, .ncs-root textarea:focus-visible,
+.ncs-root .ncs-choice:focus-within, .ncs-root .ncs-rating-item input:focus-visible + label { box-shadow: 0 0 0 5px var(--ncs-warm); }

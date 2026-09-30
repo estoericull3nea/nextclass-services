@@ -73,7 +73,6 @@ class Settings {
 		echo '<p class="ncs-help">' . esc_html__( 'Public assessments and booking forms inherit typography from your theme by default.', 'next-class-services' ) . '</p>';
 		Form::checkbox( 's[frontend_poppins]', __( 'Use Poppins for plugin content on the public site', 'next-class-services' ), $s['frontend_poppins'], array( 'help' => __( 'Off by default. The font file is served from this plugin, not from a third party.', 'next-class-services' ) ) );
 		echo '<div class="ncs-cols">';
-		Form::text( 's[frontend_primary_color]', __( 'Primary button color', 'next-class-services' ), $s['frontend_primary_color'], array( 'type' => 'color', 'class' => 'ncs-field-color' ) );
 		Form::number( 's[frontend_radius]', __( 'Corner radius (pixels)', 'next-class-services' ), $s['frontend_radius'], array( 'min' => 0, 'max' => 16 ) );
 		echo '</div></div>';
 
@@ -159,7 +158,7 @@ class Settings {
 			'retention_custom_days'      => max( 1, min( 3650, (int) $get( 'retention_custom_days' ) ) ),
 			'ga4_enabled'                => ! empty( $in['ga4_enabled'] ) ? 1 : 0,
 			'analytics_enabled'          => ! empty( $in['analytics_enabled'] ) ? 1 : 0,
-			'frontend_primary_color'     => Helpers::hex( $get( 'frontend_primary_color' ), '#ff954f' ),
+			'frontend_primary_color'     => '#393939',
 			'frontend_poppins'           => ! empty( $in['frontend_poppins'] ) ? 1 : 0,
 			'frontend_radius'            => max( 0, min( 16, (int) $get( 'frontend_radius' ) ) ),
 			'shared_calendar'            => ! empty( $in['shared_calendar'] ) ? 1 : 0,

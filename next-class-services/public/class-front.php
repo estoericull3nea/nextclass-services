@@ -211,7 +211,7 @@ class Front {
 	 * @return string
 	 */
 	public static function style_vars() {
-		$color  = Helpers::hex( Helpers::setting( 'frontend_primary_color' ), '#ff954f' );
+		$color  = '#393939';
 		$radius = max( 0, min( 16, (int) Helpers::setting( 'frontend_radius', 4 ) ) );
 		return '--ncs-primary:' . $color . ';--ncs-radius:' . $radius . 'px;';
 	}
