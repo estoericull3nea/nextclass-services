@@ -6,7 +6,7 @@
  * Version:           1.0.0
  * Requires at least: 6.0
  * Requires PHP:      7.4
- * Author:            Next Class
+ * Author:            DEV
  * Text Domain:       next-class-services
  * Domain Path:       /languages
  * License:           GPL-2.0-or-later

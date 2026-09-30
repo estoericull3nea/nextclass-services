@@ -120,8 +120,8 @@ class Assessments {
 			return;
 		}
 
-		echo '<div class="ncs-table-wrap"><table class="ncs-table"><thead><tr>';
-		foreach ( array( __( 'Assessment', 'next-class-services' ), __( 'Status', 'next-class-services' ), __( 'Questions', 'next-class-services' ), __( 'Submissions', 'next-class-services' ), __( 'Shortcode', 'next-class-services' ), __( 'Actions', 'next-class-services' ) ) as $h ) {
+		echo '<div class="ncs-table-wrap ncs-overflow-visible"><table class="ncs-table"><thead><tr>';
+		foreach ( array( __( 'Assessment', 'next-class-services' ), __( 'Status', 'next-class-services' ), __( 'Publish date', 'next-class-services' ), __( 'Questions', 'next-class-services' ), __( 'Submissions', 'next-class-services' ), __( 'Shortcode', 'next-class-services' ), __( 'Actions', 'next-class-services' ) ) as $h ) {
 			echo '<th scope="col">' . esc_html( $h ) . '</th>';
 		}
 		echo '</tr></thead><tbody>';
@@ -142,16 +142,24 @@ class Assessments {
 			}
 			echo '</td>';
 			echo '<td>' . Admin::badge( $published ? __( 'Published', 'next-class-services' ) : __( 'Draft', 'next-class-services' ), $published ? 'ok' : 'muted' ) . '</td>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			$pub_date = $published && ! empty( $post->post_date_gmt ) && '0000-00-00 00:00:00' !== $post->post_date_gmt ? Helpers::format_utc( $post->post_date_gmt, get_option( 'date_format' ) ) : '';
+			echo '<td>' . ( '' !== $pub_date ? esc_html( $pub_date ) : '<span class="ncs-muted">' . esc_html__( 'Not published', 'next-class-services' ) . '</span>' ) . '</td>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo '<td>' . esc_html( (string) $enabled ) . '</td>';
 			echo '<td>' . esc_html( (string) ( isset( $subs[ $post->ID ] ) ? $subs[ $post->ID ] : 0 ) ) . '</td>';
 			echo '<td>';
 			Admin::shortcode_box( Assessment::shortcode( $post->ID ) );
 			echo '</td><td class="ncs-actions">';
-			echo '<a href="' . esc_url( Admin::url( 'ncs-assessments', array( 'action' => 'edit', 'id' => $post->ID ) ) ) . '">' . esc_html__( 'Edit', 'next-class-services' ) . '</a>';
-			echo '<a href="' . esc_url( Admin::url( 'ncs-assessments', array( 'action' => 'preview', 'id' => $post->ID ) ) ) . '">' . esc_html__( 'Preview', 'next-class-services' ) . '</a>';
-			echo '<a href="' . esc_url( self::action_url( 'duplicate', $post->ID ) ) . '">' . esc_html__( 'Duplicate', 'next-class-services' ) . '</a>';
-			echo '<a href="' . esc_url( self::action_url( $published ? 'unpublish' : 'publish', $post->ID ) ) . '">' . esc_html( $published ? __( 'Unpublish', 'next-class-services' ) : __( 'Publish', 'next-class-services' ) ) . '</a>';
-			echo '<a class="ncs-danger" data-ncs-confirm="' . esc_attr__( 'Delete this assessment? Stored submissions are kept, but the assessment can no longer be edited or shown.', 'next-class-services' ) . '" href="' . esc_url( self::action_url( 'delete', $post->ID ) ) . '">' . esc_html__( 'Delete', 'next-class-services' ) . '</a>';
+			Admin::action_menu(
+				array(
+					array( __( 'Edit', 'next-class-services' ), Admin::url( 'ncs-assessments', array( 'action' => 'edit', 'id' => $post->ID ) ), '', '' ),
+					array( __( 'Preview', 'next-class-services' ), Admin::url( 'ncs-assessments', array( 'action' => 'preview', 'id' => $post->ID ) ), '', '' ),
+					array( __( 'Duplicate', 'next-class-services' ), self::action_url( 'duplicate', $post->ID ), '', '' ),
+					array( $published ? __( 'Unpublish', 'next-class-services' ) : __( 'Publish', 'next-class-services' ), self::action_url( $published ? 'unpublish' : 'publish', $post->ID ), '', '' ),
+					array( __( 'Delete', 'next-class-services' ), self::action_url( 'delete', $post->ID ), 'ncs-danger', __( 'Delete this assessment? Stored submissions are kept, but the assessment can no longer be edited or shown.', 'next-class-services' ) ),
+				),
+				/* translators: %s: assessment name */
+				sprintf( __( 'Actions for %s', 'next-class-services' ), $cfg['admin_title'] )
+			);
 			echo '</td></tr>';
 		}
 		echo '</tbody></table></div>';

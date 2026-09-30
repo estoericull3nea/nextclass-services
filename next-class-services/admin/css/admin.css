@@ -324,3 +324,19 @@
 .ncs-admin .ncs-notice,
 .ncs-admin .ncs-range-note,
 .ncs-admin .ncs-range-ok { border-left-width: 1px; }
+
+/* Three dot actions menu */
+
+.ncs-admin .ncs-overflow-visible { overflow: visible; }
+.ncs-admin .ncs-menu { position: relative; display: inline-block; }
+.ncs-admin .ncs-menu-btn { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border: 1px solid var(--line); border-radius: 8px; background: #ffffff; cursor: pointer; list-style: none; }
+.ncs-admin .ncs-menu-btn::-webkit-details-marker { display: none; }
+.ncs-admin .ncs-menu-btn:hover, .ncs-admin .ncs-menu[open] > .ncs-menu-btn { background: #000000; }
+.ncs-admin .ncs-dots { display: inline-flex; gap: 3px; }
+.ncs-admin .ncs-dots i { display: block; width: 4px; height: 4px; border-radius: 50%; background: #000000; }
+.ncs-admin .ncs-menu-btn:hover .ncs-dots i, .ncs-admin .ncs-menu[open] .ncs-dots i { background: #ffffff; }
+.ncs-admin .ncs-menu-list { position: absolute; right: 0; top: 40px; z-index: 20; min-width: 160px; margin: 0; padding: 6px; list-style: none; background: #ffffff; border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12); }
+.ncs-admin .ncs-menu-list li { margin: 0; }
+.ncs-admin .ncs-menu-list a { display: block; padding: 7px 12px; border-radius: 6px; white-space: nowrap; font-weight: 400; }
+.ncs-admin .ncs-menu-list a:hover { background: rgba(0, 0, 0, 0.06); opacity: 1; }
+.ncs-admin .ncs-menu-list a.ncs-danger { font-weight: 500; }

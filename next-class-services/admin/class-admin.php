@@ -166,6 +166,20 @@ class Admin {
 	}
 
 	/**
+	 * Three dot actions menu (native details element, keyboard accessible).
+	 *
+	 * @param array  $items Each: label, url, css class, confirm message.
+	 * @param string $label Accessible name for the menu button.
+	 */
+	public static function action_menu( array $items, $label ) {
+		echo '<details class="ncs-menu"><summary class="ncs-menu-btn" aria-label="' . esc_attr( $label ) . '"><span class="ncs-dots" aria-hidden="true"><i></i><i></i><i></i></span></summary><ul class="ncs-menu-list">';
+		foreach ( $items as $item ) {
+			echo '<li><a href="' . esc_url( $item[1] ) . '"' . ( $item[2] ? ' class="' . esc_attr( $item[2] ) . '"' : '' ) . ( $item[3] ? ' data-ncs-confirm="' . esc_attr( $item[3] ) . '"' : '' ) . '>' . esc_html( $item[0] ) . '</a></li>';
+		}
+		echo '</ul></details>';
+	}
+
+	/**
 	 * Build an HTML list of validation errors, each with a link to the setting to fix.
 	 *
 	 * @param array  $errors Errors: arrays with message, tab, field (or plain strings).

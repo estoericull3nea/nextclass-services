@@ -189,3 +189,32 @@
 		setTimeout( jump, 100 );
 	} );
 }() );
+
+/**
+ * Close the three dot menus on outside click or Escape.
+ */
+( function () {
+	'use strict';
+
+	document.addEventListener( 'click', function ( e ) {
+		Array.prototype.forEach.call( document.querySelectorAll( '.ncs-menu[open]' ), function ( menu ) {
+			if ( ! menu.contains( e.target ) ) {
+				menu.removeAttribute( 'open' );
+			}
+		} );
+	} );
+
+	document.addEventListener( 'keydown', function ( e ) {
+		if ( e.key !== 'Escape' ) {
+			return;
+		}
+		var open = document.querySelector( '.ncs-menu[open]' );
+		if ( open ) {
+			open.removeAttribute( 'open' );
+			var btn = open.querySelector( 'summary' );
+			if ( btn ) {
+				btn.focus();
+			}
+		}
+	} );
+}() );
