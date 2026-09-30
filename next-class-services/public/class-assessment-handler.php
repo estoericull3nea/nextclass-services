@@ -61,7 +61,7 @@ class Assessment_Handler {
 		}
 
 		$elapsed = isset( $body['elapsed'] ) ? (int) $body['elapsed'] : 0;
-		if ( ! $preview && $elapsed < 2000 ) {
+		if ( ! $preview && $elapsed < ( max( 0, (int) Helpers::setting( 'min_seconds', 2 ) ) * 1000 ) ) {
 			return Front::error( 'too_fast', __( 'Please take a moment to review your answers and try again.', 'next-class-services' ), 400 );
 		}
 

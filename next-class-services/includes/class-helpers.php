@@ -47,6 +47,15 @@ class Helpers {
 			'embed_host_allowlist'       => '',
 			'delete_on_uninstall'        => 0,
 			'debug_log'                  => 0,
+			'spam_trap_enabled'          => 1,
+			'min_seconds'                => 2,
+			'rate_limit_enabled'         => 1,
+			'rate_window_minutes'        => 10,
+			'rate_assessment'            => 40,
+			'rate_booking_create'        => 20,
+			'rate_booking_manage'        => 30,
+			'rate_lookup_per_minute'     => 90,
+			'trust_proxy_headers'        => 0,
 		);
 	}
 
@@ -294,6 +303,18 @@ class Helpers {
 	 */
 	public static function client_hash() {
 		$ip = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
+		if ( self::setting( 'trust_proxy_headers' ) ) {
+			foreach ( array( 'HTTP_CF_CONNECTING_IP', 'HTTP_X_FORWARDED_FOR' ) as $header ) {
+				if ( ! empty( $_SERVER[ $header ] ) ) {
+					$parts     = explode( ',', sanitize_text_field( wp_unslash( $_SERVER[ $header ] ) ) );
+					$candidate = trim( $parts[0] );
+					if ( filter_var( $candidate, FILTER_VALIDATE_IP ) ) {
+						$ip = $candidate;
+						break;
+					}
+				}
+			}
+		}
 		return substr( hash_hmac( 'sha256', $ip, wp_salt( 'auth' ) ), 0, 24 );
 	}
 
@@ -306,6 +327,9 @@ class Helpers {
 	 * @return bool True when the request is allowed.
 	 */
 	public static function rate_limit( $bucket, $limit = 10, $window = 60 ) {
+		if ( ! self::setting( 'rate_limit_enabled' ) ) {
+			return true;
+		}
 		$key   = 'ncs_rl_' . md5( $bucket . '|' . self::client_hash() );
 		$count = (int) get_transient( $key );
 		if ( $count >= $limit ) {

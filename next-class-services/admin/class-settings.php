@@ -69,6 +69,22 @@ class Settings {
 		Form::textarea( 's[embed_host_allowlist]', __( 'Allowed embed hosts', 'next-class-services' ), $s['embed_host_allowlist'], array( 'rows' => 2, 'help' => __( 'Optional. Comma or line separated hostnames (for example booking.example.com). When set, custom iframe embeds must use one of these hosts. Empty allows any https host.', 'next-class-services' ) ) );
 		echo '</div>';
 
+		echo '<div class="ncs-card"><h2 class="ncs-card-title">' . esc_html__( 'Security and spam protection', 'next-class-services' ) . '</h2>';
+		echo '<p class="ncs-help">' . esc_html__( 'Public forms always verify a security token and validate every field on the server. These options tune the extra protections.', 'next-class-services' ) . '</p>';
+		Form::checkbox( 's[spam_trap_enabled]', __( 'Enable the hidden spam trap field', 'next-class-services' ), $s['spam_trap_enabled'], array( 'help' => __( 'A hidden field real visitors never fill. Submissions that fill it are rejected as spam. Turn this off if a browser or password manager autofills the field and blocks real people.', 'next-class-services' ) ) );
+		Form::number( 's[min_seconds]', __( 'Minimum seconds to complete an assessment', 'next-class-services' ), $s['min_seconds'], array( 'min' => 0, 'max' => 60, 'help' => __( 'Submissions faster than this are treated as bots. Use 0 to turn the check off.', 'next-class-services' ) ) );
+		Form::checkbox( 's[rate_limit_enabled]', __( 'Limit how often one visitor can submit', 'next-class-services' ), $s['rate_limit_enabled'], array( 'help' => __( 'Limits are counted per visitor address and reset automatically. Turn this off while testing.', 'next-class-services' ) ) );
+		echo '<div class="ncs-cols">';
+		Form::number( 's[rate_window_minutes]', __( 'Limit window (minutes)', 'next-class-services' ), $s['rate_window_minutes'], array( 'min' => 1, 'max' => 1440 ) );
+		Form::number( 's[rate_assessment]', __( 'Assessment submissions per window', 'next-class-services' ), $s['rate_assessment'], array( 'min' => 1, 'max' => 1000 ) );
+		echo '</div><div class="ncs-cols">';
+		Form::number( 's[rate_booking_create]', __( 'New bookings per window', 'next-class-services' ), $s['rate_booking_create'], array( 'min' => 1, 'max' => 1000 ) );
+		Form::number( 's[rate_booking_manage]', __( 'Cancel, reschedule and lookup requests per window', 'next-class-services' ), $s['rate_booking_manage'], array( 'min' => 1, 'max' => 1000 ) );
+		echo '</div>';
+		Form::number( 's[rate_lookup_per_minute]', __( 'Calendar availability lookups per minute', 'next-class-services' ), $s['rate_lookup_per_minute'], array( 'min' => 10, 'max' => 1000 ) );
+		Form::checkbox( 's[trust_proxy_headers]', __( 'Read the visitor address from proxy headers', 'next-class-services' ), $s['trust_proxy_headers'], array( 'help' => __( 'Turn on only if the site is behind a proxy or CDN such as Cloudflare or a load balancer. Otherwise all visitors can appear to share one address and hit the limits together. Do not enable it on a site that is directly reachable, because the header can be faked.', 'next-class-services' ) ) );
+		echo '<p class="ncs-help">' . esc_html__( 'Custom embeds can also be restricted to approved hosts under Booking, Allowed embed hosts.', 'next-class-services' ) . '</p></div>';
+
 		echo '<div class="ncs-card"><h2 class="ncs-card-title">' . esc_html__( 'Frontend appearance', 'next-class-services' ) . '</h2>';
 		echo '<p class="ncs-help">' . esc_html__( 'Public assessments and booking forms inherit typography from your theme by default.', 'next-class-services' ) . '</p>';
 		echo '<div class="ncs-cols">';
@@ -164,6 +180,15 @@ class Settings {
 			'embed_host_allowlist'       => implode( ', ', array_filter( array_map( 'sanitize_text_field', preg_split( '/[\s,]+/', strtolower( $get( 'embed_host_allowlist' ) ) ) ) ) ),
 			'delete_on_uninstall'        => ! empty( $in['delete_on_uninstall'] ) ? 1 : 0,
 			'debug_log'                  => ! empty( $in['debug_log'] ) ? 1 : 0,
+			'spam_trap_enabled'          => ! empty( $in['spam_trap_enabled'] ) ? 1 : 0,
+			'min_seconds'                => max( 0, min( 60, (int) $get( 'min_seconds' ) ) ),
+			'rate_limit_enabled'         => ! empty( $in['rate_limit_enabled'] ) ? 1 : 0,
+			'rate_window_minutes'        => max( 1, min( 1440, (int) $get( 'rate_window_minutes' ) ) ),
+			'rate_assessment'            => max( 1, min( 1000, (int) $get( 'rate_assessment' ) ) ),
+			'rate_booking_create'        => max( 1, min( 1000, (int) $get( 'rate_booking_create' ) ) ),
+			'rate_booking_manage'        => max( 1, min( 1000, (int) $get( 'rate_booking_manage' ) ) ),
+			'rate_lookup_per_minute'     => max( 10, min( 1000, (int) $get( 'rate_lookup_per_minute' ) ) ),
+			'trust_proxy_headers'        => ! empty( $in['trust_proxy_headers'] ) ? 1 : 0,
 		);
 		Helpers::save_settings( $new );
 

@@ -94,7 +94,7 @@ class Booking_Handler {
 	 * @return \WP_REST_Response
 	 */
 	public static function availability( \WP_REST_Request $request ) {
-		if ( ! Helpers::rate_limit( 'availability', 90, 60 ) ) {
+		if ( ! Helpers::rate_limit( 'availability', max( 1, (int) Helpers::setting( 'rate_lookup_per_minute', 90 ) ), 60 ) ) {
 			return Front::error( 'rate_limited', __( 'Too many requests. Please wait a moment.', 'next-class-services' ), 429 );
 		}
 		$svc = self::service( absint( $request->get_param( 'service' ) ) );
@@ -144,7 +144,7 @@ class Booking_Handler {
 	 * @return \WP_REST_Response
 	 */
 	public static function slots( \WP_REST_Request $request ) {
-		if ( ! Helpers::rate_limit( 'slots', 90, 60 ) ) {
+		if ( ! Helpers::rate_limit( 'slots', max( 1, (int) Helpers::setting( 'rate_lookup_per_minute', 90 ) ), 60 ) ) {
 			return Front::error( 'rate_limited', __( 'Too many requests. Please wait a moment.', 'next-class-services' ), 429 );
 		}
 		$svc = self::service( absint( $request->get_param( 'service' ) ) );

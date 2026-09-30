@@ -145,6 +145,29 @@ class Front {
 	}
 
 	/**
+	 * Limits from Settings, security section.
+	 *
+	 * @param string $bucket  Bucket.
+	 * @param int    $limit   Default limit.
+	 * @param int    $window  Default window.
+	 * @return array [ limit, window seconds ]
+	 */
+	private static function configured_limit( $bucket, $limit, $window ) {
+		$map = array(
+			'assessment_submit'  => 'rate_assessment',
+			'booking_create'     => 'rate_booking_create',
+			'booking_manage'     => 'rate_booking_manage',
+			'booking_cancel'     => 'rate_booking_manage',
+			'booking_reschedule' => 'rate_booking_manage',
+		);
+		if ( isset( $map[ $bucket ] ) ) {
+			$limit  = max( 1, (int) Helpers::setting( $map[ $bucket ], $limit ) );
+			$window = max( 1, (int) Helpers::setting( 'rate_window_minutes', 10 ) ) * MINUTE_IN_SECONDS;
+		}
+		return array( $limit, $window );
+	}
+
+	/**
 	 * Standard guard for POST endpoints: nonce, honeypot and rate limit.
 	 *
 	 * @param \WP_REST_Request $request Request.
@@ -158,11 +181,12 @@ class Front {
 			return self::error( 'bad_nonce', __( 'Your session has expired. Please refresh the page and try again.', 'next-class-services' ), 403 );
 		}
 		$hp = $request->get_param( 'website' );
-		if ( is_string( $hp ) && '' !== trim( $hp ) ) {
+		if ( Helpers::setting( 'spam_trap_enabled' ) && is_string( $hp ) && '' !== trim( $hp ) ) {
 			// Pretend success to bots without doing any work.
 			return self::error( 'spam', __( 'We could not process this request.', 'next-class-services' ), 400 );
 		}
 		// Only requests that passed the nonce and trap checks count toward the limit.
+		list( $limit, $window ) = self::configured_limit( $bucket, $limit, $window );
 		if ( ! Helpers::rate_limit( $bucket, $limit, $window ) ) {
 			return self::error( 'rate_limited', __( 'Too many requests. Please wait a moment and try again.', 'next-class-services' ), 429 );
 		}
