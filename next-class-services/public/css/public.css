@@ -815,3 +815,60 @@
 		transform: none;
 	}
 }
+
+/*
+ * Dashboard look and feel: soft tinted surface, white rounded cards, light borders,
+ * gentle shadow, rounded controls. Uses the Next Class palette with solid fills only.
+ */
+
+.ncs-root .ncs-panel {
+	border: 1px solid rgba(57, 57, 57, 0.14);
+	border-radius: 14px;
+	box-shadow: 0 1px 3px rgba(57, 57, 57, 0.08);
+}
+
+.ncs-root .ncs-heading { font-size: clamp(1.25rem, 3vw, 1.6rem); }
+.ncs-root .ncs-question-text { font-size: clamp(1.05rem, 2.6vw, 1.25rem); }
+.ncs-root .ncs-help, .ncs-root .ncs-meta, .ncs-root .ncs-progress-text { color: rgba(57, 57, 57, 0.7); }
+
+.ncs-root .ncs-btn,
+.ncs-root .ncs-input,
+.ncs-root .ncs-select,
+.ncs-root .ncs-service-btn,
+.ncs-root .ncs-slot,
+.ncs-root .ncs-cal-day,
+.ncs-root .ncs-note,
+.ncs-root .ncs-summary { border-radius: 10px; }
+
+.ncs-root .ncs-btn { border-width: 1px; padding: 10px 24px; }
+.ncs-root .ncs-btn-primary { border-color: var(--ncs-primary); }
+.ncs-root .ncs-input,
+.ncs-root .ncs-select { border-width: 1px; border-color: rgba(57, 57, 57, 0.28); }
+
+.ncs-root .ncs-choice,
+.ncs-root .ncs-program,
+.ncs-root .ncs-stat,
+.ncs-root .ncs-rating-item label {
+	border-width: 1px;
+	border-color: rgba(57, 57, 57, 0.18);
+	border-radius: 10px;
+	box-shadow: 0 1px 2px rgba(57, 57, 57, 0.06);
+}
+.ncs-root .ncs-choice input:checked + label { border-radius: 8px; }
+.ncs-root .ncs-rating-item input:checked + label { border-width: 1px; }
+
+.ncs-root .ncs-progress-track { height: 8px; border: 0; border-radius: 999px; background: var(--ncs-warm); }
+.ncs-root .ncs-progress-fill { border-right: 0; border-radius: 999px; }
+
+.ncs-root .ncs-stat { background: var(--ncs-white); padding: 14px 20px; }
+.ncs-root .ncs-stat-value { font-size: 2rem; }
+.ncs-root .ncs-stat-label { color: rgba(57, 57, 57, 0.7); }
+.ncs-root .ncs-recommendation { border-radius: 10px; border-left-width: 4px; }
+.ncs-root .ncs-eyebrow { border: 0; border-radius: 999px; padding: 3px 12px; }
+
+.ncs-root .ncs-cal-day { border-width: 1px; border-color: rgba(57, 57, 57, 0.2); }
+.ncs-root .ncs-cal-day.is-selected, .ncs-root .ncs-slot.is-selected { border-width: 1px; }
+.ncs-root .ncs-slot { border-width: 1px; border-color: rgba(57, 57, 57, 0.2); }
+.ncs-root .ncs-summary { border: 1px solid rgba(57, 57, 57, 0.14); }
+.ncs-root .ncs-embed { border-radius: 12px; border-color: rgba(57, 57, 57, 0.14); }
+.ncs-root .ncs-preview-banner, .ncs-root .ncs-notice { border-radius: 10px; border-width: 1px; }

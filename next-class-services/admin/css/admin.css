@@ -285,3 +285,20 @@
 
 .ncs-savebar { border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 16px; box-shadow: 0 -1px 6px rgba(0, 0, 0, 0.05); }
 .ncs-preview-frame { border-radius: var(--radius); }
+
+/* No underlines anywhere on admin pages. Links are identified by position, weight and hover. */
+
+.ncs-admin a,
+.ncs-admin a:hover,
+.ncs-admin a:focus,
+.ncs-admin .ncs-btn,
+.ncs-admin .ncs-btn-danger,
+.ncs-admin .ncs-filter-links a.is-current,
+.ncs-admin .ncs-notice-error .ncs-notice-label,
+.ncs-admin .ncs-btn[disabled] {
+	text-decoration: none;
+}
+
+.ncs-admin a:hover { opacity: 0.65; }
+.ncs-admin a.ncs-btn:hover { opacity: 1; }
+.ncs-actions a { font-weight: 500; }
