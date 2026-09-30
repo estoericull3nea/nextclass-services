@@ -69,15 +69,6 @@ class Assets {
 
 		wp_register_script( 'ncs-assessment', NCS_URL . 'public/js/assessment.js', array( 'ncs-analytics' ), NCS_VERSION, true );
 		wp_register_script( 'ncs-booking', NCS_URL . 'public/js/booking.js', array( 'ncs-analytics' ), NCS_VERSION, true );
-
-		if ( Helpers::setting( 'frontend_poppins' ) ) {
-			$base = NCS_URL . 'assets/fonts/';
-			$css  = '';
-			foreach ( array( 400, 500, 600 ) as $w ) {
-				$css .= "@font-face{font-family:'Poppins';font-style:normal;font-weight:{$w};font-display:swap;src:url('" . esc_url_raw( $base . 'poppins-' . $w . '.woff2' ) . "') format('woff2');}";
-			}
-			wp_add_inline_style( 'ncs-public', $css );
-		}
 	}
 
 	/**
@@ -107,6 +98,7 @@ class Assets {
 			'timesShown'    => __( 'Times are shown in %s.', 'next-class-services' ),
 			'chooseDate'    => __( 'Choose a date', 'next-class-services' ),
 			'chooseTime'    => __( 'Choose a time', 'next-class-services' ),
+			'selectDateFirst' => __( 'Select date first', 'next-class-services' ),
 			'yourDetails'   => __( 'Your details', 'next-class-services' ),
 			'confirmTitle'  => __( 'Review and confirm', 'next-class-services' ),
 			'confirmBooking' => __( 'Confirm booking', 'next-class-services' ),

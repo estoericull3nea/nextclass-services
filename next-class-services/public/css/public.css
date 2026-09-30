@@ -24,13 +24,6 @@
 	text-align: left;
 }
 
-.ncs-root.ncs-font-poppins,
-.ncs-root.ncs-font-poppins input,
-.ncs-root.ncs-font-poppins select,
-.ncs-root.ncs-font-poppins textarea,
-.ncs-root.ncs-font-poppins button {
-	font-family: 'Poppins', inherit, sans-serif;
-}
 
 .ncs-root *,
 .ncs-root *::before,
@@ -884,3 +877,47 @@
 .ncs-root a:hover { background-color: var(--ncs-warm); }
 .ncs-root a:focus-visible, .ncs-root button:focus-visible, .ncs-root input:focus-visible, .ncs-root select:focus-visible, .ncs-root textarea:focus-visible,
 .ncs-root .ncs-choice:focus-within, .ncs-root .ncs-rating-item input:focus-visible + label { box-shadow: 0 0 0 5px var(--ncs-warm); }
+
+/* Fonts: Anton for headings, Varela Round for everything else. Served from this plugin. */
+
+@font-face { font-family: 'Anton'; font-style: normal; font-weight: 400; font-display: swap; src: url('../../assets/fonts/anton-400.woff2') format('woff2'); }
+@font-face { font-family: 'Varela Round'; font-style: normal; font-weight: 400; font-display: swap; src: url('../../assets/fonts/varela-round-400.woff2') format('woff2'); }
+
+.ncs-root,
+.ncs-root input,
+.ncs-root select,
+.ncs-root textarea,
+.ncs-root button {
+	font-family: 'Varela Round', sans-serif;
+}
+
+.ncs-root .ncs-heading,
+.ncs-root .ncs-subheading,
+.ncs-root .ncs-question-text,
+.ncs-root .ncs-program-name,
+.ncs-root .ncs-cal-title,
+.ncs-root .ncs-stat-value,
+.ncs-root .ncs-eyebrow {
+	font-family: 'Anton', sans-serif;
+	font-weight: 400;
+	letter-spacing: 0.02em;
+	line-height: 1.25;
+}
+
+.ncs-root .ncs-heading { text-transform: uppercase; }
+.ncs-root .ncs-question-text { font-size: clamp(1.15rem, 2.8vw, 1.4rem); }
+.ncs-root .ncs-btn, .ncs-root .ncs-choice label, .ncs-root .ncs-slot, .ncs-root .ncs-cal-day, .ncs-root .ncs-service-btn strong { font-weight: 400; }
+.ncs-root .ncs-btn-primary { font-weight: 400; }
+
+/* Error messages: red text, no background. */
+
+.ncs-root .ncs-error,
+.ncs-root .ncs-step-error {
+	padding: 0;
+	background: none;
+	background-color: transparent;
+	border: 0;
+	color: #c62828;
+	font-size: 0.9rem;
+	font-weight: 400;
+}

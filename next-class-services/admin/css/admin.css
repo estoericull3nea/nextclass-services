@@ -302,3 +302,12 @@
 .ncs-admin a:hover { opacity: 0.65; }
 .ncs-admin a.ncs-btn:hover { opacity: 1; }
 .ncs-actions a { font-weight: 500; }
+
+/* Notice colors: pastel red for errors, pastel green for success, pastel yellow for warnings. */
+
+.ncs-admin .ncs-notice { color: #000000; border-radius: 8px; border-left-width: 4px; }
+.ncs-admin .ncs-notice-error { background: #fde3e3; border-color: #f2b8b8; color: #000000; }
+.ncs-admin .ncs-notice-success { background: #dff5e3; border-color: #a9dcb2; }
+.ncs-admin .ncs-notice-warning { background: #fff6cf; border-color: #ecd98a; border-style: solid; }
+.ncs-admin .ncs-notice-info { background: #ffffff; }
+.ncs-admin .ncs-notice-error .ncs-notice-label { text-decoration: none; }

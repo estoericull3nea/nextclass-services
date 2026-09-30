@@ -71,7 +71,6 @@ class Settings {
 
 		echo '<div class="ncs-card"><h2 class="ncs-card-title">' . esc_html__( 'Frontend appearance', 'next-class-services' ) . '</h2>';
 		echo '<p class="ncs-help">' . esc_html__( 'Public assessments and booking forms inherit typography from your theme by default.', 'next-class-services' ) . '</p>';
-		Form::checkbox( 's[frontend_poppins]', __( 'Use Poppins for plugin content on the public site', 'next-class-services' ), $s['frontend_poppins'], array( 'help' => __( 'Off by default. The font file is served from this plugin, not from a third party.', 'next-class-services' ) ) );
 		echo '<div class="ncs-cols">';
 		Form::number( 's[frontend_radius]', __( 'Corner radius (pixels)', 'next-class-services' ), $s['frontend_radius'], array( 'min' => 0, 'max' => 16 ) );
 		echo '</div></div>';
@@ -159,7 +158,6 @@ class Settings {
 			'ga4_enabled'                => ! empty( $in['ga4_enabled'] ) ? 1 : 0,
 			'analytics_enabled'          => ! empty( $in['analytics_enabled'] ) ? 1 : 0,
 			'frontend_primary_color'     => '#393939',
-			'frontend_poppins'           => ! empty( $in['frontend_poppins'] ) ? 1 : 0,
 			'frontend_radius'            => max( 0, min( 16, (int) $get( 'frontend_radius' ) ) ),
 			'shared_calendar'            => ! empty( $in['shared_calendar'] ) ? 1 : 0,
 			'manage_page_url'            => Helpers::safe_url( $get( 'manage_page_url' ) ),

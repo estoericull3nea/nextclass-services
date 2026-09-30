@@ -222,6 +222,6 @@ class Front {
 	 * @return string
 	 */
 	public static function font_class() {
-		return Helpers::setting( 'frontend_poppins' ) ? ' ncs-font-poppins' : '';
+		return '';
 	}
 }

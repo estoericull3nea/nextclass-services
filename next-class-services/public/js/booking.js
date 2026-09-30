@@ -360,6 +360,8 @@
 			function renderSlots() {
 				slotWrap.innerHTML = '';
 				if ( ! st.date ) {
+					slotWrap.appendChild( h( 'h3', { 'class': 'ncs-subheading', text: I18N.chooseTime || 'Choose a time' } ) );
+					slotWrap.appendChild( h( 'p', { 'class': 'ncs-note ncs-slots-hint', text: I18N.selectDateFirst || 'Select date first' } ) );
 					return;
 				}
 				slotWrap.appendChild( h( 'h3', { 'class': 'ncs-subheading', text: ( I18N.chooseTime || 'Choose a time' ) + ': ' + longDate( st.date ) } ) );
@@ -395,6 +397,7 @@
 			}
 
 			loadMonth();
+			renderSlots();
 			return box;
 		}
 
