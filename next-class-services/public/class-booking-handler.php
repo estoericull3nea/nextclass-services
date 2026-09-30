@@ -197,7 +197,7 @@ class Booking_Handler {
 	 */
 	public static function create( \WP_REST_Request $request ) {
 		$body  = self::body( $request );
-		$guard = Front::guard( $request, 'booking_create', 8, 600 );
+		$guard = Front::guard( $request, 'booking_create', 20, 600 );
 		if ( $guard ) {
 			return $guard;
 		}

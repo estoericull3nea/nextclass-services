@@ -40,7 +40,7 @@ class Assessment_Handler {
 		}
 		$request->set_param( 'website', isset( $body['website'] ) ? $body['website'] : '' );
 
-		$guard = Front::guard( $request, 'assessment_submit', 12, 600 );
+		$guard = Front::guard( $request, 'assessment_submit', 40, 600 );
 		if ( $guard ) {
 			return $guard;
 		}

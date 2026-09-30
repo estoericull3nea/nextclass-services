@@ -340,3 +340,9 @@
 .ncs-admin .ncs-menu-list a { display: block; padding: 7px 12px; border-radius: 6px; white-space: nowrap; font-weight: 400; }
 .ncs-admin .ncs-menu-list a:hover { background: rgba(0, 0, 0, 0.06); opacity: 1; }
 .ncs-admin .ncs-menu-list a.ncs-danger { font-weight: 500; }
+
+/* Destructive actions: red text. */
+.ncs-admin .ncs-danger, .ncs-admin a.ncs-danger, .ncs-admin .ncs-btn-danger, .ncs-admin a.ncs-btn-danger,
+.ncs-admin .ncs-menu-list a.ncs-danger { color: #c62828; }
+.ncs-admin .ncs-btn-danger:hover, .ncs-admin a.ncs-btn-danger:hover { background: #c62828; color: #ffffff; }
+.ncs-admin .ncs-menu-list a.ncs-danger:hover { background: #fde3e3; color: #c62828; }

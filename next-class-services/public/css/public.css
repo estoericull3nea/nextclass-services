@@ -921,3 +921,10 @@
 	font-size: 0.9rem;
 	font-weight: 400;
 }
+
+/* Selected answer: highlight the full width of the choice. */
+.ncs-root .ncs-choice:has(input:checked) { background-color: var(--ncs-yellow); }
+.ncs-root .ncs-choice input:checked + label { background-color: transparent; }
+
+/* Recommendation box: no left border. */
+.ncs-root .ncs-recommendation { border-left: 0; }

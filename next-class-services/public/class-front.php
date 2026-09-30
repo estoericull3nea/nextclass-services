@@ -154,9 +154,6 @@ class Front {
 	 * @return \WP_REST_Response|null Error response or null when allowed.
 	 */
 	public static function guard( \WP_REST_Request $request, $bucket, $limit, $window ) {
-		if ( ! Helpers::rate_limit( $bucket, $limit, $window ) ) {
-			return self::error( 'rate_limited', __( 'Too many requests. Please wait a moment and try again.', 'next-class-services' ), 429 );
-		}
 		if ( ! self::verify_nonce( $request ) ) {
 			return self::error( 'bad_nonce', __( 'Your session has expired. Please refresh the page and try again.', 'next-class-services' ), 403 );
 		}
@@ -164,6 +161,10 @@ class Front {
 		if ( is_string( $hp ) && '' !== trim( $hp ) ) {
 			// Pretend success to bots without doing any work.
 			return self::error( 'spam', __( 'We could not process this request.', 'next-class-services' ), 400 );
+		}
+		// Only requests that passed the nonce and trap checks count toward the limit.
+		if ( ! Helpers::rate_limit( $bucket, $limit, $window ) ) {
+			return self::error( 'rate_limited', __( 'Too many requests. Please wait a moment and try again.', 'next-class-services' ), 429 );
 		}
 		return null;
 	}
