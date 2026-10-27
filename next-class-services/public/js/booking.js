@@ -413,6 +413,7 @@
 				globe: [ 'M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0ZM3 12h18', 'M12 3a18 18 0 0 1 0 18 18 18 0 0 1 0-18Z' ],
 				edit: [ 'm15 5 4 4M4 20l4-1L20 7a2.8 2.8 0 0 0-4-4L4 15Z' ],
 				check: [ 'm5 12 4 4L19 6' ],
+				cancel: [ 'm6 6 12 12M18 6 6 18' ],
 				back: [ 'M19 12H5m6-6-6 6 6 6' ],
 				video: [ 'M15 9l6-4v14l-6-4', 'M3 5h12v14H3Z' ],
 				link: [ 'M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-2 2', 'M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l2-2' ]
@@ -803,7 +804,7 @@
 
 			function summary( d ) {
 				var a = d.appointment;
-				var card = bookingCard( a );
+				var card = bookingCard( a, true );
 				card.appendChild( statusBadge( a.status, a.statusLabel ) );
 				return card;
 			}
@@ -811,17 +812,17 @@
 			function drawManage( d, notice ) {
 				var a = d.appointment;
 				var panel = h( 'div', { 'class': 'ncs-panel ncs-manage' },
-					h( 'div', { 'class': 'ncs-booking-hero' }, h( 'h2', { 'class': 'ncs-heading', 'data-ncs-focus': '', text: I18N.manageTitle || 'Manage your booking' } ), statusBadge( a.status, a.statusLabel ) ),
+					h( 'div', { 'class': 'ncs-booking-hero' }, h( 'span', { 'class': 'ncs-received-heading-icon' }, bookingIcon( 'calendar' ) ), h( 'h2', { 'class': 'ncs-heading', 'data-ncs-focus': '', text: I18N.manageTitle || 'Manage your booking' } ), statusBadge( a.status, a.statusLabel ) ),
 					h( 'p', { 'class': 'ncs-lead-text', text: I18N.manageHelp || 'Your appointment details and available changes, all in one place.' } )
 				);
 				if ( notice ) { panel.appendChild( h( 'p', { 'class': 'ncs-booking-notice', role: 'status', text: notice } ) ); }
-				var details = h( 'section', { 'class': 'ncs-booking-card' }, h( 'h3', { 'class': 'ncs-booking-card-title', text: I18N.yourDetails || 'Your details' } ), summaryList( [ [ I18N.name || 'Name', a.name ], [ I18N.email || 'Email', a.email ] ] ) );
-				add( details, calendarNotice( a.calendarState, '' ) );
-				if ( a.active ) { add( details, meetButton( a.meetUrl ) ); }
+				var details = h( 'section', { 'class': 'ncs-booking-card' }, h( 'h3', { 'class': 'ncs-booking-card-title' }, bookingIcon( 'user' ), h( 'span', { text: I18N.yourDetails || 'Your details' } ) ), summaryList( [ [ I18N.name || 'Name', a.name, 'user' ], [ I18N.email || 'Email', a.email, 'mail' ] ] ) );
+				add( details, calendarNotice( a.calendarState, '', true ) );
+				if ( a.active ) { add( details, meetButton( a.meetUrl, true ) ); }
 				if ( a.calendarState === 'pending' ) {
 					details.appendChild( h( 'button', { type: 'button', 'class': 'ncs-booking-edit', text: I18N.refreshBooking || 'Refresh booking details', onclick: function ( event ) { event.currentTarget.disabled = true; loadManage(); } } ) );
 				}
-				panel.appendChild( h( 'div', { 'class': 'ncs-booking-grid' }, bookingCard( a ), details ) );
+				panel.appendChild( h( 'div', { 'class': 'ncs-booking-grid' }, bookingCard( a, true ), details ) );
 				var actions = h( 'div', { 'class': 'ncs-booking-grid ncs-manage-actions' } );
 				if ( d.appointment.active ) {
 					if ( d.canReschedule ) {
@@ -840,6 +841,13 @@
 					}
 				}
 				panel.appendChild( actions );
+				Array.prototype.forEach.call( actions.querySelectorAll( '.ncs-booking-card' ), function ( card ) {
+					var button = card.querySelector( 'button' );
+					var icon = button.classList.contains( 'ncs-booking-cancel' ) ? 'cancel' : 'clock';
+					var heading = card.querySelector( 'h3' );
+					heading.insertBefore( bookingIcon( icon ), heading.firstChild );
+					reviewButtonLabel( button, button.textContent, icon );
+				} );
 				show( panel, true );
 			}
 

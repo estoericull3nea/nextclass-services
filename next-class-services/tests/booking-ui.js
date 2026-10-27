@@ -23,7 +23,7 @@ class Element {
 	focus() {}
 	select() {}
 	matches( selector ) {
-		const tag = /^[a-z]+/i.exec( selector );
+		const tag = /^[a-z][a-z0-9]*/i.exec( selector );
 		if ( tag && this.tagName !== tag[0].toUpperCase() ) { return false; }
 		for ( const match of selector.split( '[' )[0].matchAll( /\.([\w-]+)/g ) ) { if ( ! this.classList.contains( match[1] ) ) { return false; } }
 		for ( const match of selector.matchAll( /\[([\w-]+)(?:="([^"]*)")?\]/g ) ) { if ( ! ( match[1] in this.attrs ) || ( match[2] !== undefined && this.attrs[match[1]] !== match[2] ) ) { return false; } }
@@ -80,6 +80,7 @@ async function chooseTime( ui ) { await flush(); ui.app.querySelector( '.ncs-cal
 	assert.equal( ui.calls.filter( call => call.route === 'booking/create' ).length, 1 );
 
 	ui = setup( true ); await flush(); assert.ok( ui.app.textContent.includes( 'Need a different time?' ) );
+	assert.ok( ui.app.querySelectorAll( 'svg[aria-hidden="true"]' ).length >= 8, 'Management uses decorative icons alongside readable labels' );
 	ui.button( 'Reschedule' ).click(); await chooseTime( ui ); ui.button( 'Confirm new time' ).click();
 	assert.equal( ui.button( 'Rescheduling...' ).disabled, true, 'Disable confirmation while rescheduling' );
 	assert.equal( ui.button( 'Rescheduling...' ).getAttribute( 'aria-busy' ), 'true', 'Expose rescheduling loading state to assistive technology' );
