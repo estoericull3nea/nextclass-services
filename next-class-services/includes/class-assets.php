@@ -173,13 +173,26 @@ class Assets {
 			'ncs-admin',
 			'ncsAdmin',
 			array(
+				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
 				'i18n' => array(
 					'confirmDelete' => __( 'This cannot be undone. Continue?', 'next-class-services' ),
+					'working' => __( 'Working...', 'next-class-services' ),
+					'ajaxError' => __( 'The request could not be completed. Check your connection and try again.', 'next-class-services' ),
+					'popupBlocked' => __( 'Allow popups for this site, then click Connect again.', 'next-class-services' ),
+					'connected' => __( 'Connected', 'next-class-services' ),
+					'notConnected' => __( 'Not connected', 'next-class-services' ),
+					'secretSaved' => __( 'A secret is saved. Leave blank to keep it. Secrets are encrypted and never displayed.', 'next-class-services' ),
+					'secretEmpty' => __( 'Enter the client secret from Google Cloud.', 'next-class-services' ),
+					'oauthWaiting' => __( 'Complete authorization in the Google window.', 'next-class-services' ),
+					'oauthClosed' => __( 'The Google window was closed. Connection status has been refreshed.', 'next-class-services' ),
 					'copied'        => __( 'Copied', 'next-class-services' ),
 					'copy'          => __( 'Copy', 'next-class-services' ),
 				),
 			)
 		);
+		if ( 'ncs-settings' === $page ) {
+			wp_enqueue_script( 'ncs-settings-admin', NCS_URL . 'admin/js/settings.js', array( 'ncs-admin' ), NCS_VERSION, true );
+		}
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$action = isset( $_GET['action'] ) ? sanitize_key( wp_unslash( $_GET['action'] ) ) : '';

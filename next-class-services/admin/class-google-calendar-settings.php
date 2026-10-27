@@ -10,14 +10,36 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class Google_Calendar_Settings {
+	private static $popup_callback = false;
+
 	public static function init() {
 		foreach ( array( 'save', 'connect', 'callback', 'disconnect', 'test', 'retry' ) as $action ) {
 			add_action( 'admin_post_ncs_google_' . $action, array( __CLASS__, 'handle_' . $action ) );
 		}
+		foreach ( array( 'save', 'connect', 'disconnect', 'test', 'status' ) as $action ) {
+			add_action( 'wp_ajax_ncs_google_' . $action, function () use ( $action ) {
+				Admin::begin_ajax( array( Settings::class, 'ajax_state' ) );
+				call_user_func( array( __CLASS__, 'handle_' . $action ) );
+			} );
+		}
+	}
+
+	/** Only return public connection metadata, never secrets or tokens. */
+	public static function state() {
+		$c = Google_Calendar::config();
+		return array( 'connected' => Google_Calendar::connected(), 'secretSaved' => '' !== $c['secret'], 'clientId' => $c['client_id'], 'calendarId' => $c['calendar_id'], 'test' => get_option( 'ncs_google_test_result', array() ) );
+	}
+
+	public static function handle_status() {
+		self::authorize( 'status' );
+		wp_send_json_success( array( 'state' => Settings::ajax_state() ) );
 	}
 
 	private static function authorize( $action ) {
 		if ( ! current_user_can( 'manage_options' ) ) {
+			if ( wp_doing_ajax() ) {
+				wp_send_json_error( array( 'message' => __( 'Only administrators can manage Google Calendar credentials.', 'next-class-services' ) ), 403 );
+			}
 			wp_die( esc_html__( 'Only administrators can manage Google Calendar credentials.', 'next-class-services' ), '', array( 'response' => 403 ) );
 		}
 		Admin::authorize( Settings::CAP, 'ncs_google_' . $action, '_ncs_nonce' );
@@ -28,12 +50,21 @@ class Google_Calendar_Settings {
 	}
 
 	private static function finish( $message, $type = 'success' ) {
+		if ( self::$popup_callback ) {
+			nocache_headers();
+			header( 'Content-Type: text/html; charset=' . get_option( 'blog_charset' ) );
+			$parts = wp_parse_url( admin_url() );
+			$origin = $parts['scheme'] . '://' . $parts['host'] . ( isset( $parts['port'] ) ? ':' . $parts['port'] : '' );
+			$data = array( 'type' => 'ncs-google-oauth', 'success' => 'success' === $type, 'message' => $message );
+			echo '<!doctype html><html><head><meta charset="utf-8"><title>' . esc_html__( 'Google Calendar connection', 'next-class-services' ) . '</title></head><body><p>' . esc_html( $message ) . '</p><p><a href="' . esc_url( Admin::url( 'ncs-settings' ) ) . '">' . esc_html__( 'Return to Settings', 'next-class-services' ) . '</a></p><script>if(window.opener){window.opener.postMessage(' . wp_json_encode( $data, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT ) . ',' . wp_json_encode( $origin ) . ');window.close();}</script></body></html>';
+			exit;
+		}
 		Admin::flash( $type, $message );
 		Admin::redirect( Admin::url( 'ncs-settings' ) . '#ncs-google-calendar' );
 	}
 
 	private static function form_start( $action ) {
-		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" class="ncs-form"><input type="hidden" name="action" value="ncs_google_' . esc_attr( $action ) . '">';
+		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" class="ncs-form" data-ncs-settings-ajax><input type="hidden" name="action" value="ncs_google_' . esc_attr( $action ) . '">';
 		wp_nonce_field( 'ncs_google_' . $action, '_ncs_nonce' );
 	}
 
@@ -42,8 +73,8 @@ class Google_Calendar_Settings {
 			return;
 		}
 		$c = Google_Calendar::config();
-		echo '<div class="ncs-card" id="ncs-google-calendar"><div class="ncs-guide-heading"><h2 class="ncs-card-title">' . esc_html__( 'Google Calendar and Google Meet', 'next-class-services' ) . '</h2><button type="button" class="ncs-guide-trigger" data-ncs-dialog-open="ncs-google-guide" aria-haspopup="dialog" aria-controls="ncs-google-guide" aria-label="' . esc_attr__( 'Open Google Calendar setup guide', 'next-class-services' ) . '" title="' . esc_attr__( 'Setup guide', 'next-class-services' ) . '"><span aria-hidden="true">?</span></button></div>';
-		echo '<p>' . esc_html( Google_Calendar::connected() ? __( 'Account connected. Use the test below to verify calendar access and Meet creation.', 'next-class-services' ) : __( 'Account not connected.', 'next-class-services' ) ) . '</p>';
+		$connected = Google_Calendar::connected();
+		echo '<div class="ncs-card" id="ncs-google-calendar" data-connected="' . ( $connected ? '1' : '0' ) . '" data-status-nonce="' . esc_attr( wp_create_nonce( 'ncs_google_status' ) ) . '"><div class="ncs-guide-heading"><h2 class="ncs-card-title">' . esc_html__( 'Google Calendar and Google Meet', 'next-class-services' ) . '</h2><button type="button" class="ncs-guide-trigger" data-ncs-dialog-open="ncs-google-guide" aria-haspopup="dialog" aria-controls="ncs-google-guide" aria-label="' . esc_attr__( 'Open Google Calendar setup guide', 'next-class-services' ) . '" title="' . esc_attr__( 'Setup guide', 'next-class-services' ) . '"><span aria-hidden="true">?</span></button><span class="ncs-connection-badge ' . ( $connected ? 'is-connected' : 'is-disconnected' ) . '" data-ncs-google-badge role="status">' . esc_html( $connected ? __( 'Connected', 'next-class-services' ) : __( 'Not connected', 'next-class-services' ) ) . '</span></div>';
 		echo '<p class="ncs-help">' . esc_html__( 'Enable the Google Calendar API in Google Cloud, configure the OAuth consent screen, and create a Web application OAuth client. An API key alone cannot create calendar events. Add this exact authorized redirect URI:', 'next-class-services' ) . '</p><p><code>' . esc_html( Google_Calendar::redirect_uri() ) . '</code></p>';
 		echo '<p class="ncs-help">' . esc_html__( 'For an External app in Testing, add your Google account as a test user. Google may expire testing refresh tokens after seven days. Use a production OAuth app for ongoing bookings. The connected calendar must support Google Meet.', 'next-class-services' ) . '</p>';
 		self::form_start( 'save' );
@@ -55,13 +86,11 @@ class Google_Calendar_Settings {
 		echo '<div class="ncs-item-actions">';
 		foreach ( array( 'connect' => __( 'Connect / reconnect Google', 'next-class-services' ), 'test' => __( 'Test Calendar and Meet API', 'next-class-services' ), 'disconnect' => __( 'Disconnect Google', 'next-class-services' ) ) as $action => $label ) {
 			self::form_start( $action );
-			echo '<button type="submit" class="ncs-btn">' . esc_html( $label ) . '</button></form>';
+			echo '<button type="submit" class="ncs-btn" data-ncs-google-action="' . esc_attr( $action ) . '"' . disabled( 'connect' === $action ? $connected : ! $connected, true, false ) . '>' . esc_html( $label ) . '</button></form>';
 		}
 		echo '</div><p class="ncs-help">' . esc_html__( 'The test creates a temporary event with Meet, updates its time, and deletes it. If Meet generation is still pending, the result says so. Failed booking syncs retry automatically through WordPress scheduled tasks; a working WP-Cron is required.', 'next-class-services' ) . '</p>';
 		$test = get_option( 'ncs_google_test_result', array() );
-		if ( ! empty( $test['message'] ) ) {
-			echo '<p role="status">' . esc_html( $test['date'] . ': ' . $test['message'] ) . '</p>';
-		}
+		echo '<p role="status" data-ncs-google-test-result' . ( empty( $test['message'] ) ? ' hidden' : '' ) . '>' . ( ! empty( $test['message'] ) ? esc_html( $test['date'] . ': ' . $test['message'] ) : '' ) . '</p>';
 		echo '</div>';
 		self::render_guide();
 	}
@@ -181,17 +210,23 @@ class Google_Calendar_Settings {
 
 	public static function handle_connect() {
 		self::authorize( 'connect' );
+		if ( Google_Calendar::connected() ) {
+			self::finish( __( 'Google is already connected. Disconnect first to connect another account.', 'next-class-services' ), 'error' );
+		}
 		$c = Google_Calendar::config();
 		if ( ! $c['client_id'] || ! Google_Calendar::decrypt( $c['secret'] ) ) {
 			self::finish( __( 'Save an OAuth client ID and secret first.', 'next-class-services' ), 'error' );
 		}
 		$state = bin2hex( random_bytes( 32 ) );
-		set_transient( 'ncs_google_state_' . hash( 'sha256', $state ), array( 'user' => get_current_user_id(), 'session' => hash( 'sha256', wp_get_session_token() ), 'client' => hash( 'sha256', $c['client_id'] . $c['secret'] ) ), 10 * MINUTE_IN_SECONDS );
+		set_transient( 'ncs_google_state_' . hash( 'sha256', $state ), array( 'user' => get_current_user_id(), 'session' => hash( 'sha256', wp_get_session_token() ), 'client' => hash( 'sha256', $c['client_id'] . $c['secret'] ), 'popup' => wp_doing_ajax() ), 10 * MINUTE_IN_SECONDS );
 		$url = add_query_arg( array(
 			'client_id' => $c['client_id'], 'redirect_uri' => Google_Calendar::redirect_uri(), 'response_type' => 'code',
 			'scope' => 'https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/calendar.calendars.readonly',
 			'access_type' => 'offline', 'prompt' => 'consent', 'state' => $state,
 		), 'https://accounts.google.com/o/oauth2/v2/auth' );
+		if ( wp_doing_ajax() ) {
+			wp_send_json_success( array( 'authUrl' => $url ) );
+		}
 		wp_redirect( $url ); // Fixed Google authorization host, not user-provided.
 		exit;
 	}
@@ -211,6 +246,7 @@ class Google_Calendar_Settings {
 			self::finish( __( 'Google authorization expired or belongs to another session. Connect again.', 'next-class-services' ), 'error' );
 		}
 		delete_transient( $key );
+		self::$popup_callback = ! empty( $saved['popup'] );
 		$code = self::input( 'code', $_GET );
 		if ( '' === $code || '' !== self::input( 'error', $_GET ) ) {
 			self::finish( __( 'Google authorization was declined or incomplete.', 'next-class-services' ), 'error' );
@@ -221,6 +257,9 @@ class Google_Calendar_Settings {
 
 	public static function handle_disconnect() {
 		self::authorize( 'disconnect' );
+		if ( ! Google_Calendar::connected() ) {
+			self::finish( __( 'Google is not connected.', 'next-class-services' ), 'error' );
+		}
 		$c = Google_Calendar::config();
 		$c['tokens'] = '';
 		Google_Calendar::save_config( $c );
@@ -229,6 +268,9 @@ class Google_Calendar_Settings {
 
 	public static function handle_test() {
 		self::authorize( 'test' );
+		if ( ! Google_Calendar::connected() ) {
+			self::finish( __( 'Connect Google before testing the API.', 'next-class-services' ), 'error' );
+		}
 		$result = self::test_connection();
 		$message = is_wp_error( $result ) ? $result->get_error_message() : $result;
 		update_option( 'ncs_google_test_result', array( 'date' => current_time( 'mysql' ), 'message' => $message ), false );

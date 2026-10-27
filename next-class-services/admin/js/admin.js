@@ -169,7 +169,15 @@
 			form.addEventListener( 'change', mark );
 			form.addEventListener( 'ncs:change', mark );
 			form.addEventListener( 'submit', function () {
+				if ( ! form.hasAttribute( 'data-ncs-settings-ajax' ) ) {
+					dirty = false;
+				}
+			} );
+			form.addEventListener( 'ncs:saved', function () {
 				dirty = false;
+				if ( flag ) {
+					flag.hidden = true;
+				}
 			} );
 			window.addEventListener( 'beforeunload', function ( e ) {
 				if ( dirty ) {

@@ -227,9 +227,15 @@
 .ncs-savebar { position: sticky; bottom: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px; margin-top: 20px; padding: 12px 0; background: var(--w); border-top: 1px solid var(--line); }
 .ncs-savebar-status { margin-right: auto; padding: 0 8px; border: 1px dashed var(--line); }
 .ncs-admin .ncs-settings-savebar { position: sticky; bottom: 0; }
+.ncs-admin .ncs-connection-badge { display: inline-block; padding: 3px 10px; border: 1px solid; border-radius: 999px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.ncs-admin .ncs-connection-badge.is-connected { color: #146c2e; background: #e9f7ed; border-color: #8ac89a; }
+.ncs-admin .ncs-connection-badge.is-disconnected { color: #a51d24; background: #fceced; border-color: #e4a0a5; }
+.ncs-admin button:disabled { cursor: not-allowed; opacity: 0.5; }
+.ncs-admin #ncs-settings-feedback:empty { display: none; }
+.ncs-admin #ncs-settings-feedback { scroll-margin-top: 48px; }
 
 /* Google setup guide */
-.ncs-admin .ncs-guide-heading { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.ncs-admin .ncs-guide-heading { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 12px; }
 .ncs-admin .ncs-guide-heading .ncs-card-title { margin: 0; }
 .ncs-admin .ncs-guide-trigger { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 24px; width: 24px; height: 24px; padding: 0; border: 1px solid #000000; border-radius: 50%; background: #ffffff; color: #000000; font-weight: 600; cursor: pointer; }
 .ncs-admin .ncs-guide-trigger:hover { background: #000000; color: #ffffff; }

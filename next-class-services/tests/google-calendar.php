@@ -37,6 +37,22 @@ namespace {
 	function wp_next_scheduled( $hook, $args = array() ) { return $GLOBALS['jobs'][ $hook . json_encode( $args ) ] ?? false; }
 	function wp_schedule_single_event( $time, $hook, $args ) { $GLOBALS['jobs'][ $hook . json_encode( $args ) ] = $time; }
 	function wp_clear_scheduled_hook( $hook, $args ) { unset( $GLOBALS['jobs'][ $hook . json_encode( $args ) ] ); }
+	class JsonResponse extends RuntimeException {
+		public $success;
+		public $data;
+		public $status;
+		public function __construct( $success, $data, $status ) { $this->success = $success; $this->data = $data; $this->status = $status; }
+	}
+	function wp_send_json_success( $data, $status = 200 ) { throw new JsonResponse( true, $data, $status ); }
+	function wp_send_json_error( $data, $status = 200 ) { throw new JsonResponse( false, $data, $status ); }
+	function current_user_can( $cap ) { return ! isset( $GLOBALS['denied_cap'] ) || $GLOBALS['denied_cap'] !== $cap; }
+	function check_ajax_referer( $action, $field, $die ) { return $GLOBALS['nonce_valid'] ?? true; }
+	function wp_doing_ajax() { return true; }
+	function wp_unslash( $value ) { return $value; }
+	function sanitize_text_field( $value ) { return strip_tags( $value ); }
+	function add_action( $hook, $callback ) { $GLOBALS['hooks'][ $hook ] = $callback; }
+	function admin_url( $path = '' ) { return 'https://example.test/wp-admin/' . $path; }
+	function add_query_arg( $args, $url ) { return $url . '?' . http_build_query( $args ); }
 	class MockDB {
 		public $prefix = 'wp_';
 		public $rows = array();
@@ -54,6 +70,8 @@ namespace NextClassServices {
 	class Helpers {
 		public static function now_utc() { return gmdate( 'Y-m-d H:i:s' ); }
 		public static function setting( $key ) { return false; }
+		public static function settings() { return array( 'retention_mode' => 'indefinite' ); }
+		public static function retention_days() { return 0; }
 	}
 }
 namespace {
@@ -61,9 +79,12 @@ namespace {
 	require __DIR__ . '/../modules/booking/class-appointment.php';
 	require __DIR__ . '/../modules/booking/class-google-calendar.php';
 	require __DIR__ . '/../admin/class-google-calendar-settings.php';
+	require __DIR__ . '/../admin/class-admin.php';
+	require __DIR__ . '/../admin/class-settings.php';
 	use NextClassServices\Booking\Google_Calendar as Calendar;
 	use NextClassServices\Booking\Appointment;
 	use NextClassServices\Admin\Google_Calendar_Settings as Settings;
+	use NextClassServices\Admin\Admin;
 	function check( $condition, $message ) {
 		if ( ! $condition ) { throw new RuntimeException( $message ); }
 		$GLOBALS['checks']++;
@@ -214,5 +235,53 @@ namespace {
 	};
 	Calendar::sync_now( 1 );
 	check( ! empty( $GLOBALS['jobs'] ), 'Synchronous sync schedules a safety retry before HTTP' );
+	// Settings AJAX must preserve authorization and never disclose credentials.
+	reset_test();
+	Admin::begin_ajax( array( \NextClassServices\Admin\Settings::class, 'ajax_state' ) );
+	try {
+		Settings::handle_status();
+		throw new RuntimeException( 'Status must return JSON' );
+	} catch ( JsonResponse $response ) {
+		check( $response->success && $response->data['state']['google']['connected'], 'AJAX status returns connection state' );
+		$json = json_encode( $response->data );
+		check( false === strpos( $json, 'refresh-test' ) && false === strpos( $json, 'test-secret' ) && false === strpos( $json, 'access-test' ), 'AJAX responses do not expose credentials' );
+	}
+	$GLOBALS['nonce_valid'] = false;
+	try { Settings::handle_disconnect(); } catch ( JsonResponse $response ) {
+		check( ! $response->success && 403 === $response->status && Calendar::connected(), 'Invalid AJAX nonce blocks disconnect without modifying tokens' );
+	}
+	$GLOBALS['nonce_valid'] = true;
+	$GLOBALS['denied_cap'] = 'manage_options';
+	try { Settings::handle_disconnect(); } catch ( JsonResponse $response ) {
+		check( ! $response->success && 403 === $response->status && Calendar::connected(), 'AJAX credential changes require administrator capability' );
+	}
+	unset( $GLOBALS['denied_cap'] );
+	try { Settings::handle_connect(); } catch ( JsonResponse $response ) {
+		check( ! $response->success && Calendar::connected(), 'Server blocks connect while already connected' );
+	}
+	Admin::begin_ajax( array( \NextClassServices\Admin\Settings::class, 'ajax_state' ) );
+	try { Settings::handle_disconnect(); } catch ( JsonResponse $response ) {
+		check( $response->success && ! $response->data['state']['google']['connected'], 'AJAX disconnect returns updated badge and button state' );
+	}
+	Admin::begin_ajax( array( \NextClassServices\Admin\Settings::class, 'ajax_state' ) );
+	try { Settings::handle_test(); } catch ( JsonResponse $response ) {
+		check( ! $response->success && empty( $GLOBALS['requests'] ), 'Server blocks test while disconnected without making HTTP requests' );
+	}
+	reset_test();
+	Admin::begin_ajax( array( \NextClassServices\Admin\Settings::class, 'ajax_state' ) );
+	$_POST = array( 'client_id' => 'test-client', 'client_secret' => '', 'calendar_id' => 'primary' );
+	try { Settings::handle_save(); } catch ( JsonResponse $response ) {
+		check( $response->success && Calendar::connected() && 'test-secret' === Calendar::decrypt( Calendar::config()['secret'] ), 'Saving a blank secret preserves credentials and connection' );
+	}
+	$_POST['client_secret'] = 'new-secret';
+	Admin::begin_ajax( array( \NextClassServices\Admin\Settings::class, 'ajax_state' ) );
+	try { Settings::handle_save(); } catch ( JsonResponse $response ) {
+		check( $response->success && ! Calendar::connected() && $response->data['state']['google']['secretSaved'], 'Rotating credentials clears connection and returns safe UI state' );
+	}
+	\NextClassServices\Admin\Settings::init();
+	Settings::init();
+	foreach ( array( 'ncs_save_settings', 'ncs_run_cleanup', 'ncs_google_save', 'ncs_google_connect', 'ncs_google_disconnect', 'ncs_google_test', 'ncs_google_status' ) as $hook ) {
+		check( isset( $GLOBALS['hooks'][ 'wp_ajax_' . $hook ] ), 'Register authorized AJAX handler: ' . $hook );
+	}
 	echo 'Passed ' . $GLOBALS['checks'] . " Google Calendar regression checks.\n";
 }

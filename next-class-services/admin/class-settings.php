@@ -28,6 +28,20 @@ class Settings {
 	public static function init() {
 		add_action( 'admin_post_ncs_save_settings', array( __CLASS__, 'handle_save' ) );
 		add_action( 'admin_post_ncs_run_cleanup', array( __CLASS__, 'handle_cleanup' ) );
+		foreach ( array( 'ncs_save_settings' => 'handle_save', 'ncs_run_cleanup' => 'handle_cleanup' ) as $action => $handler ) {
+			add_action( 'wp_ajax_' . $action, function () use ( $handler ) {
+				Admin::begin_ajax( array( __CLASS__, 'ajax_state' ) );
+				call_user_func( array( __CLASS__, $handler ) );
+			} );
+		}
+	}
+
+	public static function ajax_state() {
+		return array(
+			'cleanupEnabled' => Helpers::retention_days() > 0,
+			'settings' => Helpers::settings(),
+			'google' => current_user_can( 'manage_options' ) ? Google_Calendar_Settings::state() : null,
+		);
 	}
 
 	/**
@@ -39,6 +53,7 @@ class Settings {
 		}
 		$s = Helpers::settings();
 		Admin::header( 'ncs-settings', __( 'Settings', 'next-class-services' ) );
+		echo '<div id="ncs-settings-feedback" aria-live="polite" aria-atomic="true"></div>';
 
 		$tz_options = array(
 			'' => sprintf(
@@ -51,7 +66,7 @@ class Settings {
 			$tz_options[ $tz ] = $tz;
 		}
 
-		echo '<form id="ncs-settings-form" method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" class="ncs-form" data-ncs-warn-unsaved>';
+		echo '<form id="ncs-settings-form" method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" class="ncs-form" data-ncs-settings-ajax data-ncs-warn-unsaved>';
 		echo '<input type="hidden" name="action" value="ncs_save_settings">';
 		wp_nonce_field( 'ncs_save_settings', '_ncs_nonce' );
 
@@ -123,9 +138,9 @@ class Settings {
 
 		echo '<div class="ncs-card"><h2 class="ncs-card-title">' . esc_html__( 'Run retention cleanup now', 'next-class-services' ) . '</h2>';
 		echo '<p class="ncs-help">' . esc_html__( 'Applies the saved retention period immediately. This permanently deletes data older than the period.', 'next-class-services' ) . '</p>';
-		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" data-ncs-confirm-submit="' . esc_attr__( 'Permanently delete personal data older than the retention period?', 'next-class-services' ) . '"><input type="hidden" name="action" value="ncs_run_cleanup">';
+		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" data-ncs-settings-ajax data-ncs-confirm-submit="' . esc_attr__( 'Permanently delete personal data older than the retention period?', 'next-class-services' ) . '"><input type="hidden" name="action" value="ncs_run_cleanup">';
 		wp_nonce_field( 'ncs_run_cleanup', '_ncs_nonce' );
-		echo '<button class="ncs-btn ncs-btn-danger" type="submit"' . disabled( Helpers::retention_days() < 1, true, false ) . '>' . esc_html__( 'Run cleanup', 'next-class-services' ) . '</button></form></div>';
+		echo '<button class="ncs-btn ncs-btn-danger" type="submit" data-ncs-cleanup' . disabled( Helpers::retention_days() < 1, true, false ) . '>' . esc_html__( 'Run cleanup', 'next-class-services' ) . '</button></form></div>';
 
 		echo '<div class="ncs-card"><h2 class="ncs-card-title">' . esc_html__( 'Roles and capabilities', 'next-class-services' ) . '</h2>';
 		echo '<p class="ncs-help">' . esc_html__( 'Administrators receive every capability on activation. Use a role editor plugin to grant them to other roles.', 'next-class-services' ) . '</p>';

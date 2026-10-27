@@ -86,6 +86,8 @@ Rescheduling patches the same event and retains its Meet conference. Cancellatio
 Each appointment pins its real calendar ID and remote event ID before requests. Retries reuse event IDs after timeouts and read the latest appointment state. Errors appear in appointment details with a retry button. A working WP-Cron is required for background retries. A booking remains valid when Google is temporarily unavailable. Disconnecting keeps remote events; reconnect the same account to finish pending changes. Appointment deletion waits for remote cancellation to succeed; retention preserves rows with unresolved sync errors. Retention of old successful appointments does not delete historical Google events. Uninstalling does not delete remote Google events.
 
 Run mocked API regression checks with `php tests/google-calendar.php` (OpenSSL enabled). No live Google credentials are used by these checks.
+
+Settings actions use authenticated, nonce-protected AJAX and show results inline. Google authorization opens in a popup so the Settings page stays open. The green/red connection badge and action buttons update after configuration changes, authorization and disconnect. Connect is disabled while connected; Test and Disconnect are disabled while disconnected. Run `node tests/settings.js` for the Settings UI regressions.
 - Filter: `ncs_capability_slugs`.
 
 ## Design rules enforced in code

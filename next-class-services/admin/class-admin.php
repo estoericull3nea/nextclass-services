@@ -17,6 +17,14 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Registers the admin menu and provides helper methods to page classes.
  */
 class Admin {
+	private static $ajax_notices = null;
+	private static $ajax_state = null;
+
+	/** Reuse the same authorized handlers without redirects for settings AJAX. */
+	public static function begin_ajax( $state_callback ) {
+		self::$ajax_notices = array();
+		self::$ajax_state = $state_callback;
+	}
 
 	/**
 	 * Init.
@@ -132,6 +140,15 @@ class Admin {
 	 * @param string $field  Nonce field name.
 	 */
 	public static function authorize( $cap, $action, $field = '_wpnonce' ) {
+		if ( null !== self::$ajax_notices ) {
+			if ( ! current_user_can( $cap ) ) {
+				wp_send_json_error( array( 'message' => __( 'You do not have permission to do that.', 'next-class-services' ) ), 403 );
+			}
+			if ( ! check_ajax_referer( $action, $field, false ) ) {
+				wp_send_json_error( array( 'message' => __( 'Your session has expired. Refresh the page and try again.', 'next-class-services' ) ), 403 );
+			}
+			return;
+		}
 		if ( ! current_user_can( $cap ) ) {
 			wp_die( esc_html__( 'You do not have permission to do that.', 'next-class-services' ), '', array( 'response' => 403 ) );
 		}
@@ -145,6 +162,10 @@ class Admin {
 	 * @param string $message Message.
 	 */
 	public static function flash( $type, $message ) {
+		if ( null !== self::$ajax_notices ) {
+			self::$ajax_notices[] = array( 'type' => $type, 'message' => $message );
+			return;
+		}
 		$key   = 'ncs_notice_' . get_current_user_id();
 		$queue = get_transient( $key );
 		$queue = is_array( $queue ) ? $queue : array();
@@ -161,6 +182,15 @@ class Admin {
 	 * @param string $url URL.
 	 */
 	public static function redirect( $url ) {
+		if ( null !== self::$ajax_notices ) {
+			$data = array( 'notices' => self::$ajax_notices, 'state' => call_user_func( self::$ajax_state ) );
+			foreach ( self::$ajax_notices as $notice ) {
+				if ( 'error' === $notice['type'] ) {
+					wp_send_json_error( $data );
+				}
+			}
+			wp_send_json_success( $data );
+		}
 		wp_safe_redirect( $url );
 		exit;
 	}
