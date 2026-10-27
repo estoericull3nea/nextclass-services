@@ -227,6 +227,8 @@
 .ncs-savebar { position: sticky; bottom: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px; margin-top: 20px; padding: 12px 0; background: var(--w); border-top: 1px solid var(--line); }
 .ncs-savebar-status { margin-right: auto; padding: 0 8px; border: 1px dashed var(--line); }
 .ncs-admin .ncs-settings-savebar { position: sticky; bottom: 0; }
+.ncs-admin .ncs-settings-panel { margin-top: 20px; }
+.ncs-admin #ncs-settings-form { margin: 0; }
 .ncs-admin .ncs-connection-badge { display: inline-block; padding: 3px 10px; border: 1px solid; border-radius: 999px; font-size: 12px; font-weight: 600; white-space: nowrap; }
 .ncs-admin .ncs-connection-badge.is-connected { color: #146c2e; background: #e9f7ed; border-color: #8ac89a; }
 .ncs-admin .ncs-connection-badge.is-disconnected { color: #a51d24; background: #fceced; border-color: #e4a0a5; }

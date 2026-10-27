@@ -168,6 +168,13 @@
 			form.addEventListener( 'input', mark );
 			form.addEventListener( 'change', mark );
 			form.addEventListener( 'ncs:change', mark );
+			[ 'input', 'change' ].forEach( function ( type ) {
+				root.addEventListener( type, function ( e ) {
+					if ( e.target.form === form && ! form.contains( e.target ) ) {
+						mark();
+					}
+				} );
+			} );
 			form.addEventListener( 'submit', function () {
 				if ( ! form.hasAttribute( 'data-ncs-settings-ajax' ) ) {
 					dirty = false;

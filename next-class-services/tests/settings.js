@@ -30,6 +30,8 @@ function setup( connected = false ) {
 	const radius = Object.assign( element(), { name: 's[frontend_radius]', type: 'number', value: '7' } );
 	for ( const action of [ 'ncs_save_settings', 'ncs_google_save', 'ncs_google_connect', 'ncs_google_disconnect', 'ncs_google_test' ] ) {
 		const form = action === 'ncs_save_settings' ? main : element();
+		form.attrs['data-ncs-settings-ajax'] = '';
+		form.contains = () => false;
 		const short = action.replace( 'ncs_google_', '' );
 		const button = element( [ 'connect', 'disconnect', 'test' ].includes( short ) ? { 'data-ncs-google-action': short } : {} );
 		button.disabled = short === 'connect' ? connected : [ 'disconnect', 'test' ].includes( short ) && ! connected;
@@ -37,6 +39,7 @@ function setup( connected = false ) {
 		form.matches = () => true;
 		form.querySelector = selector => selector.includes( 'client_secret' ) ? secret : selector.includes( 'client_id' ) ? client : selector.includes( 'calendar_id' ) ? calendar : button;
 		form.querySelectorAll = () => [ radius ];
+		form.elements = [ radius ];
 		form.dispatched = [];
 		form.dispatchEvent = event => form.dispatched.push( event.type );
 		forms[action] = form;
@@ -112,6 +115,13 @@ const flush = () => new Promise( resolve => setImmediate( resolve ) );
 	await flush();
 	assert.equal( ui.forms.ncs_save_settings.dispatched.length, 0, 'Editing during a save remains unsaved' );
 	assert.equal( ui.radius.value, '12', 'Do not overwrite new edits with an older response' );
+
+	ui = setup();
+	ui.responses.push( { success: true, data: { state: ui.state( false ), notices: [] } } );
+	ui.submit( 'ncs_save_settings' );
+	ui.root.listeners.input( { target: { form: ui.forms.ncs_save_settings } } );
+	await flush();
+	assert.equal( ui.forms.ncs_save_settings.dispatched.length, 0, 'Track new edits in fields associated with the shared form outside its DOM tree' );
 
 	ui = setup( true );
 	ui.responses.push( { success: true, data: { state: ui.state( false ), notices: [] } } );

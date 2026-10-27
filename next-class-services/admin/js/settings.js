@@ -163,6 +163,32 @@
 		form.addEventListener( 'input', function () { form.ncsRevision++; } );
 		form.addEventListener( 'change', function () { form.ncsRevision++; } );
 	} );
+	[ 'input', 'change' ].forEach( function ( type ) {
+		root.addEventListener( type, function ( event ) {
+			var form = event.target.form;
+			if ( form && form.hasAttribute( 'data-ncs-settings-ajax' ) && ! form.contains( event.target ) ) {
+				form.ncsRevision++;
+			}
+		} );
+	} );
+
+	// Reveal the category containing an invalid control before browser validation focuses it.
+	var invalidField = null;
+	root.addEventListener( 'invalid', function ( event ) {
+		if ( ! event.target.form || event.target.form.id !== 'ncs-settings-form' ) {
+			return;
+		}
+		if ( invalidField ) {
+			event.preventDefault();
+			return;
+		}
+		invalidField = event.target;
+		var panel = event.target.closest( '[role="tabpanel"]' );
+		if ( panel && panel.hidden ) {
+			document.getElementById( panel.getAttribute( 'aria-labelledby' ) ).click();
+		}
+		window.setTimeout( function () { invalidField = null; }, 0 );
+	}, true );
 
 	root.addEventListener( 'submit', function ( event ) {
 		var form = event.target;
@@ -201,7 +227,7 @@
 			if ( response.success && revision === form.ncsRevision ) {
 				form.dispatchEvent( new Event( 'ncs:saved' ) );
 				if ( action === 'ncs_save_settings' ) {
-					Array.prototype.forEach.call( form.querySelectorAll( '[name^="s["]' ), function ( input ) {
+					Array.prototype.forEach.call( form.elements, function ( input ) {
 						var match = /^s\[([^\]]+)\]$/.exec( input.name );
 						if ( ! match || ! Object.prototype.hasOwnProperty.call( state.settings, match[1] ) ) {
 							return;

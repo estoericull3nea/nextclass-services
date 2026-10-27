@@ -88,6 +88,8 @@ Each appointment pins its real calendar ID and remote event ID before requests. 
 Run mocked API regression checks with `php tests/google-calendar.php` (OpenSSL enabled). No live Google credentials are used by these checks.
 
 Settings actions use authenticated, nonce-protected AJAX and show results inline. Google authorization opens in a popup so the Settings page stays open. The green/red connection badge and action buttons update after configuration changes, authorization and disconnect. Connect is disabled while connected; Test and Disconnect are disabled while disconnected. Run `node tests/settings.js` for the Settings UI regressions.
+
+Settings are organized into Booking (including Google Calendar), Notifications, Appearance, Analytics, Security, Privacy & data, and Advanced tabs. The sticky Save settings button saves configuration across all tabs; Google configuration retains its own save and connection actions. Run `php tests/settings-render.php` to verify panel grouping and form ownership.
 - Filter: `ncs_capability_slugs`.
 
 ## Design rules enforced in code

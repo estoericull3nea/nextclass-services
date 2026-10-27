@@ -75,20 +75,17 @@ class Google_Calendar_Settings {
 		$c = Google_Calendar::config();
 		$connected = Google_Calendar::connected();
 		echo '<div class="ncs-card" id="ncs-google-calendar" data-connected="' . ( $connected ? '1' : '0' ) . '" data-status-nonce="' . esc_attr( wp_create_nonce( 'ncs_google_status' ) ) . '"><div class="ncs-guide-heading"><h2 class="ncs-card-title">' . esc_html__( 'Google Calendar and Google Meet', 'next-class-services' ) . '</h2><button type="button" class="ncs-guide-trigger" data-ncs-dialog-open="ncs-google-guide" aria-haspopup="dialog" aria-controls="ncs-google-guide" aria-label="' . esc_attr__( 'Open Google Calendar setup guide', 'next-class-services' ) . '" title="' . esc_attr__( 'Setup guide', 'next-class-services' ) . '"><span aria-hidden="true">?</span></button><span class="ncs-connection-badge ' . ( $connected ? 'is-connected' : 'is-disconnected' ) . '" data-ncs-google-badge role="status">' . esc_html( $connected ? __( 'Connected', 'next-class-services' ) : __( 'Not connected', 'next-class-services' ) ) . '</span></div>';
-		echo '<p class="ncs-help">' . esc_html__( 'Enable the Google Calendar API in Google Cloud, configure the OAuth consent screen, and create a Web application OAuth client. An API key alone cannot create calendar events. Add this exact authorized redirect URI:', 'next-class-services' ) . '</p><p><code>' . esc_html( Google_Calendar::redirect_uri() ) . '</code></p>';
-		echo '<p class="ncs-help">' . esc_html__( 'For an External app in Testing, add your Google account as a test user. Google may expire testing refresh tokens after seven days. Use a production OAuth app for ongoing bookings. The connected calendar must support Google Meet.', 'next-class-services' ) . '</p>';
 		self::form_start( 'save' );
-		Form::text( 'client_id', __( 'Google OAuth client ID', 'next-class-services' ), $c['client_id'] );
-		Form::text( 'client_secret', __( 'Google OAuth client secret', 'next-class-services' ), '', array( 'type' => 'password', 'attrs' => array( 'autocomplete' => 'new-password' ), 'help' => $c['secret'] ? __( 'A secret is saved. Leave blank to keep it. Secrets are encrypted and never displayed.', 'next-class-services' ) : __( 'Enter the client secret from Google Cloud.', 'next-class-services' ) ) );
-		Form::text( 'calendar_id', __( 'Google calendar ID', 'next-class-services' ), $c['calendar_id'], array( 'help' => __( 'Use primary for the connected account, or copy a calendar ID from Google Calendar settings. Changes apply to new bookings; existing events keep their calendar.', 'next-class-services' ) ) );
-		echo '<button type="submit" class="ncs-btn ncs-btn-primary">' . esc_html__( 'Save Google configuration', 'next-class-services' ) . '</button></form>';
-		echo '<p class="ncs-help">' . esc_html__( 'Save configuration before connecting or testing. Enable sync per service in Booking, General. Sync sends generic event titles and booking times to Google; customer names, email addresses and notes are not sent. Meet links appear in appointment details, customer booking management and plugin emails. Google attendee invitations are not sent. Google Calendar busy times are not imported.', 'next-class-services' ) . '</p>';
+		Form::text( 'client_id', __( 'Client ID', 'next-class-services' ), $c['client_id'] );
+		Form::text( 'client_secret', __( 'Client secret', 'next-class-services' ), '', array( 'type' => 'password', 'attrs' => array( 'autocomplete' => 'new-password' ), 'help' => $c['secret'] ? __( 'Saved. Leave blank to keep.', 'next-class-services' ) : __( 'Not saved.', 'next-class-services' ) ) );
+		Form::text( 'calendar_id', __( 'Calendar ID', 'next-class-services' ), $c['calendar_id'] );
+		echo '<button type="submit" class="ncs-btn ncs-btn-primary">' . esc_html__( 'Save configuration', 'next-class-services' ) . '</button></form>';
 		echo '<div class="ncs-item-actions">';
-		foreach ( array( 'connect' => __( 'Connect / reconnect Google', 'next-class-services' ), 'test' => __( 'Test Calendar and Meet API', 'next-class-services' ), 'disconnect' => __( 'Disconnect Google', 'next-class-services' ) ) as $action => $label ) {
+		foreach ( array( 'connect' => __( 'Connect', 'next-class-services' ), 'test' => __( 'Test connection', 'next-class-services' ), 'disconnect' => __( 'Disconnect', 'next-class-services' ) ) as $action => $label ) {
 			self::form_start( $action );
 			echo '<button type="submit" class="ncs-btn" data-ncs-google-action="' . esc_attr( $action ) . '"' . disabled( 'connect' === $action ? $connected : ! $connected, true, false ) . '>' . esc_html( $label ) . '</button></form>';
 		}
-		echo '</div><p class="ncs-help">' . esc_html__( 'The test creates a temporary event with Meet, updates its time, and deletes it. If Meet generation is still pending, the result says so. Failed booking syncs retry automatically through WordPress scheduled tasks; a working WP-Cron is required.', 'next-class-services' ) . '</p>';
+		echo '</div>';
 		$test = get_option( 'ncs_google_test_result', array() );
 		echo '<p role="status" data-ncs-google-test-result' . ( empty( $test['message'] ) ? ' hidden' : '' ) . '>' . ( ! empty( $test['message'] ) ? esc_html( $test['date'] . ': ' . $test['message'] ) : '' ) . '</p>';
 		echo '</div>';
@@ -142,15 +139,16 @@ class Google_Calendar_Settings {
 			) ),
 			array( __( 'Save and connect in WordPress', 'next-class-services' ), array(
 				__( 'Close this guide.', 'next-class-services' ),
-				__( 'Paste your client ID into Google OAuth client ID.', 'next-class-services' ),
-				__( 'Paste your client secret into Google OAuth client secret.', 'next-class-services' ),
-				__( 'Leave Google calendar ID as primary to use your main calendar.', 'next-class-services' ),
-				__( 'Click Save Google configuration.', 'next-class-services' ),
-				__( 'Click Connect / reconnect Google.', 'next-class-services' ),
+				__( 'Paste your client ID into Client ID.', 'next-class-services' ),
+				__( 'Paste your client secret into Client secret.', 'next-class-services' ),
+				__( 'Leave Calendar ID as primary to use your main calendar. To use another calendar, copy its ID from Google Calendar settings.', 'next-class-services' ),
+				__( 'Click Save configuration.', 'next-class-services' ),
+				__( 'Click Connect.', 'next-class-services' ),
 				__( 'Sign in with the intended Google account and grant the requested permissions.', 'next-class-services' ),
 			) ),
 			array( __( 'Test and enable booking sync', 'next-class-services' ), array(
-				__( 'Click Test Calendar and Meet API. The test creates, reschedules and deletes a temporary event.', 'next-class-services' ),
+				__( 'Click Test connection. The test creates, reschedules and deletes a temporary event with a Google Meet request.', 'next-class-services' ),
+				__( 'Review the result. If Meet generation is still pending, it is reported as unverified.', 'next-class-services' ),
 				__( 'Once the test succeeds, open Booking and edit a booking service.', 'next-class-services' ),
 				__( 'In General, select Native WordPress booking.', 'next-class-services' ),
 				__( 'Enable Sync to Google Calendar and create a Google Meet.', 'next-class-services' ),
@@ -172,7 +170,21 @@ class Google_Calendar_Settings {
 			}
 			echo '</li>';
 		}
-		echo '</ol><div class="ncs-guide-notes"><h3>' . esc_html__( 'If something does not work', 'next-class-services' ) . '</h3><ul>';
+		echo '</ol><div class="ncs-guide-notes"><h3>' . esc_html__( 'Configuration and sync details', 'next-class-services' ) . '</h3><ul>';
+		foreach ( array(
+			__( 'Use an OAuth client ID and secret. An API key alone cannot create calendar events.', 'next-class-services' ),
+			__( 'Credentials are encrypted and never displayed. Leave Client secret blank to keep the saved secret. Changing credentials requires connecting again.', 'next-class-services' ),
+			__( 'Save configuration before connecting or testing. Calendar ID changes apply to new bookings; existing events keep their calendar.', 'next-class-services' ),
+			__( 'The green Connected badge means an account is authorized. The red Not connected badge means you need to connect. Test connection and Disconnect are available only when connected.', 'next-class-services' ),
+			__( 'To switch accounts or authorize again, click Disconnect, then Connect. Disconnecting leaves existing Google events in place.', 'next-class-services' ),
+			__( 'Sync sends generic event titles and booking times to Google. Customer names, email addresses and notes are not sent, and Google attendee invitations are not sent.', 'next-class-services' ),
+			__( 'Meet links appear in appointment details, private booking management and plugin emails once available.', 'next-class-services' ),
+			__( 'WordPress controls availability. Busy events created directly in Google Calendar are not imported.', 'next-class-services' ),
+			__( 'Failed booking syncs retry through WordPress scheduled tasks. A working WP-Cron is required.', 'next-class-services' ),
+		) as $detail ) {
+			echo '<li>' . esc_html( $detail ) . '</li>';
+		}
+		echo '</ul><h3>' . esc_html__( 'If something does not work', 'next-class-services' ) . '</h3><ul>';
 		foreach ( array(
 			__( 'Redirect URI mismatch: make sure the URI in Google exactly matches the address above, including https, the domain and the action query parameter.', 'next-class-services' ),
 			__( 'Access blocked while testing: add the connecting account as a test user in Audience. External apps in Testing can have refresh tokens expire after seven days; publish the app and complete any Google verification required for ongoing use.', 'next-class-services' ),
