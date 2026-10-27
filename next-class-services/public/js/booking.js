@@ -403,23 +403,52 @@
 
 		/* ---------- native booking flow ---------- */
 
+		/** Decorative inline icons; labels remain readable without SVG support. */
+		function bookingIcon( name ) {
+			var paths = {
+				calendar: [ 'M8 2v4M16 2v4M3 10h18', 'M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z' ],
+				clock: [ 'M12 8v4l3 2', 'M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z' ],
+				user: [ 'M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z', 'M4 21v-2a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v2' ],
+				mail: [ 'M3 6l9 7 9-7', 'M3 5h18v14H3Z' ],
+				globe: [ 'M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0ZM3 12h18', 'M12 3a18 18 0 0 1 0 18 18 18 0 0 1 0-18Z' ],
+				edit: [ 'm15 5 4 4M4 20l4-1L20 7a2.8 2.8 0 0 0-4-4L4 15Z' ],
+				check: [ 'm5 12 4 4L19 6' ],
+				back: [ 'M19 12H5m6-6-6 6 6 6' ],
+				video: [ 'M15 9l6-4v14l-6-4', 'M3 5h12v14H3Z' ]
+			};
+			var svg = document.createElementNS( 'http://www.w3.org/2000/svg', 'svg' );
+			var attrs = { viewBox: '0 0 24 24', width: '20', height: '20', fill: 'none', stroke: 'currentColor', 'stroke-width': '1.7', 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'aria-hidden': 'true', focusable: 'false', 'class': 'ncs-booking-icon' };
+			Object.keys( attrs ).forEach( function ( key ) { svg.setAttribute( key, attrs[key] ); } );
+			( paths[name] || paths.check ).forEach( function ( data ) {
+				var path = document.createElementNS( 'http://www.w3.org/2000/svg', 'path' );
+				path.setAttribute( 'd', data ); svg.appendChild( path );
+			} );
+			return svg;
+		}
+
+		function reviewButtonLabel( button, text, icon ) {
+			button.textContent = '';
+			button.appendChild( bookingIcon( icon || 'check' ) );
+			button.appendChild( h( 'span', { text: text } ) );
+		}
+
 		function summaryList( rows ) {
 			var list = h( 'dl', { 'class': 'ncs-booking-facts' } );
 			rows.forEach( function ( row ) {
 				if ( row[1] ) {
-					list.appendChild( h( 'div', {}, h( 'dt', { text: row[0] } ), h( 'dd', { text: row[1] } ) ) );
+					list.appendChild( h( 'div', {}, h( 'dt', {}, row[2] ? bookingIcon( row[2] ) : null, h( 'span', { text: row[0] } ) ), h( 'dd', { text: row[1] } ) ) );
 				}
 			} );
 			return list;
 		}
 
-		function bookingCard( appointment ) {
+		function bookingCard( appointment, icons ) {
 			return h( 'section', { 'class': 'ncs-booking-card ncs-appointment-card', 'aria-label': I18N.appointmentDetails || 'Appointment details' },
-				h( 'p', { 'class': 'ncs-booking-kicker', text: I18N.yourAppointment || 'Your appointment' } ),
+				h( 'p', { 'class': 'ncs-booking-kicker' }, icons ? bookingIcon( 'calendar' ) : null, h( 'span', { text: I18N.yourAppointment || 'Your appointment' } ) ),
 				h( 'h3', { 'class': 'ncs-booking-card-title', text: appointment.service } ),
-				h( 'p', { 'class': 'ncs-booking-date', text: appointment.date } ),
-				h( 'p', { 'class': 'ncs-booking-time', text: appointment.time } ),
-				appointment.timezone ? h( 'p', { 'class': 'ncs-meta', text: appointment.timezone } ) : null
+				h( 'p', { 'class': 'ncs-booking-date' }, h( 'span', { text: appointment.date } ) ),
+				h( 'p', { 'class': 'ncs-booking-time' }, icons ? bookingIcon( 'clock' ) : null, h( 'span', { text: appointment.time } ) ),
+				appointment.timezone ? h( 'p', { 'class': 'ncs-meta' }, icons ? bookingIcon( 'globe' ) : null, h( 'span', { text: appointment.timezone } ) ) : null
 			);
 		}
 
@@ -460,6 +489,7 @@
 
 			function draw() {
 				wrap.innerHTML = '';
+				wrap.classList.toggle( 'ncs-review', screen === 'confirm' );
 				if ( screen !== 'confirm' ) {
 					wrap.appendChild( serviceHeader( s ) );
 				}
@@ -590,38 +620,49 @@
 
 			function drawConfirm( serverErrors ) {
 				wrap.appendChild( h( 'p', { 'class': 'ncs-step-label', text: stepLabel( 3 ) } ) );
-				wrap.appendChild( h( 'h2', { 'class': 'ncs-heading', 'data-ncs-focus': '', text: I18N.confirmTitle || 'Review and confirm' } ) );
-				wrap.appendChild( h( 'p', { 'class': 'ncs-lead-text', text: I18N.reviewHelp || 'Check your appointment and contact details before you confirm.' } ) );
+				var progress = h( 'ol', { 'class': 'ncs-review-progress', 'aria-label': I18N.bookingProgress || 'Booking progress' } );
+				[ I18N.chooseTime || 'Choose a time', I18N.yourDetails || 'Your details', I18N.confirmTitle || 'Review and confirm' ].forEach( function ( label, index ) {
+					progress.appendChild( h( 'li', { 'aria-current': index === 2 ? 'step' : null }, h( 'span', { 'class': 'ncs-review-step-number', 'aria-hidden': 'true' }, index < 2 ? bookingIcon( 'check' ) : '3' ), h( 'span', { text: label } ) ) );
+				} );
+				wrap.appendChild( progress );
+				wrap.appendChild( h( 'div', { 'class': 'ncs-review-header' }, h( 'span', { 'class': 'ncs-review-heading-icon' }, bookingIcon( 'check' ) ), h( 'div', {},
+					h( 'h2', { 'class': 'ncs-heading', 'data-ncs-focus': '', text: I18N.confirmTitle || 'Review and confirm' } ),
+					h( 'p', { 'class': 'ncs-lead-text', text: I18N.reviewHelp || 'Check your appointment and contact details before you confirm.' } ) ) ) );
 				var grid = h( 'div', { 'class': 'ncs-booking-grid' } );
-				var appointment = bookingCard( { service: s.name, date: longDate( chosen.date ), time: chosen.label, timezone: s.tzLabel } );
+				var appointment = bookingCard( { service: s.name, date: longDate( chosen.date ), time: chosen.label, timezone: s.tzLabel }, true );
 				var editTime = h( 'button', { type: 'button', 'class': 'ncs-booking-edit', text: I18N.editTime || 'Edit date and time', onclick: function () {
 					screen = 'pick'; draw(); focusEl( wrap.querySelector( '.ncs-step-label' ) );
 				} } );
+				reviewButtonLabel( editTime, I18N.editTime || 'Edit date and time', 'edit' );
 				appointment.appendChild( editTime );
 				var rows = [];
 				s.fields.forEach( function ( f ) {
 					if ( values[ f.key ] ) {
-						rows.push( [ f.label, values[ f.key ] ] );
+						rows.push( [ f.label, values[ f.key ], f.key === 'email' ? 'mail' : ( f.key === 'name' ? 'user' : null ) ] );
 					}
 				} );
 				var editDetails = h( 'button', { type: 'button', 'class': 'ncs-booking-edit', text: I18N.editDetails || 'Edit details', onclick: function () {
 					screen = 'details'; draw(); focusEl( wrap.querySelector( '[data-ncs-focus]' ) );
 				} } );
+				reviewButtonLabel( editDetails, I18N.editDetails || 'Edit details', 'edit' );
 				grid.appendChild( appointment );
-				grid.appendChild( h( 'section', { 'class': 'ncs-booking-card' }, h( 'h3', { 'class': 'ncs-booking-card-title', text: I18N.yourDetails || 'Your details' } ), summaryList( rows ), editDetails ) );
+				grid.appendChild( h( 'section', { 'class': 'ncs-booking-card' }, h( 'h3', { 'class': 'ncs-booking-card-title ncs-review-details-title' }, bookingIcon( 'user' ), h( 'span', { text: I18N.yourDetails || 'Your details' } ) ), summaryList( rows ), editDetails ) );
 				wrap.appendChild( grid );
 				if ( s.calendarSync ) {
-					wrap.appendChild( h( 'p', { 'class': 'ncs-booking-notice', text: I18N.invitationReview || 'Your name and email will be used to send a Google Calendar invitation with a Meet link.' } ) );
+					wrap.appendChild( h( 'div', { 'class': 'ncs-booking-notice ncs-review-invitation' }, bookingIcon( 'video' ), h( 'p', { text: I18N.invitationReview || 'Your name and email will be used to send a Google Calendar invitation with a Meet link.' } ) ) );
 				}
 				var msg = h( 'p', { 'class': 'ncs-error', role: 'alert', hidden: ! serverErrors, text: serverErrors || '' } );
 				wrap.appendChild( msg );
 				var hp = h( 'div', { 'class': 'ncs-hp', 'aria-hidden': 'true' }, h( 'input', { type: 'text', name: 'website', tabindex: '-1', autocomplete: 'off' } ) );
 				wrap.appendChild( hp );
 				var confirm = h( 'button', { type: 'button', 'class': 'ncs-btn ncs-btn-primary', text: s.buttonText && s.buttonText !== 'Book a time' ? s.buttonText : ( I18N.confirmBooking || 'Confirm booking' ) } );
+				var confirmLabel = confirm.textContent;
+				reviewButtonLabel( confirm, confirmLabel );
 				var back = h( 'button', { type: 'button', 'class': 'ncs-btn', text: I18N.back || 'Back', onclick: function () {
 					screen = 'details';
 					draw();
 				} } );
+				reviewButtonLabel( back, I18N.back || 'Back', 'back' );
 				confirm.addEventListener( 'click', function () {
 					msg.hidden = true;
 					confirm.disabled = true;
@@ -629,7 +670,7 @@
 					editTime.disabled = true;
 					editDetails.disabled = true;
 					wrap.setAttribute( 'aria-busy', 'true' );
-					confirm.textContent = I18N.working || 'Working...';
+					reviewButtonLabel( confirm, I18N.working || 'Working...', 'clock' );
 					var body = {
 						service: s.id,
 						date: chosen.date,
@@ -652,7 +693,7 @@
 						}
 						confirm.disabled = false;
 						back.disabled = editTime.disabled = editDetails.disabled = false;
-						confirm.textContent = I18N.confirmBooking || 'Confirm booking';
+						reviewButtonLabel( confirm, confirmLabel );
 						msg.hidden = false;
 						msg.textContent = d.message || ( I18N.network || 'Something went wrong. Please try again.' );
 						if ( d.code === 'slot_taken' ) {
@@ -671,7 +712,7 @@
 						wrap.removeAttribute( 'aria-busy' );
 						back.disabled = editTime.disabled = editDetails.disabled = false;
 						confirm.disabled = false;
-						confirm.textContent = I18N.confirmBooking || 'Confirm booking';
+						reviewButtonLabel( confirm, confirmLabel );
 						msg.hidden = false;
 						msg.textContent = I18N.network || 'Something went wrong. Please try again.';
 					} );

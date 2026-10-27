@@ -129,6 +129,7 @@ class Assets {
 			'calendarReadyTitle' => __( 'Your calendar invitation', 'next-class-services' ),
 			'calendarReady' => __( 'Check your inbox for the Google Calendar invitation. You may need to accept it to add the event to your calendar.', 'next-class-services' ),
 			'reviewHelp' => __( 'Check your appointment and contact details before you confirm.', 'next-class-services' ),
+			'bookingProgress' => __( 'Booking progress', 'next-class-services' ),
 			'editTime' => __( 'Edit date and time', 'next-class-services' ),
 			'editDetails' => __( 'Edit details', 'next-class-services' ),
 			'invitationReview' => __( 'Your name and email will be used to send a Google Calendar invitation with a Meet link.', 'next-class-services' ),

@@ -2,7 +2,7 @@
 
 WordPress plugin with two services for Next Class: an HR Diagnostic Assessment Tool and an Online Booking System.
 
-- Version: 1.2.0
+- Version: 1.2.1
 - Requires WordPress 6.0 or newer, PHP 7.4 or newer
 - Tested up to WordPress 6.8
 - Text domain: `next-class-services`, PHP prefix `ncs_`, namespace `NextClassServices`
@@ -100,4 +100,4 @@ Notifications includes an optional Email CC field for admin booking and assessme
 
 ## Design rules enforced in code
 
-Public pages use the Next Class palette (#ff954f, #393939, #ffffff, #f1efe7, #ffe972). Admin screens use black (#000000) and white (#ffffff) only. Only solid fills are used. There are no icons, no emoji and no em dashes anywhere in the plugin. Poppins is loaded only on Next Class Services admin screens (from `assets/fonts`, no third party request) and on the public site only if enabled in Settings.
+Public pages use the Next Class palette (#ff954f, #393939, #ffffff, #f1efe7, #ffe972). Admin screens use black (#000000) and white (#ffffff) only. Only solid fills are used. The review screen uses decorative inline SVG icons alongside visible text labels. There are no emoji or em dashes anywhere in the plugin. Poppins is loaded only on Next Class Services admin screens (from `assets/fonts`, no third party request) and on the public site only if enabled in Settings.

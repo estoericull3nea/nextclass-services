@@ -11,7 +11,7 @@ class Element {
 	get firstChild() { return this.children[0]; }
 	get className() { return this.attrs.class || ''; }
 	set className( value ) { this.attrs.class = value; }
-	get classList() { return { add: name => { this.className += ' ' + name; }, contains: name => this.className.split( ' ' ).includes( name ) }; }
+	get classList() { return { add: name => { this.className += ' ' + name; }, contains: name => this.className.split( ' ' ).includes( name ), toggle: ( name, active ) => { this.className = this.className.split( ' ' ).filter( value => value !== name ).join( ' ' ) + ( active ? ' ' + name : '' ); } }; }
 	appendChild( node ) { if ( node.parentNode ) { node.parentNode.children = node.parentNode.children.filter( c => c !== node ); } this.children.push( node ); node.parentNode = this; return node; }
 	insertBefore( node, before ) { const index = this.children.indexOf( before ); if ( index === -1 ) { return this.appendChild( node ); } this.children.splice( index, 0, node ); node.parentNode = this; }
 	setAttribute( key, value ) { this.attrs[key] = String( value ); }
@@ -51,7 +51,7 @@ function setup( manage = false ) {
 		if ( route === 'booking/manage' ) { data = { ok: true, service, appointment: appointment(), canCancel: status === 'confirmed', canReschedule: status === 'confirmed' }; }
 		return Promise.resolve( { data } );
 	} } };
-	const document = { readyState: 'complete', documentElement: { lang: 'en' }, querySelectorAll: () => [ root ], createElement: tag => new Element( tag ), createTextNode: text => { const node = new Element( '#text' ); node.textContent = text; return node; } };
+	const document = { readyState: 'complete', documentElement: { lang: 'en' }, querySelectorAll: () => [ root ], createElement: tag => new Element( tag ), createElementNS: ( ns, tag ) => new Element( tag ), createTextNode: text => { const node = new Element( '#text' ); node.textContent = text; return node; } };
 	vm.runInNewContext( fs.readFileSync( path.join( __dirname, '../public/js/booking.js' ), 'utf8' ), { document, window, navigator: {}, setTimeout() {} } );
 	const button = text => { const result = app.querySelectorAll( 'button' ).find( el => el.textContent === text ); assert.ok( result, 'Find button: ' + text ); return result; };
 	return { app, calls, button };
@@ -66,6 +66,8 @@ async function chooseTime( ui ) { await flush(); ui.app.querySelector( '.ncs-cal
 	for ( const [ name, value ] of [ [ 'name', 'Alex Client' ], [ 'email', 'alex@example.test' ] ] ) { const input = ui.app.querySelector( '[name="' + name + '"]' ); input.value = value; input.fire( 'input' ); }
 	ui.app.querySelector( 'form' ).fire( 'submit' );
 	assert.ok( ui.app.textContent.includes( 'Review and confirm' ) );
+	assert.ok( ui.app.querySelectorAll( 'svg[aria-hidden="true"]' ).length >= 6, 'Review icons are decorative and retain text labels' );
+	assert.equal( ui.app.querySelector( '[aria-current="step"]' ).textContent, '3Review and confirm', 'Progress indicates the current step' );
 	assert.equal( ui.app.querySelectorAll( '.ncs-booking-card' ).length >= 2, true );
 	ui.button( 'Edit details' ).click(); assert.equal( ui.app.querySelector( '[name="email"]' ).value, 'alex@example.test', 'Editing preserves entered values' );
 	ui.app.querySelector( 'form' ).fire( 'submit' ); ui.button( 'Confirm booking' ).click(); await flush();

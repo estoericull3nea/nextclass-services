@@ -4,7 +4,7 @@ Tags: assessment, lead generation, booking, appointments, calendly, tidycal
 Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.2.0
+Stable tag: 1.2.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -118,7 +118,7 @@ Booking
 Analytics and design
 * Views, starts, completions, leads, native bookings, cancellations and reschedules are counted. External bookings are not counted as completed.
 * Date filtering and CSV export. GA4 events fail silently without gtag.
-* Poppins only on plugin admin screens, black and white on admin screens (palette colors on the public site), solid fills, no icons, no em dashes.
+* Scoped typography and palette, solid fills, decorative review icons with visible text labels, no em dashes.
 * Keyboard navigation, visible focus, mobile layout, reduced motion.
 
 == Troubleshooting ==
@@ -132,6 +132,9 @@ Analytics and design
 * **Slots disappear after changing Settings.** Sharing one calendar across services blocks the same time for every native service. Turn it off if services use different staff.
 
 == Changelog ==
+
+= 1.2.1 =
+* Refined the booking review screen with inline icons, progress indicators and clearer edit and confirm actions.
 
 = 1.2.0 =
 * Native Google Calendar bookings now invite clients and notify them of reschedules and cancellations.
