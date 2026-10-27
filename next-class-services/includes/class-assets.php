@@ -196,7 +196,7 @@ class Assets {
 		$page = sanitize_key( wp_unslash( $_GET['page'] ) );
 
 		wp_enqueue_style( 'ncs-admin', NCS_URL . 'admin/css/admin.css', array(), NCS_VERSION );
-		wp_enqueue_script( 'ncs-admin', NCS_URL . 'admin/js/admin.js', array(), NCS_VERSION, true );
+		wp_enqueue_script( 'ncs-admin', NCS_URL . 'admin/js/admin.js', array(), NCS_VERSION . '.' . filemtime( NCS_PATH . 'admin/js/admin.js' ), true );
 		wp_localize_script(
 			'ncs-admin',
 			'ncsAdmin',

@@ -108,7 +108,7 @@
 			var tabs = Array.prototype.slice.call( list.querySelectorAll( '[role="tab"]' ) );
 			var hidden = document.getElementById( 'ncs-current-tab' );
 
-			function select( tab, focus ) {
+			function select( tab, focus, updateUrl ) {
 				tabs.forEach( function ( t ) {
 					var on = t === tab;
 					t.classList.toggle( 'is-active', on );
@@ -122,6 +122,16 @@
 				if ( hidden ) {
 					hidden.value = tab.getAttribute( 'data-tab' );
 				}
+				if ( updateUrl && list.classList.contains( 'ncs-settings-tabs' ) ) {
+					var url = new URL( window.location.href );
+					url.searchParams.set( 'tab', tab.getAttribute( 'data-tab' ) );
+					var anchor = url.hash ? document.getElementById( url.hash.slice( 1 ) ) : null;
+					var anchorPanel = anchor ? anchor.closest( '[role="tabpanel"]' ) : null;
+					if ( anchorPanel && anchorPanel.id !== tab.getAttribute( 'aria-controls' ) ) {
+						url.hash = '';
+					}
+					window.history.replaceState( window.history.state, '', url.toString() );
+				}
 				if ( focus ) {
 					tab.focus();
 				}
@@ -129,7 +139,7 @@
 
 			tabs.forEach( function ( tab, i ) {
 				tab.addEventListener( 'click', function () {
-					select( tab, false );
+					select( tab, false, true );
 				} );
 				tab.addEventListener( 'keydown', function ( e ) {
 					var next = null;
@@ -144,7 +154,7 @@
 					}
 					if ( next ) {
 						e.preventDefault();
-						select( next, true );
+						select( next, true, true );
 					}
 				} );
 			} );
