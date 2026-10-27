@@ -891,6 +891,8 @@
 					}
 					confirm.disabled = true;
 					moving = true;
+					confirm.textContent = I18N.rescheduling || 'Rescheduling...';
+					confirm.setAttribute( 'aria-busy', 'true' );
 					NCS.api( 'POST', 'booking/reschedule', { token: token, date: chosen.date, time: chosen.time, website: '' } ).then( function ( res ) {
 						var r = res.data || {};
 						if ( r.ok ) {
@@ -898,12 +900,16 @@
 						} else {
 							moving = false;
 							confirm.disabled = false;
+							confirm.textContent = I18N.confirmMove || 'Confirm new time';
+							confirm.removeAttribute( 'aria-busy' );
 							msg.hidden = false;
 							msg.textContent = r.message || I18N.network;
 						}
 					} ).catch( function () {
 						moving = false;
 						confirm.disabled = false;
+						confirm.textContent = I18N.confirmMove || 'Confirm new time';
+						confirm.removeAttribute( 'aria-busy' );
 						msg.hidden = false;
 						msg.textContent = I18N.network || 'Something went wrong.';
 					} );

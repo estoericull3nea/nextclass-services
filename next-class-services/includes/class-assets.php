@@ -157,6 +157,7 @@ class Assets {
 			'keepBooking'   => __( 'Keep booking', 'next-class-services' ),
 			'newTime'       => __( 'Choose a new time', 'next-class-services' ),
 			'confirmMove'   => __( 'Confirm new time', 'next-class-services' ),
+			'rescheduling' => __( 'Rescheduling...', 'next-class-services' ),
 			'bookingNotFound' => __( 'We could not find that booking.', 'next-class-services' ),
 			'selected'      => __( 'selected', 'next-class-services' ),
 			'weekdays'      => array_values( array( __( 'Mon', 'next-class-services' ), __( 'Tue', 'next-class-services' ), __( 'Wed', 'next-class-services' ), __( 'Thu', 'next-class-services' ), __( 'Fri', 'next-class-services' ), __( 'Sat', 'next-class-services' ), __( 'Sun', 'next-class-services' ) ) ),

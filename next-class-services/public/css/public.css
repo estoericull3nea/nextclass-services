@@ -973,6 +973,7 @@
 .ncs-root .ncs-booking-edit:disabled { cursor: wait; opacity: 0.5; }
 .ncs-root .ncs-booking-notice { padding: 18px 20px; border-radius: 10px; background: var(--ncs-warm); line-height: 1.6; }
 .ncs-root .ncs-booking-notice p:last-child { margin-bottom: 0; }
+.ncs-root .ncs-booking-card > .ncs-booking-notice { margin-bottom: 16px; }
 .ncs-root .ncs-booking-footer { justify-content: space-between; padding-top: 20px; border-top: 1px solid rgba(57,57,57,0.18); }
 .ncs-root .ncs-booking-hero { margin-bottom: 20px; padding-bottom: 24px; border-bottom: 1px solid rgba(57,57,57,0.18); }
 .ncs-root .ncs-booking-status { display: inline-block; padding: 5px 12px; margin: 8px 0 0; border: 1px solid var(--ncs-charcoal); border-radius: 999px; font-size: 0.8rem; background: var(--ncs-white); color: var(--ncs-charcoal); }
@@ -983,7 +984,8 @@
 .ncs-root .ncs-private-link label { display: block; font-weight: 600; }
 .ncs-root .ncs-manage-actions .ncs-booking-card { display: flex; flex-direction: column; align-items: flex-start; }
 .ncs-root .ncs-manage-actions .ncs-btn { margin-top: auto; }
-.ncs-root .ncs-booking-cancel { border-style: dashed; }
+.ncs-root .ncs-booking-cancel { color: #c62828; border: 1px dotted #c62828; }
+.ncs-root .ncs-booking-cancel:hover { color: #a51d24; border-color: #a51d24; background-color: #fff5f5; }
 @media (max-width: 640px) {
 	.ncs-root .ncs-review-progress { gap: 8px; }
 	.ncs-root .ncs-review-progress li { flex-direction: column; text-align: center; align-items: center; gap: 6px; font-size: 0.72rem; }

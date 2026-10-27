@@ -80,7 +80,10 @@ async function chooseTime( ui ) { await flush(); ui.app.querySelector( '.ncs-cal
 	assert.equal( ui.calls.filter( call => call.route === 'booking/create' ).length, 1 );
 
 	ui = setup( true ); await flush(); assert.ok( ui.app.textContent.includes( 'Need a different time?' ) );
-	ui.button( 'Reschedule' ).click(); await chooseTime( ui ); ui.button( 'Confirm new time' ).click(); await flush();
+	ui.button( 'Reschedule' ).click(); await chooseTime( ui ); ui.button( 'Confirm new time' ).click();
+	assert.equal( ui.button( 'Rescheduling...' ).disabled, true, 'Disable confirmation while rescheduling' );
+	assert.equal( ui.button( 'Rescheduling...' ).getAttribute( 'aria-busy' ), 'true', 'Expose rescheduling loading state to assistive technology' );
+	await flush();
 	assert.ok( ui.app.textContent.includes( 'November 4, 2026' ) && ui.app.textContent.includes( 'Rescheduled.' ), 'Reschedule refreshes the management summary' );
 	ui.button( 'Cancel booking' ).click(); ui.button( 'Yes, cancel booking' ).click(); await flush();
 	assert.ok( ui.app.textContent.includes( 'Cancelled' ) );
