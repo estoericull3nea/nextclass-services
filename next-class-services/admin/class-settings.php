@@ -7,7 +7,6 @@
 
 namespace NextClassServices\Admin;
 
-use NextClassServices\Capabilities;
 use NextClassServices\Helpers;
 use NextClassServices\Retention;
 
@@ -252,34 +251,13 @@ class Settings {
 		self::field( 'checkbox', 's[delete_on_uninstall]', __( 'Delete all Next Class Services data when the plugin is uninstalled', 'next-class-services' ), $s['delete_on_uninstall'], array( 'help' => __( 'Off by default. Deactivating never deletes data. When on, deleting the plugin removes tables, options, scheduled tasks, assessments, booking services and capabilities.', 'next-class-services' ) ) );
 		echo '</div>';
 
-		self::card_start( 'stored-data', __( 'Stored data', 'next-class-services' ) );
-		echo '<p class="ncs-help">' . esc_html__( 'Assessment, booking and analytics records.', 'next-class-services' ) . '</p>';
-		foreach ( array(
-			__( 'Assessment submissions: lead fields you enable (name, email, phone, company, job title, company size, custom fields), answers, score, result, recommended programs, consent status and wording, page URL, date.', 'next-class-services' ),
-			__( 'Appointments: name, email, phone, company, job title, notes and custom fields you enable, time, timezone, status, page URL, date. Management links are stored as one-way hashes.', 'next-class-services' ),
-			__( 'Analytics events: event type, assessment or service ID, a short context value and date. No IP address, cookie or device data.', 'next-class-services' ),
-			__( 'Temporary rate limit counters use a one-way hash of the visitor IP for a few minutes and then expire.', 'next-class-services' ),
-			__( 'Personal data is included in WordPress export and erase tools (Tools, Export Personal Data and Erase Personal Data).', 'next-class-services' ),
-		) as $line ) {
-			self::guide_note( '', $line );
-		}
-		echo '</div>';
 		echo '</section>';
 
 		self::panel_start( 'advanced', $active );
 		self::card_start( 'troubleshooting', __( 'Troubleshooting', 'next-class-services' ) );
 		self::field( 'checkbox', 's[debug_log]', __( 'Write technical errors to the PHP error log', 'next-class-services' ), $s['debug_log'], array( 'help' => __( 'Only enable while troubleshooting. Visitors never see technical details.', 'next-class-services' ) ) );
 		echo '</div>';
-		self::card_start( 'roles', __( 'Access', 'next-class-services' ), __( 'Administrators receive every capability on activation. Use a role editor plugin to grant them to other roles. The table below lists the plugin permissions.', 'next-class-services' ) );
-		echo '<p class="ncs-help">' . esc_html__( 'Manage access through WordPress roles.', 'next-class-services' ) . '</p>';
-		ob_start();
-		echo '<table class="ncs-table"><thead><tr><th scope="col">' . esc_html__( 'Capability', 'next-class-services' ) . '</th><th scope="col">' . esc_html__( 'Allows', 'next-class-services' ) . '</th></tr></thead><tbody>';
-		foreach ( Capabilities::all() as $cap => $desc ) {
-			echo '<tr><td><code>' . esc_html( $cap ) . '</code></td><td>' . esc_html( $desc ) . '</td></tr>';
-		}
-		echo '</tbody></table>';
-		self::$guides['roles']['html'] = ob_get_clean();
-		echo '</div></section>';
+		echo '</section>';
 		self::render_guides();
 
 		echo '<div class="ncs-savebar ncs-settings-savebar"><span class="ncs-savebar-status" id="ncs-dirty" role="status" hidden>' . esc_html__( 'You have unsaved changes.', 'next-class-services' ) . '</span><button type="submit" form="ncs-settings-form" class="ncs-btn ncs-btn-primary">' . esc_html__( 'Save settings', 'next-class-services' ) . '</button></div>';

@@ -4,7 +4,7 @@ Tags: assessment, lead generation, booking, appointments, calendly, tidycal
 Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.3.0
+Stable tag: 1.4.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -132,6 +132,10 @@ Analytics and design
 * **Slots disappear after changing Settings.** Sharing one calendar across services blocks the same time for every native service. Turn it off if services use different staff.
 
 == Changelog ==
+
+= 1.4.0 =
+* New native booking requests require staff approval. Clients receive an awaiting-review receipt and a separate approval email when staff confirms the appointment.
+* Google Calendar events, Meet links and invitations wait until approval.
 
 = 1.3.0 =
 * Standardized plugin email as professional letters with branded letterhead, greetings, detail tables, action links and closing signatures in HTML and plain text.

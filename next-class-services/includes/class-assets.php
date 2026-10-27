@@ -132,7 +132,7 @@ class Assets {
 			'bookingProgress' => __( 'Booking progress', 'next-class-services' ),
 			'editTime' => __( 'Edit date and time', 'next-class-services' ),
 			'editDetails' => __( 'Edit details', 'next-class-services' ),
-			'invitationReview' => __( 'Your name and email will be used to send a Google Calendar invitation with a Meet link.', 'next-class-services' ),
+			'invitationReview' => __( 'Our team will review your request first. After approval, your name and email will be used to send a Google Calendar invitation with a Meet link.', 'next-class-services' ),
 			'bookingSaved' => __( 'Booking saved', 'next-class-services' ),
 			'nextSteps' => __( 'What happens next', 'next-class-services' ),
 			'pendingBooking' => __( 'Your booking is awaiting approval. Keep your private link to check its status.', 'next-class-services' ),

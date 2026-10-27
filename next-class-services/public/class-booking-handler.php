@@ -233,7 +233,7 @@ class Booking_Handler {
 				'service_title'  => $cfg['title'],
 				'start_utc'      => $slot['start_utc'],
 				'timezone'       => Availability::tz( $cfg )->getName(),
-				'status'         => $cfg['native']['new_status'],
+					'status'         => 'pending',
 				'page_url'       => '',
 			);
 			return self::created_response( $appt, $cfg, '', true );
@@ -259,6 +259,9 @@ class Booking_Handler {
 		$vars     = Booking_Email::vars( $appt, $cfg, $token );
 		$statuses = Appointment::statuses();
 		$message  = Mailer::replace( $cfg['confirmation']['message'], $vars, 'text' );
+		if ( 'pending' === $appt['status'] ) {
+			$message = __( 'Your booking request has been received and is awaiting review. We will email you when our team approves your appointment.', 'next-class-services' );
+		}
 		return new \WP_REST_Response(
 			array(
 				'ok'          => true,
@@ -272,7 +275,7 @@ class Booking_Handler {
 					'status'      => $appt['status'],
 					'statusLabel' => isset( $statuses[ $appt['status'] ] ) ? $statuses[ $appt['status'] ] : $appt['status'],
 				),
-				'manageUrl'   => ( '' !== $token && ( $cfg['native']['allow_cancel'] || $cfg['native']['allow_reschedule'] || ! empty( $cfg['native']['google_sync'] ) ) ) ? $vars['manage_link'] : '',
+				'manageUrl'   => '' !== $token ? $vars['manage_link'] : '',
 				'meetUrl'     => $vars['google_meet_link'],
 				'calendarState' => self::calendar_state( $appt ),
 				'email'       => isset( $appt['customer_email'] ) ? $appt['customer_email'] : '',
@@ -286,6 +289,9 @@ class Booking_Handler {
 	private static function calendar_state( array $appt ) {
 		if ( empty( $appt['google_sync_enabled'] ) ) {
 			return 'off';
+		}
+		if ( 'pending' === $appt['status'] ) {
+			return 'awaiting_approval';
 		}
 		if ( 'cancelled' === $appt['status'] ) {
 			return 'cancelled';

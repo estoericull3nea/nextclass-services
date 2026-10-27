@@ -275,6 +275,13 @@ class Appointments {
 				}
 			}
 		}
+		if ( 'pending' === $appt['status'] && 'confirmed' === $status ) {
+			$svc = Booking_Service::get( $appt['service_id'] );
+			if ( $svc ) {
+				$sent = Booking_Email::send_approval( Appointment::get( $id ), $svc['config'] );
+				Admin::flash( $sent ? 'success' : 'warning', $sent ? __( 'Booking approved. The client approval email was accepted for delivery.', 'next-class-services' ) : __( 'Booking approved, but the approval email could not be sent. Check your mail configuration.', 'next-class-services' ) );
+			}
+		}
 		Admin::flash( 'success', __( 'Appointment status updated.', 'next-class-services' ) );
 		Admin::redirect( $back );
 	}

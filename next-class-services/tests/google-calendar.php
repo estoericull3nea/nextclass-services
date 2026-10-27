@@ -294,6 +294,13 @@ namespace {
 	Calendar::sync( 1 );
 	$body = json_decode( $GLOBALS['requests'][1][1]['body'], true );
 	check( 1 === count( $body['attendees'] ), 'Client and admin matching emails are not invited twice' );
+	reset_test();
+	Appointment::update( 1, array( 'status' => 'pending' ) );
+	Calendar::sync( 1 );
+	check( empty( $GLOBALS['requests'] ) && empty( $GLOBALS['admin_calendar_mails'] ), 'Pending requests create no calendar event, invitation or admin calendar email' );
+	Appointment::update( 1, array( 'status' => 'confirmed' ) );
+	Calendar::sync( 1 );
+	check( ! empty( $GLOBALS['requests'] ) && ! empty( $GLOBALS['admin_calendar_mails'] ), 'Approval releases calendar creation and invitations' );
 	// Settings AJAX must preserve authorization and never disclose credentials.
 	reset_test();
 	Admin::begin_ajax( array( \NextClassServices\Admin\Settings::class, 'ajax_state' ) );

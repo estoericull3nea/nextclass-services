@@ -54,7 +54,7 @@ namespace {
 	list( $xpath, $html ) = render_page();
 	check( 7 === $xpath->query( '//*[@role="tab"]' )->length, 'Seven settings categories' );
 	check( 7 === $xpath->query( '//*[@role="tabpanel"]' )->length, 'One panel per category' );
-	check( 12 === $xpath->query( '//dialog[contains(@class,"ncs-guide-dialog")]' )->length, 'Every settings card has its own guide, including Google Calendar' );
+	check( 10 === $xpath->query( '//dialog[contains(@class,"ncs-guide-dialog")]' )->length, 'Every remaining settings card has its own guide, including Google Calendar' );
 	foreach ( $xpath->query( '//*[@data-ncs-dialog-open]' ) as $trigger ) {
 		$id = $trigger->getAttribute( 'data-ncs-dialog-open' );
 		check( 1 === $xpath->query( '//dialog[@id="' . $id . '"]' )->length, 'Every guide icon opens an existing modal' );
@@ -71,7 +71,7 @@ namespace {
 	check( 0 === $xpath->query( '//*[contains(concat(" ",normalize-space(@class)," ")," ncs-field ")]//p[contains(@class,"ncs-help") and not(ancestor::*[@id="ncs-google-calendar"])]' )->length, 'Detailed field descriptions moved from settings fields into guides' );
 	check( 1 === $xpath->query( '//dialog[@id="ncs-settings-guide-notifications"]//*[text()="CC (optional)"]' )->length, 'The email guide explains optional CC' );
 	check( 1 === $xpath->query( '//dialog[@id="ncs-settings-guide-security"]//*[text()="Trust proxy headers"]' )->length, 'The security guide retains proxy guidance' );
-	check( 1 === $xpath->query( '//dialog[@id="ncs-settings-guide-roles"]//table' )->length, 'The access guide retains the permissions table' );
+	check( 0 === $xpath->query( '//dialog[@id="ncs-settings-guide-roles" or @id="ncs-settings-guide-stored-data"]' )->length, 'Removed sections have no remaining guide modals' );
 	check( 0 === $xpath->query( '//form//form' )->length, 'Independent AJAX forms are never nested' );
 	check( 1 === $xpath->query( '//*[@id="ncs-settings-panel-privacy"]//*[@data-ncs-cleanup]' )->length, 'Cleanup is grouped with privacy' );
 	check( 1 === $xpath->query( '//*[@id="ncs-settings-panel-privacy"]//input[@name="s[delete_on_uninstall]"]' )->length, 'Uninstall data setting is grouped with privacy' );

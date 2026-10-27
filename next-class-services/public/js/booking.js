@@ -458,7 +458,7 @@
 		}
 
 		function calendarNotice( state, email, icons ) {
-			if ( state === 'off' || state === 'cancelled' || ! state ) {
+			if ( state === 'off' || state === 'cancelled' || state === 'awaiting_approval' || ! state ) {
 				return null;
 			}
 			return h( 'div', { 'class': 'ncs-booking-notice' },
@@ -650,7 +650,7 @@
 				grid.appendChild( h( 'section', { 'class': 'ncs-booking-card' }, h( 'h3', { 'class': 'ncs-booking-card-title ncs-review-details-title' }, bookingIcon( 'user' ), h( 'span', { text: I18N.yourDetails || 'Your details' } ) ), summaryList( rows ), editDetails ) );
 				wrap.appendChild( grid );
 				if ( s.calendarSync ) {
-					wrap.appendChild( h( 'div', { 'class': 'ncs-booking-notice ncs-review-invitation' }, bookingIcon( 'video' ), h( 'p', { text: I18N.invitationReview || 'Your name and email will be used to send a Google Calendar invitation with a Meet link.' } ) ) );
+					wrap.appendChild( h( 'div', { 'class': 'ncs-booking-notice ncs-review-invitation' }, bookingIcon( 'video' ), h( 'p', { text: I18N.invitationReview || 'Our team will review your request first. After approval, your name and email will be used to send a Google Calendar invitation with a Meet link.' } ) ) );
 				}
 				var msg = h( 'p', { 'class': 'ncs-error', role: 'alert', hidden: ! serverErrors, text: serverErrors || '' } );
 				wrap.appendChild( msg );

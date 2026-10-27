@@ -97,7 +97,10 @@ namespace {
 	check( 1 === substr_count( $authored['text'], 'Dear ' ) && 1 === substr_count( $authored['text'], 'Kind regards,' ), 'Authored HTML letters keep their greeting and signature without duplicates' );
 	$pending = array_merge( $appt, array( 'status' => 'pending' ) );
 	Booking_Email::send_confirmation( $pending, $cfg, 'test-only' );
-	check( false !== strpos( end( $GLOBALS['sent'] )['subject'], 'booking request' ), 'Pending appointments are not described as confirmed in the default subject' );
+	check( false !== strpos( end( $GLOBALS['sent'] )['subject'], 'Booking request' ), 'Pending appointments are not described as confirmed in the default subject' );
+	check( false !== strpos( end( $GLOBALS['sent'] )['mailer']->AltBody, 'not confirmed yet' ), 'Pending request email explains staff review' );
+	Booking_Email::send_approval( $appt, $cfg );
+	check( false !== strpos( end( $GLOBALS['sent'] )['subject'], 'Booking approved' ), 'Approval sends a dedicated client approval letter' );
 	if ( ! empty( $argv[1] ) ) { file_put_contents( $argv[1], $GLOBALS['sent'][0]['html'] ); }
 	echo "Professional email checks passed across 10 email paths. No email was sent.\n";
 }

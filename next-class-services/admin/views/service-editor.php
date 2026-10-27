@@ -196,9 +196,8 @@ $embed_value = 'embed' === $ex['custom_mode'] ? $ex['url'] : '';
 					)
 				);
 				Form::select( 'cfg[native][new_status]', __( 'Status of new bookings', 'next-class-services' ), array(
-					'confirmed' => __( 'Confirmed automatically', 'next-class-services' ),
-					'pending'   => __( 'Pending until you confirm', 'next-class-services' ),
-				), $n['new_status'] );
+					'pending'   => __( 'Pending staff approval', 'next-class-services' ),
+				), 'pending', array( 'help' => __( 'Every new request must be reviewed under Appointments. Change its status to Confirmed to approve it and email the client.', 'next-class-services' ) ) );
 				?>
 			</div>
 			<div class="ncs-card">

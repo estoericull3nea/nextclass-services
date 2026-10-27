@@ -218,6 +218,9 @@ class Google_Calendar {
 		$id = (int) $a['id'];
 		$event_id = $a['google_event_id'];
 		$calendar = $a['google_calendar_id'];
+		if ( 'pending' === $a['status'] ) {
+			return true;
+		}
 		if ( 'cancelled' === $a['status'] ) {
 			$meta = ! empty( $a['google_calendar_meta'] ) ? json_decode( $a['google_calendar_meta'], true ) : array();
 			$meta = is_array( $meta ) ? $meta : array();

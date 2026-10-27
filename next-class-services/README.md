@@ -2,7 +2,7 @@
 
 WordPress plugin with two services for Next Class: an HR Diagnostic Assessment Tool and an Online Booking System.
 
-- Version: 1.3.0
+- Version: 1.4.0
 - Requires WordPress 6.0 or newer, PHP 7.4 or newer
 - Tested up to WordPress 6.8
 - Text domain: `next-class-services`, PHP prefix `ncs_`, namespace `NextClassServices`
@@ -77,7 +77,9 @@ All tables use the WordPress prefix.
 2. Create an OAuth client of type **Web application**. Copy the exact redirect URI shown under Next Class Services > Settings > Google Calendar into the client's authorized redirect URIs.
 3. Save the OAuth client ID, client secret and calendar ID in that section. `primary` uses the connecting account's primary calendar. An API key alone cannot authorize event creation. PHP OpenSSL is required for encrypted credential storage; changing WordPress authentication salts requires re-entering the secret and reconnecting.
 4. Click **Connect / reconnect Google**, grant Calendar event and calendar metadata permissions, then click **Test Calendar and Meet API**. The test creates a temporary event with a Meet request, changes its time, and deletes it. Pending Meet generation is reported as unverified. Failed cleanup retains the test event ID and the next test retries deletion first.
-5. Edit a booking service, select Native WordPress booking in General, and enable **Sync to Google Calendar and create a Google Meet**. This applies to new bookings, including pending bookings. Existing synced appointments continue syncing after the toggle is turned off.
+5. Edit a booking service, select Native WordPress booking in General, and enable **Sync to Google Calendar and create a Google Meet**. New requests start as Pending and hold their local slot. Staff reviews them under Appointments and sets the status to Confirmed to approve. Only approved bookings create Google events, Meet links and invitations. Existing synced appointments continue syncing after the toggle is turned off.
+
+Every new native booking requires staff approval, including services previously configured for automatic confirmation. Existing confirmed appointments retain their status. Clients receive an awaiting-review receipt and staff receive a review notice. Changing Pending to Confirmed sends a dedicated client approval email, regardless of the optional confirmation-template switch. If WordPress rejects the approval email handoff, the admin receives a warning. Duplicate Confirmed submissions do not send another approval email. Staff need the `ncs_manage_appointments` capability to review and approve bookings.
 
 Sync saves the service title and booking times on the connected Google calendar, adds the client name and email as an attendee, and uses `sendUpdates=all` for invitations, rescheduling and cancellation. Client calendar appearance depends on their Google invitation settings and may require an RSVP. Phone numbers, notes and custom answers are not exported. Retries skip unchanged events with the correct attendee to avoid repeated invitation notifications, and preserve existing RSVP responses. Ready Meet links appear in plugin booking emails, the confirmation screen, private booking management and the appointment detail. Use `{google_meet_link}` to position the link within an email template. If Google generates the link asynchronously, it appears on the private management page after the scheduled retry; the original confirmation email is not resent. The API connection test remains attendee-free.
 

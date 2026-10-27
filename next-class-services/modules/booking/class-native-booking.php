@@ -148,7 +148,7 @@ class Native_Booking {
 		}
 
 		$token  = Appointment::new_token();
-		$status = 'pending' === $cfg['native']['new_status'] ? 'pending' : 'confirmed';
+		$status = 'pending';
 		$row    = array(
 			'service_id'      => (int) $service_id,
 			'service_title'   => Helpers::truncate( '' !== $cfg['title'] ? $cfg['title'] : $cfg['admin_title'], 250 ),

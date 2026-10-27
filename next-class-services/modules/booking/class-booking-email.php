@@ -126,6 +126,10 @@ class Booking_Email {
 	 * @return bool
 	 */
 	public static function send_confirmation( array $appt, array $cfg, $token ) {
+		if ( 'pending' === $appt['status'] ) {
+			$tpl = array( 'subject' => __( 'Booking request received: {service_name}', 'next-class-services' ), 'body' => __( "Thank you for your booking request. Our team will review your request and email you once it has been approved. Your appointment is not confirmed yet.\n\nService: {service_name}\nRequested date: {appointment_date}\nRequested time: {appointment_time} ({timezone})\nStatus: Awaiting approval\n\nPlease retain your private booking link to view the status of your request.", 'next-class-services' ) );
+			return self::dispatch( $tpl, self::vars( $appt, $cfg, $token ), $appt['customer_email'], $cfg, __( 'Awaiting approval', 'next-class-services' ) );
+		}
 		$tpl = $cfg['notify']['customer'];
 		if ( empty( $tpl['enabled'] ) ) {
 			return false;
@@ -134,6 +138,11 @@ class Booking_Email {
 			$tpl['subject'] = __( 'Your booking request: {service_name}', 'next-class-services' );
 		}
 		return self::dispatch( $tpl, self::vars( $appt, $cfg, $token ), $appt['customer_email'], $cfg, __( 'Booking received', 'next-class-services' ) );
+	}
+
+	public static function send_approval( array $appt, array $cfg ) {
+		$tpl = array( 'subject' => __( 'Booking approved: {service_name}', 'next-class-services' ), 'body' => __( "Your booking request has been approved. We are pleased to confirm the appointment details below.\n\nService: {service_name}\nDate: {appointment_date}\nTime: {appointment_time} ({timezone})\nStatus: Approved\n\nWe look forward to speaking with you. Please retain your original private booking link if you need to manage this appointment.", 'next-class-services' ) );
+		return self::dispatch( $tpl, self::vars( $appt, $cfg ), $appt['customer_email'], $cfg, __( 'Your booking is approved', 'next-class-services' ) );
 	}
 
 	/**
@@ -145,6 +154,9 @@ class Booking_Email {
 	 */
 	public static function send_admin_new( array $appt, array $cfg ) {
 		$tpl = $cfg['notify']['admin'];
+		if ( 'pending' === $appt['status'] ) {
+			$tpl = array( 'enabled' => true, 'subject' => __( 'Review required: {service_name} with {customer_name}', 'next-class-services' ), 'body' => __( "A client has submitted a booking request that requires your review. Please open the appointment record and set its status to Confirmed to approve it.\n\nService: {service_name}\nCustomer: {customer_name}\nEmail: {customer_email}\nRequested date: {appointment_date}\nRequested time: {appointment_time} ({timezone})\nStatus: Awaiting approval\n\nThe client will receive an approval email after confirmation. Google Calendar invitations and the Meet link are created only after approval.", 'next-class-services' ) );
+		}
 		if ( empty( $tpl['enabled'] ) ) {
 			return false;
 		}
