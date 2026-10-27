@@ -240,6 +240,8 @@
 .ncs-admin .ncs-guide-dialog-header h2 { margin: 0; font-size: 20px; line-height: 1.4; }
 .ncs-admin .ncs-guide-steps { margin: 20px 0; padding-left: 24px; }
 .ncs-admin .ncs-guide-steps > li { padding-left: 6px; margin-bottom: 20px; }
+.ncs-admin .ncs-guide-substeps { list-style: decimal; margin: 8px 0 12px; padding-left: 24px; }
+.ncs-admin .ncs-guide-substeps > li { margin-bottom: 6px; padding-left: 4px; }
 .ncs-admin .ncs-guide-dialog h3 { margin: 0 0 6px; font-size: 15px; }
 .ncs-admin .ncs-guide-steps p { margin: 0 0 8px; }
 .ncs-admin .ncs-guide-dialog code { overflow-wrap: anywhere; font-size: 12px; }

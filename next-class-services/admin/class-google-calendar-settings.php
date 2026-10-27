@@ -71,17 +71,69 @@ class Google_Calendar_Settings {
 		echo '<dialog id="ncs-google-guide" class="ncs-guide-dialog" aria-labelledby="ncs-google-guide-title"><div class="ncs-guide-dialog-header"><h2 id="ncs-google-guide-title" tabindex="-1" autofocus>' . esc_html__( 'Set up Google Calendar and Google Meet', 'next-class-services' ) . '</h2><button type="button" class="ncs-btn ncs-btn-small" data-ncs-dialog-close>' . esc_html__( 'Close', 'next-class-services' ) . '</button></div>';
 		echo '<p>' . esc_html__( 'Follow these steps to get your Google OAuth client ID and client secret, then connect them to this website.', 'next-class-services' ) . '</p><ol class="ncs-guide-steps">';
 		$steps = array(
-			array( __( 'Choose a Google Cloud project', 'next-class-services' ), __( 'Open Google Cloud Console using the Google account that will host your bookings. Use the project selector at the top to select a project or create a new one.', 'next-class-services' ) ),
-			array( __( 'Enable the Google Calendar API', 'next-class-services' ), __( 'In that project, open APIs & Services > Library. Search for Google Calendar API, open it, and click Enable.', 'next-class-services' ) ),
-			array( __( 'Configure the consent screen', 'next-class-services' ), __( 'Open Google Auth platform. If prompted, click Get started. In Branding, enter an app name, a support email and developer contact details. In Audience, choose Internal only for an eligible Workspace organization; otherwise choose External. If the app is in Testing, add the Google account you will connect under Test users.', 'next-class-services' ) ),
-			array( __( 'Add the Calendar permissions', 'next-class-services' ), __( 'In Google Auth platform > Data Access, choose Add or remove scopes. Add the two Calendar scopes shown below, then save. The plugin requests these permissions when you connect.', 'next-class-services' ) ),
-			array( __( 'Create a Web application client', 'next-class-services' ), __( 'Open Google Auth platform > Clients > Create client. Select Web application and enter a name such as Next Class Bookings. Under Authorized redirect URIs, click Add URI and paste the exact address below. Click Create.', 'next-class-services' ) ),
-			array( __( 'Copy your client ID and client secret', 'next-class-services' ), __( 'Copy the client ID and client secret from the new client dialog. If Google offers a JSON download, keep it securely; it contains client_id and client_secret. Google may show the full secret only at creation. If you no longer have it, create a replacement secret in that client. Keep the secret private.', 'next-class-services' ) ),
-			array( __( 'Save and connect in WordPress', 'next-class-services' ), __( 'Close this guide and paste the values into Google OAuth client ID and Google OAuth client secret. Leave Google calendar ID as primary to use your main calendar. Click Save Google configuration, then Connect / reconnect Google. Sign in with the intended Google account and grant the requested permissions.', 'next-class-services' ) ),
-			array( __( 'Test and enable booking sync', 'next-class-services' ), __( 'Click Test Calendar and Meet API. It creates, reschedules and deletes a temporary event. Once the test succeeds, edit a booking service, choose Native WordPress booking in General, enable Sync to Google Calendar and create a Google Meet, then save the service.', 'next-class-services' ) ),
+			array( __( 'Choose a Google Cloud project', 'next-class-services' ), array(
+				__( 'Open Google Cloud Console.', 'next-class-services' ),
+				__( 'Sign in with the Google account that will host your bookings.', 'next-class-services' ),
+				__( 'Use the project selector at the top to select a project or create a new one.', 'next-class-services' ),
+			) ),
+			array( __( 'Enable the Google Calendar API', 'next-class-services' ), array(
+				__( 'In your selected project, open APIs & Services > Library.', 'next-class-services' ),
+				__( 'Search for Google Calendar API.', 'next-class-services' ),
+				__( 'Open the API and click Enable.', 'next-class-services' ),
+			) ),
+			array( __( 'Configure the consent screen', 'next-class-services' ), array(
+				__( 'Open Google Auth platform.', 'next-class-services' ),
+				__( 'If prompted, click Get started.', 'next-class-services' ),
+				__( 'Open Branding and enter an app name.', 'next-class-services' ),
+				__( 'Enter a support email and developer contact details, then save.', 'next-class-services' ),
+				__( 'Open Audience.', 'next-class-services' ),
+				__( 'Choose Internal only for an eligible Workspace organization; otherwise choose External.', 'next-class-services' ),
+				__( 'If the app is in Testing, open Test users and add the Google account you will connect.', 'next-class-services' ),
+			) ),
+			array( __( 'Add the Calendar permissions', 'next-class-services' ), array(
+				__( 'Open Google Auth platform > Data Access.', 'next-class-services' ),
+				__( 'Click Add or remove scopes.', 'next-class-services' ),
+				__( 'Add both Calendar scopes shown below.', 'next-class-services' ),
+				__( 'Save your changes. The plugin requests these permissions when you connect.', 'next-class-services' ),
+			) ),
+			array( __( 'Create a Web application client', 'next-class-services' ), array(
+				__( 'Open Google Auth platform > Clients.', 'next-class-services' ),
+				__( 'Click Create client.', 'next-class-services' ),
+				__( 'Select Web application.', 'next-class-services' ),
+				__( 'Enter a name such as Next Class Bookings.', 'next-class-services' ),
+				__( 'Under Authorized redirect URIs, click Add URI.', 'next-class-services' ),
+				__( 'Copy the exact redirect URI below and paste it into Google.', 'next-class-services' ),
+				__( 'Click Create.', 'next-class-services' ),
+			) ),
+			array( __( 'Copy your client ID and client secret', 'next-class-services' ), array(
+				__( 'Copy the client ID from the new client dialog.', 'next-class-services' ),
+				__( 'Copy the client secret and keep it private. Google may show the full secret only at creation.', 'next-class-services' ),
+				__( 'If a JSON download is offered, save it securely. It contains client_id and client_secret.', 'next-class-services' ),
+				__( 'If you no longer have the secret, create a replacement secret in that client.', 'next-class-services' ),
+			) ),
+			array( __( 'Save and connect in WordPress', 'next-class-services' ), array(
+				__( 'Close this guide.', 'next-class-services' ),
+				__( 'Paste your client ID into Google OAuth client ID.', 'next-class-services' ),
+				__( 'Paste your client secret into Google OAuth client secret.', 'next-class-services' ),
+				__( 'Leave Google calendar ID as primary to use your main calendar.', 'next-class-services' ),
+				__( 'Click Save Google configuration.', 'next-class-services' ),
+				__( 'Click Connect / reconnect Google.', 'next-class-services' ),
+				__( 'Sign in with the intended Google account and grant the requested permissions.', 'next-class-services' ),
+			) ),
+			array( __( 'Test and enable booking sync', 'next-class-services' ), array(
+				__( 'Click Test Calendar and Meet API. The test creates, reschedules and deletes a temporary event.', 'next-class-services' ),
+				__( 'Once the test succeeds, open Booking and edit a booking service.', 'next-class-services' ),
+				__( 'In General, select Native WordPress booking.', 'next-class-services' ),
+				__( 'Enable Sync to Google Calendar and create a Google Meet.', 'next-class-services' ),
+				__( 'Save the booking service.', 'next-class-services' ),
+			) ),
 		);
 		foreach ( $steps as $index => $step ) {
-			echo '<li><h3>' . esc_html( $step[0] ) . '</h3><p>' . esc_html( $step[1] ) . '</p>';
+			echo '<li><h3>' . esc_html( $step[0] ) . '</h3><ol class="ncs-guide-substeps">';
+			foreach ( $step[1] as $instruction ) {
+				echo '<li>' . esc_html( $instruction ) . '</li>';
+			}
+			echo '</ol>';
 			if ( 0 === $index ) {
 				echo '<a href="https://console.cloud.google.com/" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Open Google Cloud Console', 'next-class-services' ) . '</a>';
 			} elseif ( 3 === $index ) {
