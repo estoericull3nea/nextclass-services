@@ -2,7 +2,7 @@
 
 WordPress plugin with two services for Next Class: an HR Diagnostic Assessment Tool and an Online Booking System.
 
-- Version: 1.2.1
+- Version: 1.2.2
 - Requires WordPress 6.0 or newer, PHP 7.4 or newer
 - Tested up to WordPress 6.8
 - Text domain: `next-class-services`, PHP prefix `ncs_`, namespace `NextClassServices`
@@ -82,6 +82,8 @@ All tables use the WordPress prefix.
 Sync saves the service title and booking times on the connected Google calendar, adds the client name and email as an attendee, and uses `sendUpdates=all` for invitations, rescheduling and cancellation. Client calendar appearance depends on their Google invitation settings and may require an RSVP. Phone numbers, notes and custom answers are not exported. Retries skip unchanged events with the correct attendee to avoid repeated invitation notifications, and preserve existing RSVP responses. Ready Meet links appear in plugin booking emails, the confirmation screen, private booking management and the appointment detail. Use `{google_meet_link}` to position the link within an email template. If Google generates the link asynchronously, it appears on the private management page after the scheduled retry; the original confirmation email is not resent. The API connection test remains attendee-free.
 
 Booking service editors include configurable placeholders for built-in and custom customer fields. Existing fields fall back to sensible examples until saved. The frontend uses placeholders for text and textarea fields, and as the initial prompt for dropdowns. Review shows separate appointment and customer cards with edit actions. Confirmation provides calendar status, Meet and management actions, and a private-link copy control. Management refreshes current server state after cancellation and rescheduling. Run `node tests/booking-ui.js` for the mocked frontend flow. `tests/booking-preview.html` is an optional local-only visual fixture; all its booking API calls are mocked.
+
+Synced calendar events also invite the global Notification email, falling back to WordPress Settings > General > Administration Email Address when blank. Client and admin recipients are deduplicated without regard to case and their existing RSVP responses are preserved. The Booking received screen uses matching decorative icons for the appointment, invitation, Meet and private-link actions.
 
 Rescheduling patches the same event and retains its Meet conference. Cancellation deletes the event and removes the locally displayed Meet link. Deleting a Calendar event does not guarantee immediate invalidation of a previously shared Meet URL; Google's conference expiry rules apply. WordPress owns availability; busy events created in Google Calendar are not imported.
 

@@ -414,7 +414,8 @@
 				edit: [ 'm15 5 4 4M4 20l4-1L20 7a2.8 2.8 0 0 0-4-4L4 15Z' ],
 				check: [ 'm5 12 4 4L19 6' ],
 				back: [ 'M19 12H5m6-6-6 6 6 6' ],
-				video: [ 'M15 9l6-4v14l-6-4', 'M3 5h12v14H3Z' ]
+				video: [ 'M15 9l6-4v14l-6-4', 'M3 5h12v14H3Z' ],
+				link: [ 'M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-2 2', 'M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l2-2' ]
 			};
 			var svg = document.createElementNS( 'http://www.w3.org/2000/svg', 'svg' );
 			var attrs = { viewBox: '0 0 24 24', width: '20', height: '20', fill: 'none', stroke: 'currentColor', 'stroke-width': '1.7', 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'aria-hidden': 'true', focusable: 'false', 'class': 'ncs-booking-icon' };
@@ -456,19 +457,19 @@
 			return h( 'span', { 'class': 'ncs-booking-status' + ( status === 'cancelled' ? ' is-cancelled' : '' ), text: label || status } );
 		}
 
-		function calendarNotice( state, email ) {
+		function calendarNotice( state, email, icons ) {
 			if ( state === 'off' || state === 'cancelled' || ! state ) {
 				return null;
 			}
 			return h( 'div', { 'class': 'ncs-booking-notice' },
-				h( 'h3', { 'class': 'ncs-booking-card-title', text: state === 'pending' ? ( I18N.calendarPendingTitle || 'Calendar invitation is being prepared' ) : ( I18N.calendarReadyTitle || 'Your calendar invitation' ) } ),
+				h( 'h3', { 'class': 'ncs-booking-card-title' }, icons ? bookingIcon( 'mail' ) : null, h( 'span', { text: state === 'pending' ? ( I18N.calendarPendingTitle || 'Calendar invitation is being prepared' ) : ( I18N.calendarReadyTitle || 'Your calendar invitation' ) } ) ),
 				h( 'p', { text: state === 'pending' ? ( I18N.calendarPending || 'Your booking is saved. Your calendar invitation and Meet link are still being prepared. Check your private booking page shortly.' ) : ( I18N.calendarReady || 'Check your inbox for the Google Calendar invitation. You may need to accept it to add the event to your calendar.' ) } ),
 				email ? h( 'p', { 'class': 'ncs-meta', text: email } ) : null
 			);
 		}
 
-		function meetButton( url ) {
-			return url ? h( 'a', { href: url, 'class': 'ncs-btn ncs-btn-primary', target: '_blank', rel: 'noopener noreferrer', text: I18N.joinMeet || 'Join Google Meet' } ) : null;
+		function meetButton( url, icons ) {
+			return url ? h( 'a', { href: url, 'class': 'ncs-btn ncs-btn-primary', target: '_blank', rel: 'noopener noreferrer' }, icons ? bookingIcon( 'video' ) : null, h( 'span', { text: I18N.joinMeet || 'Join Google Meet' } ) ) : null;
 		}
 
 		function renderNative( s ) {
@@ -722,28 +723,31 @@
 
 			function done( d ) {
 				wrap.innerHTML = '';
+				wrap.classList.remove( 'ncs-review' );
+				wrap.classList.add( 'ncs-booking-received' );
 				var a = d.appointment || {};
 				wrap.appendChild( h( 'div', { 'class': 'ncs-booking-hero' },
+					h( 'span', { 'class': 'ncs-received-heading-icon' }, bookingIcon( a.status === 'pending' ? 'clock' : 'check' ) ),
 					h( 'p', { 'class': 'ncs-booking-kicker', text: d.preview ? ( I18N.preview || 'Preview' ) : ( I18N.bookingSaved || 'Booking saved' ) } ),
 					h( 'h2', { 'class': 'ncs-heading', 'data-ncs-focus': '', text: I18N.bookingDone || 'Booking received' } ),
 					statusBadge( a.status, a.statusLabel )
 				) );
 				wrap.appendChild( h( 'p', { 'class': 'ncs-lead-text', text: d.message } ) );
-				var next = h( 'section', { 'class': 'ncs-booking-card' }, h( 'h3', { 'class': 'ncs-booking-card-title', text: I18N.nextSteps || 'What happens next' } ) );
+				var next = h( 'section', { 'class': 'ncs-booking-card' }, h( 'h3', { 'class': 'ncs-booking-card-title' }, bookingIcon( 'calendar' ), h( 'span', { text: I18N.nextSteps || 'What happens next' } ) ) );
 				if ( a.status === 'pending' ) {
 					next.appendChild( h( 'p', { text: I18N.pendingBooking || 'Your booking is awaiting approval. Keep your private link to check its status.' } ) );
 				}
-				add( next, calendarNotice( d.calendarState, d.email ) );
+				add( next, calendarNotice( d.calendarState, d.email, true ) );
 				if ( d.calendarState === 'off' || ! d.calendarState ) {
 					next.appendChild( h( 'p', { text: I18N.keepBookingLink || 'Keep your private booking link so you can view your appointment and available changes.' } ) );
 				}
 				var nextActions = h( 'div', { 'class': 'ncs-actions' } );
 				if ( d.manageUrl ) {
-					nextActions.appendChild( h( 'a', { 'class': d.meetUrl ? 'ncs-btn' : 'ncs-btn ncs-btn-primary', href: d.manageUrl, text: I18N.manageTitle || 'Manage your booking' } ) );
+					nextActions.appendChild( h( 'a', { 'class': d.meetUrl ? 'ncs-btn' : 'ncs-btn ncs-btn-primary', href: d.manageUrl }, bookingIcon( 'calendar' ), h( 'span', { text: I18N.manageTitle || 'Manage your booking' } ) ) );
 				}
-				add( nextActions, meetButton( d.meetUrl ) );
+				add( nextActions, meetButton( d.meetUrl, true ) );
 				next.appendChild( nextActions );
-				wrap.appendChild( h( 'div', { 'class': 'ncs-booking-grid' }, bookingCard( a ), next ) );
+				wrap.appendChild( h( 'div', { 'class': 'ncs-booking-grid' }, bookingCard( a, true ), next ) );
 				if ( d.preview ) {
 					wrap.appendChild( h( 'p', { 'class': 'ncs-note', text: I18N.previewDone || 'This is a preview, so nothing was saved.' } ) );
 				}
@@ -757,7 +761,8 @@
 							navigator.clipboard.writeText( d.manageUrl ).then( function () { copyResult.textContent = I18N.linkCopied || 'Link copied.'; }, manualCopy );
 						} else { manualCopy(); }
 					} } );
-					wrap.appendChild( h( 'section', { 'class': 'ncs-booking-card ncs-private-link' }, h( 'label', { 'for': linkId, text: I18N.privateLink || 'Your private booking link' } ),
+					reviewButtonLabel( copy, I18N.copyLink || 'Copy link', 'link' );
+					wrap.appendChild( h( 'section', { 'class': 'ncs-booking-card ncs-private-link' }, h( 'label', { 'for': linkId }, bookingIcon( 'link' ), h( 'span', { text: I18N.privateLink || 'Your private booking link' } ) ),
 						h( 'p', { 'class': 'ncs-meta', text: I18N.privateLinkHelp || 'Save this link and keep it private. Anyone with the link can manage this booking.' } ), h( 'div', { 'class': 'ncs-booking-link-row' }, link, copy ), copyResult ) );
 				}
 				focusEl( wrap.querySelector( '[data-ncs-focus]' ) );

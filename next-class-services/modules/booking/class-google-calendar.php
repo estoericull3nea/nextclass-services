@@ -3,6 +3,7 @@
 namespace NextClassServices\Booking;
 
 use NextClassServices\Database;
+use NextClassServices\Helpers;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -261,20 +262,31 @@ class Google_Calendar {
 			'start' => array( 'dateTime' => gmdate( 'Y-m-d\TH:i:s\Z', strtotime( $a['start_utc'] . ' UTC' ) ), 'timeZone' => $a['timezone'] ),
 			'end' => array( 'dateTime' => gmdate( 'Y-m-d\TH:i:s\Z', strtotime( $a['end_utc'] . ' UTC' ) ), 'timeZone' => $a['timezone'] ),
 		);
-		$has_attendee = false;
+		$required_attendees = array();
 		if ( ! empty( $a['customer_email'] ) && is_email( $a['customer_email'] ) ) {
-			$attendees = is_array( $existing ) && ! empty( $existing['attendees'] ) ? $existing['attendees'] : array();
+			$required_attendees[] = array( 'email' => $a['customer_email'], 'displayName' => isset( $a['customer_name'] ) ? $a['customer_name'] : '' );
+		}
+		$notification_email = Helpers::notification_email();
+		if ( is_email( $notification_email ) ) {
+			$required_attendees[] = array( 'email' => $notification_email );
+		}
+		$attendees = is_array( $existing ) && ! empty( $existing['attendees'] ) ? $existing['attendees'] : array();
+		$has_attendee = true;
+		foreach ( $required_attendees as $required ) {
+			$found = false;
 			foreach ( $attendees as $attendee ) {
-				if ( isset( $attendee['email'] ) && 0 === strcasecmp( $attendee['email'], $a['customer_email'] ) ) {
-					$has_attendee = true;
+				if ( isset( $attendee['email'] ) && 0 === strcasecmp( $attendee['email'], $required['email'] ) ) {
+					$found = true;
+					break;
 				}
 			}
-			if ( ! $has_attendee ) {
-				$attendees[] = array( 'email' => $a['customer_email'], 'displayName' => isset( $a['customer_name'] ) ? $a['customer_name'] : '' );
+			if ( ! $found ) {
+				$attendees[] = $required;
+				$has_attendee = false;
 			}
+		}
+		if ( $attendees ) {
 			$body['attendees'] = $attendees;
-		} else {
-			$has_attendee = true;
 		}
 		if ( ! is_array( $existing ) ) {
 			if ( '' === $event_id ) {

@@ -73,6 +73,11 @@ namespace NextClassServices {
 		public static function setting( $key ) { return false; }
 		public static function settings() { return array( 'retention_mode' => 'indefinite' ); }
 		public static function retention_days() { return 0; }
+		public static function notification_email() {
+			$settings = \get_option( 'ncs_settings', array() );
+			$email = $settings['default_notification_email'] ?? '';
+			return \is_email( $email ) ? $email : \get_option( 'admin_email' );
+		}
 	}
 }
 namespace {
@@ -93,6 +98,7 @@ namespace {
 	function response( $code, $data = array() ) { return array( 'code' => $code, 'data' => $data ); }
 	function reset_test() {
 		$GLOBALS['options'] = array(); $GLOBALS['requests'] = array(); $GLOBALS['jobs'] = array();
+		$GLOBALS['options']['admin_email'] = 'site-admin@example.test';
 		$GLOBALS['wpdb']->busy = false;
 		$GLOBALS['wpdb']->rows = array( 1 => array(
 			'id' => 1, 'service_id' => 9, 'status' => 'confirmed', 'start_utc' => '2026-11-01 09:00:00', 'end_utc' => '2026-11-01 09:30:00', 'timezone' => 'Asia/Shanghai',
@@ -103,7 +109,7 @@ namespace {
 		Calendar::save_config( array( 'client_id' => 'test-client', 'secret' => Calendar::encrypt( 'test-secret' ), 'calendar_id' => 'primary', 'tokens' => Calendar::encrypt( json_encode( array( 'refresh_token' => 'refresh-test', 'access_token' => 'access-test', 'expires_at' => time() + 3600 ) ) ) ) );
 	}
 	function calendar_metadata() { return response( 200, array( 'id' => 'calendar@example.test', 'conferenceProperties' => array( 'allowedConferenceSolutionTypes' => array( 'hangoutsMeet' ) ) ) ); }
-	function event_data() { return array( 'id' => 'event-test', 'attendees' => array( array( 'email' => 'client@example.test', 'responseStatus' => 'accepted' ) ), 'hangoutLink' => 'https://meet.google.com/abc-defg-hij', 'start' => array( 'dateTime' => '2026-11-01T09:00:00Z' ), 'end' => array( 'dateTime' => '2026-11-01T09:30:00Z' ), 'conferenceData' => array( 'createRequest' => array( 'status' => array( 'statusCode' => 'success' ) ) ) ); }
+	function event_data() { return array( 'id' => 'event-test', 'attendees' => array( array( 'email' => 'client@example.test', 'responseStatus' => 'accepted' ), array( 'email' => 'site-admin@example.test', 'responseStatus' => 'tentative' ) ), 'hangoutLink' => 'https://meet.google.com/abc-defg-hij', 'start' => array( 'dateTime' => '2026-11-01T09:00:00Z' ), 'end' => array( 'dateTime' => '2026-11-01T09:30:00Z' ), 'conferenceData' => array( 'createRequest' => array( 'status' => array( 'statusCode' => 'success' ) ) ) ); }
 	$GLOBALS['checks'] = 0;
 	reset_test();
 	$encrypted = Calendar::encrypt( 'private-token' );
@@ -127,6 +133,7 @@ namespace {
 	check( 'hangoutsMeet' === $creation['conferenceData']['createRequest']['conferenceSolutionKey']['type'], 'Request Meet conference' );
 	check( 'HR consultation' === $creation['summary'] && ! isset( $creation['description'] ), 'Use the service title without exporting notes' );
 	check( false !== strpos( $GLOBALS['requests'][1][0], 'sendUpdates=all' ), 'Request the Google Calendar invitation when creating the event' );
+	check( 'site-admin@example.test' === $creation['attendees'][1]['email'], 'Blank Notification email falls back to WordPress admin email' );
 	$event_id = $a['google_event_id'];
 	Appointment::update( 1, array( 'start_utc' => '2026-11-02 09:00:00', 'end_utc' => '2026-11-02 09:30:00' ) );
 	$GLOBALS['requests'] = array();
@@ -134,6 +141,7 @@ namespace {
 	check( 'PATCH' === $GLOBALS['requests'][1][1]['method'] && false !== strpos( $GLOBALS['requests'][1][0], $event_id ), 'Reschedule the same event' );
 	check( ! isset( json_decode( $GLOBALS['requests'][1][1]['body'], true )['conferenceData'] ), 'Retain existing Meet on reschedule' );
 	check( 'accepted' === json_decode( $GLOBALS['requests'][1][1]['body'], true )['attendees'][0]['responseStatus'], 'Preserve RSVP when rescheduling' );
+	check( 'tentative' === json_decode( $GLOBALS['requests'][1][1]['body'], true )['attendees'][1]['responseStatus'], 'Preserve admin RSVP when rescheduling' );
 	check( false !== strpos( $GLOBALS['requests'][1][0], 'sendUpdates=all' ), 'Notify attendees when rescheduling' );
 	Appointment::update( 1, array( 'status' => 'cancelled' ) );
 	$GLOBALS['requests'] = array();
@@ -245,6 +253,17 @@ namespace {
 	};
 	Calendar::sync_now( 1 );
 	check( ! empty( $GLOBALS['jobs'] ), 'Synchronous sync schedules a safety retry before HTTP' );
+	reset_test();
+	$GLOBALS['options']['ncs_settings'] = array( 'default_notification_email' => 'bookings@example.test' );
+	$GLOBALS['http'] = function ( $url, $args ) { return false === strpos( $url, '/events' ) ? calendar_metadata() : response( 200, event_data() ); };
+	Calendar::sync( 1 );
+	$body = json_decode( $GLOBALS['requests'][1][1]['body'], true );
+	check( array( 'client@example.test', 'bookings@example.test' ) === array_column( $body['attendees'], 'email' ), 'Invite client and the configured Notification email' );
+	reset_test();
+	$GLOBALS['options']['ncs_settings'] = array( 'default_notification_email' => 'CLIENT@example.test' );
+	Calendar::sync( 1 );
+	$body = json_decode( $GLOBALS['requests'][1][1]['body'], true );
+	check( 1 === count( $body['attendees'] ), 'Client and admin matching emails are not invited twice' );
 	// Settings AJAX must preserve authorization and never disclose credentials.
 	reset_test();
 	Admin::begin_ajax( array( \NextClassServices\Admin\Settings::class, 'ajax_state' ) );

@@ -11,7 +11,7 @@ class Element {
 	get firstChild() { return this.children[0]; }
 	get className() { return this.attrs.class || ''; }
 	set className( value ) { this.attrs.class = value; }
-	get classList() { return { add: name => { this.className += ' ' + name; }, contains: name => this.className.split( ' ' ).includes( name ), toggle: ( name, active ) => { this.className = this.className.split( ' ' ).filter( value => value !== name ).join( ' ' ) + ( active ? ' ' + name : '' ); } }; }
+	get classList() { return { add: name => { this.className += ' ' + name; }, remove: name => { this.className = this.className.split( ' ' ).filter( value => value !== name ).join( ' ' ); }, contains: name => this.className.split( ' ' ).includes( name ), toggle: ( name, active ) => { this.className = this.className.split( ' ' ).filter( value => value !== name ).join( ' ' ) + ( active ? ' ' + name : '' ); } }; }
 	appendChild( node ) { if ( node.parentNode ) { node.parentNode.children = node.parentNode.children.filter( c => c !== node ); } this.children.push( node ); node.parentNode = this; return node; }
 	insertBefore( node, before ) { const index = this.children.indexOf( before ); if ( index === -1 ) { return this.appendChild( node ); } this.children.splice( index, 0, node ); node.parentNode = this; }
 	setAttribute( key, value ) { this.attrs[key] = String( value ); }
@@ -72,6 +72,8 @@ async function chooseTime( ui ) { await flush(); ui.app.querySelector( '.ncs-cal
 	ui.button( 'Edit details' ).click(); assert.equal( ui.app.querySelector( '[name="email"]' ).value, 'alex@example.test', 'Editing preserves entered values' );
 	ui.app.querySelector( 'form' ).fire( 'submit' ); ui.button( 'Confirm booking' ).click(); await flush();
 	assert.ok( ui.app.textContent.includes( 'What happens next' ) && ui.app.textContent.includes( 'Your private booking link' ) );
+	assert.ok( ui.app.querySelector( '.ncs-booking-received' ) && ui.app.querySelector( '.ncs-received-heading-icon' ), 'Confirmation uses a distinct icon-led completion layout' );
+	assert.ok( ui.app.querySelectorAll( 'svg[aria-hidden="true"]' ).length >= 7, 'Confirmation icons remain decorative with text labels' );
 	assert.ok( ui.app.querySelector( 'a[href="https://meet.google.com/abc-defg-hij"]' ), 'Meet CTA appears after booking' );
 	ui.button( 'Copy link' ).click(); assert.ok( ui.app.textContent.includes( 'Select and copy' ), 'Clipboard fallback remains usable' );
 	assert.equal( ui.calls.filter( call => call.route === 'booking/create' ).length, 1 );

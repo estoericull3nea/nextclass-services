@@ -4,7 +4,7 @@ Tags: assessment, lead generation, booking, appointments, calendly, tidycal
 Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.2.1
+Stable tag: 1.2.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -132,6 +132,10 @@ Analytics and design
 * **Slots disappear after changing Settings.** Sharing one calendar across services blocks the same time for every native service. Turn it off if services use different staff.
 
 == Changelog ==
+
+= 1.2.2 =
+* Calendar invitations include the Notification email, falling back to the WordPress admin email.
+* Added matching icons to the Booking received screen.
 
 = 1.2.1 =
 * Refined the booking review screen with inline icons, progress indicators and clearer edit and confirm actions.

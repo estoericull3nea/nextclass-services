@@ -195,6 +195,7 @@ class Google_Calendar_Settings {
 			__( 'To switch accounts or authorize again, click Disconnect, then Connect. Disconnecting leaves existing Google events in place.', 'next-class-services' ),
 			__( 'Sync saves the service title and booking times to Google Calendar, adds the client name and email as an attendee, and requests an invitation email. Rescheduling and cancellation notify attendees. Phone numbers, notes and custom answers are not sent.', 'next-class-services' ),
 			__( 'The event is saved on the connected calendar. Whether it automatically appears on the client calendar depends on their Google invitation settings; they may need to accept the invitation.', 'next-class-services' ),
+			__( 'The Notification email under Settings > Notifications is also invited. If blank, the WordPress admin email under Settings > General is used. Matching client and admin addresses are invited only once.', 'next-class-services' ),
 			__( 'Meet links appear in appointment details, private booking management and plugin emails once available.', 'next-class-services' ),
 			__( 'WordPress controls availability. Busy events created directly in Google Calendar are not imported.', 'next-class-services' ),
 			__( 'Failed booking syncs retry through WordPress scheduled tasks. A working WP-Cron is required.', 'next-class-services' ),

@@ -174,7 +174,7 @@ class Settings {
 
 		self::panel_start( 'notifications', $active );
 		self::card_start( 'notifications', __( 'Email', 'next-class-services' ) );
-		self::field( 'text', 's[default_notification_email]', __( 'Default notification email', 'next-class-services' ), $s['default_notification_email'], array( 'type' => 'email', 'help' => sprintf( /* translators: %s: email */ __( 'Used when an assessment or service has no recipient. Leave empty to use the site admin email (%s).', 'next-class-services' ), esc_html( get_option( 'admin_email' ) ) ) ) );
+		self::field( 'text', 's[default_notification_email]', __( 'Default notification email', 'next-class-services' ), $s['default_notification_email'], array( 'type' => 'email', 'help' => sprintf( /* translators: %s: email */ __( 'Used when an assessment or service has no email recipient. This address also receives Google Calendar invitations for synced bookings. Leave empty to use the WordPress admin email from Settings > General (%s).', 'next-class-services' ), esc_html( get_option( 'admin_email' ) ) ) ) );
 		self::field( 'text', 's[notification_cc]', __( 'Email CC (optional)', 'next-class-services' ), $s['notification_cc'], array( 'help' => __( 'Copy these addresses on admin booking and assessment notifications. Separate multiple addresses with commas. Leave blank to disable.', 'next-class-services' ), 'placeholder' => 'team@example.com, manager@example.com' ) );
 		echo '<div class="ncs-cols">';
 		self::field( 'text', 's[from_name]', __( 'Default sender name', 'next-class-services' ), $s['from_name'], array( 'help' => __( 'Optional. Overrides the WordPress default sender name on plugin emails.', 'next-class-services' ) ) );
