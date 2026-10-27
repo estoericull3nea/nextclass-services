@@ -121,6 +121,7 @@ class Assets {
 			'status'        => __( 'Status', 'next-class-services' ),
 			'service'       => __( 'Service', 'next-class-services' ),
 			'manageTitle'   => __( 'Manage your booking', 'next-class-services' ),
+			'joinMeet'      => __( 'Join Google Meet', 'next-class-services' ),
 			'cancelBooking' => __( 'Cancel booking', 'next-class-services' ),
 			'rescheduleBooking' => __( 'Reschedule', 'next-class-services' ),
 			'confirmCancel' => __( 'Are you sure you want to cancel this booking?', 'next-class-services' ),

@@ -643,6 +643,9 @@
 				if ( d.manageUrl ) {
 					wrap.appendChild( h( 'p', { 'class': 'ncs-note' }, ( I18N.manageLink || 'Save this private link to cancel or reschedule your booking:' ) + ' ', h( 'a', { href: d.manageUrl, text: I18N.manageTitle || 'Manage your booking' } ) ) );
 				}
+				if ( d.meetUrl ) {
+					wrap.appendChild( h( 'p', {}, h( 'a', { href: d.meetUrl, target: '_blank', rel: 'noopener noreferrer', text: I18N.joinMeet || 'Join Google Meet' } ) ) );
+				}
 				focusEl( wrap.querySelector( '[data-ncs-focus]' ) );
 				if ( d.redirect && ! d.preview ) {
 					setTimeout( function () {
@@ -679,6 +682,10 @@
 					dl.appendChild( h( 'dt', { text: r[ 0 ] } ) );
 					dl.appendChild( h( 'dd', { text: r[ 1 ] } ) );
 				} );
+				if ( a.meetUrl ) {
+					dl.appendChild( h( 'dt', { text: 'Google Meet' } ) );
+					dl.appendChild( h( 'dd', {}, h( 'a', { href: a.meetUrl, target: '_blank', rel: 'noopener noreferrer', text: I18N.joinMeet || 'Join Google Meet' } ) ) );
+				}
 				return dl;
 			}
 

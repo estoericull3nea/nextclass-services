@@ -174,7 +174,11 @@ class Appointment {
 			}
 			$data['active_slot'] = self::slot_key( $appt['service_id'], strtotime( $appt['start_utc'] . ' UTC' ) );
 		}
-		return self::update( $appt['id'], $data ) ? true : 'slot_taken';
+		if ( ! self::update( $appt['id'], $data ) ) {
+			return 'slot_taken';
+		}
+		Google_Calendar::sync_now( $appt['id'] );
+		return true;
 	}
 
 	/**
@@ -204,7 +208,20 @@ class Appointment {
 	 */
 	public static function delete( $id ) {
 		global $wpdb;
-		return (bool) $wpdb->delete( Database::table( 'appointments' ), array( 'id' => absint( $id ) ), array( '%d' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		$appt = self::get( $id );
+		if ( $appt && ! empty( $appt['google_sync_enabled'] ) ) {
+			// Keep the row and its remote identifiers until remote cleanup succeeds.
+			self::set_status( $appt, 'cancelled' );
+			$appt = self::get( $id );
+			if ( ! Google_Calendar::deletion_ready( $id ) ) {
+				return false;
+			}
+		}
+		$deleted = (bool) $wpdb->delete( Database::table( 'appointments' ), array( 'id' => absint( $id ) ), array( '%d' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		if ( $deleted ) {
+			wp_clear_scheduled_hook( Google_Calendar::RETRY, array( absint( $id ) ) );
+		}
+		return $deleted;
 	}
 
 	/**

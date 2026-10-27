@@ -109,6 +109,7 @@ class Loader {
 		Retention::init();
 		Privacy::init();
 		Assets::init();
+		Booking\Google_Calendar::init();
 
 		Front\Front::init();
 

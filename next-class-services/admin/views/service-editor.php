@@ -83,6 +83,9 @@ $embed_value = 'embed' === $ex['custom_mode'] ? $ex['url'] : '';
 			Form::number( 'cfg[duration]', __( 'Duration (minutes)', 'next-class-services' ), $cfg['duration'], array( 'min' => 5, 'max' => 480, 'step' => 5 ) );
 			Form::select( 'cfg[method]', __( 'Booking method', 'next-class-services' ), Booking_Service::methods(), $cfg['method'], array( 'help' => __( 'Each service can use a different method. External providers manage their own calendars, confirmations and reminders.', 'next-class-services' ) ) );
 			?>
+			<div data-show-method="native"<?php echo 'native' === $cfg['method'] ? '' : ' hidden'; ?>>
+				<?php Form::checkbox( 'cfg[native][google_sync]', __( 'Sync to Google Calendar and create a Google Meet', 'next-class-services' ), $n['google_sync'], array( 'class' => 'ncs-calendar-toggle', 'help' => __( 'Connect Google Calendar in Settings first. New bookings create an event with a Meet link. Cancellations remove the event; rescheduling updates the same event. Existing synced bookings continue syncing when this is turned off.', 'next-class-services' ) ) ); ?>
+			</div>
 		</div>
 		<div class="ncs-card">
 			<h2 class="ncs-card-title"><?php esc_html_e( 'Display', 'next-class-services' ); ?></h2>
@@ -145,7 +148,7 @@ $embed_value = 'embed' === $ex['custom_mode'] ? $ex['url'] : '';
 		<div data-show-method="native">
 			<div class="ncs-card">
 				<h2 class="ncs-card-title"><?php esc_html_e( 'Availability', 'next-class-services' ); ?></h2>
-				<p class="ncs-help"><?php esc_html_e( 'WordPress appointment data is the booking calendar. No external calendar (Google, Outlook) is synchronized.', 'next-class-services' ); ?></p>
+				<p class="ncs-help"><?php esc_html_e( 'WordPress controls booking availability. Enable Google Calendar sync in General to send bookings to Google Calendar with Meet links. Events created directly in Google Calendar do not block availability here.', 'next-class-services' ); ?></p>
 				<fieldset class="ncs-fieldset" id="ncs-native-days">
 					<legend><?php esc_html_e( 'Available working days', 'next-class-services' ); ?></legend>
 					<div class="ncs-inline-checks">

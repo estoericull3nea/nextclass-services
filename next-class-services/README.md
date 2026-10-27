@@ -2,11 +2,11 @@
 
 WordPress plugin with two services for Next Class: an HR Diagnostic Assessment Tool and an Online Booking System.
 
-- Version: 1.0.0
+- Version: 1.1.0
 - Requires WordPress 6.0 or newer, PHP 7.4 or newer
 - Tested up to WordPress 6.8
 - Text domain: `next-class-services`, PHP prefix `ncs_`, namespace `NextClassServices`
-- No CRM integration, no Google Analytics installation, no external calendar sync
+- Optional outbound Google Calendar sync with Google Meet for native bookings. No CRM integration or Google Analytics installation.
 
 See `readme.txt` for installation, configuration, the testing checklist, troubleshooting and the changelog.
 
@@ -69,7 +69,23 @@ All tables use the WordPress prefix.
 
 ## Extension points
 
-- Actions: `ncs_appointment_created`, `ncs_appointment_updated`, `ncs_appointment_cancelled` (use these for a future calendar sync).
+- Actions: `ncs_appointment_created`, `ncs_appointment_updated`, `ncs_appointment_cancelled`.
+
+## Google Calendar setup
+
+1. Enable Google Calendar API in a Google Cloud project and configure its OAuth consent screen. For External apps in Testing, add the connecting Google account as a test user; testing refresh tokens can expire after seven days. Use a production OAuth app for ongoing bookings.
+2. Create an OAuth client of type **Web application**. Copy the exact redirect URI shown under Next Class Services > Settings > Google Calendar into the client's authorized redirect URIs.
+3. Save the OAuth client ID, client secret and calendar ID in that section. `primary` uses the connecting account's primary calendar. An API key alone cannot authorize event creation. PHP OpenSSL is required for encrypted credential storage; changing WordPress authentication salts requires re-entering the secret and reconnecting.
+4. Click **Connect / reconnect Google**, grant Calendar event and calendar metadata permissions, then click **Test Calendar and Meet API**. The test creates a temporary event with a Meet request, changes its time, and deletes it. Pending Meet generation is reported as unverified. Failed cleanup retains the test event ID and the next test retries deletion first.
+5. Edit a booking service, select Native WordPress booking in General, and enable **Sync to Google Calendar and create a Google Meet**. This applies to new bookings, including pending bookings. Existing synced appointments continue syncing after the toggle is turned off.
+
+Sync sends generic event titles and booking times. Customer contact details and notes are not exported and Google attendee invitations are not sent. Ready Meet links appear in plugin booking emails, the confirmation screen, private booking management and the appointment detail. Use `{google_meet_link}` to position the link within an email template. If Google generates the link asynchronously, it appears on the private management page after the scheduled retry; the original confirmation email is not resent.
+
+Rescheduling patches the same event and retains its Meet conference. Cancellation deletes the event and removes the locally displayed Meet link. Deleting a Calendar event does not guarantee immediate invalidation of a previously shared Meet URL; Google's conference expiry rules apply. WordPress owns availability; busy events created in Google Calendar are not imported.
+
+Each appointment pins its real calendar ID and remote event ID before requests. Retries reuse event IDs after timeouts and read the latest appointment state. Errors appear in appointment details with a retry button. A working WP-Cron is required for background retries. A booking remains valid when Google is temporarily unavailable. Disconnecting keeps remote events; reconnect the same account to finish pending changes. Appointment deletion waits for remote cancellation to succeed; retention preserves rows with unresolved sync errors. Retention of old successful appointments does not delete historical Google events. Uninstalling does not delete remote Google events.
+
+Run mocked API regression checks with `php tests/google-calendar.php` (OpenSSL enabled). No live Google credentials are used by these checks.
 - Filter: `ncs_capability_slugs`.
 
 ## Design rules enforced in code

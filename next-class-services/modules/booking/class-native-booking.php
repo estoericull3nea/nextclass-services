@@ -17,9 +17,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Creates, cancels and reschedules native appointments.
  *
- * Structured so that an external calendar sync could later hook the
- * ncs_appointment_created / _updated / _cancelled actions. No external calendar
- * is contacted today: the WordPress appointment table is the booking calendar.
+ * WordPress owns availability. Services can opt into outbound Google Calendar
+ * synchronization; lifecycle actions remain available for other integrations.
  */
 class Native_Booking {
 
@@ -169,6 +168,7 @@ class Native_Booking {
 			'timezone'        => Availability::tz( $cfg )->getName(),
 			'status'          => $status,
 			'active_slot'     => Appointment::slot_key( $service_id, $slot['start_ts'] ),
+			'google_sync_enabled' => ! empty( $cfg['native']['google_sync'] ) ? 1 : 0,
 			'page_url'        => self::clean_page_url( $page_url ),
 		);
 		$id = Appointment::insert( $row );
@@ -179,13 +179,15 @@ class Native_Booking {
 		}
 
 		$appt = Appointment::get( $id );
+		Google_Calendar::sync_now( $id );
+		$appt = Appointment::get( $id );
 		Tracker::record( 'booking_complete', 'booking', $service_id, 'native' );
 
 		Booking_Email::send_confirmation( $appt, $cfg, $token );
 		Booking_Email::send_admin_new( $appt, $cfg );
 
 		/**
-		 * Fires after a native appointment was created. Hook for future calendar sync.
+		 * Fires after a native appointment was created.
 		 *
 		 * @param array $appt Appointment row.
 		 * @param array $cfg  Service config.
@@ -312,6 +314,8 @@ class Native_Booking {
 		if ( ! $ok ) {
 			return array( 'ok' => false, 'code' => 'slot_taken' );
 		}
+		$updated = Appointment::get( $appt['id'] );
+		Google_Calendar::sync_now( $appt['id'] );
 		$updated = Appointment::get( $appt['id'] );
 		Tracker::record( 'booking_reschedule', 'booking', $appt['service_id'], 'native' );
 		Booking_Email::send_reschedule( $updated, $prev, $cfg, $token );

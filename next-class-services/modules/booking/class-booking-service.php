@@ -82,6 +82,7 @@ class Booking_Service {
 				'redirect_url' => '',
 			),
 			'native'       => array(
+				'google_sync'             => false,
 				'days'                    => array( 1, 2, 3, 4, 5 ),
 				'start'                   => '09:00',
 				'end'                     => '17:00',
@@ -312,6 +313,7 @@ class Booking_Service {
 		}
 
 		$c['native'] = array(
+			'google_sync'             => 'native' === $method && ! empty( $n['google_sync'] ),
 			'days'                    => $days,
 			'start'                   => self::clean_time( $str( $n, 'start' ), '09:00' ),
 			'end'                     => self::clean_time( $str( $n, 'end' ), '17:00' ),

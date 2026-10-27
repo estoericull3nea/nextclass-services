@@ -21,7 +21,36 @@
 			return;
 		}
 
-		// Copy shortcode buttons.
+		// Native dialogs keep focus inside the guide and support Escape to close.
+		root.addEventListener( 'click', function ( e ) {
+			var trigger = e.target.closest( '[data-ncs-dialog-open]' );
+			if ( ! trigger ) {
+				return;
+			}
+			var dialog = document.getElementById( trigger.getAttribute( 'data-ncs-dialog-open' ) );
+			if ( dialog && ! dialog.open ) {
+				dialog.ncsTrigger = trigger;
+				dialog.showModal();
+				dialog.scrollTop = 0;
+			}
+		} );
+		Array.prototype.forEach.call( root.querySelectorAll( 'dialog.ncs-guide-dialog' ), function ( dialog ) {
+			dialog.addEventListener( 'click', function ( e ) {
+				var close = e.target.closest( '[data-ncs-dialog-close]' );
+				var bounds = dialog.getBoundingClientRect();
+				var backdrop = e.target === dialog && ( e.clientX < bounds.left || e.clientX > bounds.right || e.clientY < bounds.top || e.clientY > bounds.bottom );
+				if ( close || backdrop ) {
+					dialog.close();
+				}
+			} );
+			dialog.addEventListener( 'close', function () {
+				if ( dialog.ncsTrigger ) {
+					dialog.ncsTrigger.focus();
+				}
+			} );
+		} );
+
+		// Copy shortcode and setup guide buttons.
 		root.addEventListener( 'click', function ( e ) {
 			var btn = e.target.closest( '[data-ncs-copy]' );
 			if ( ! btn ) {

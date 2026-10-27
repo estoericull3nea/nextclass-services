@@ -213,6 +213,9 @@ class Booking_Services {
 		$post     = wp_unslash( $_POST ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitized in Booking_Service::from_request().
 		$warnings = array();
 		$config   = Booking_Service::from_request( $post, $warnings );
+		if ( ! empty( $config['native']['google_sync'] ) && ! \NextClassServices\Booking\Google_Calendar::connected() ) {
+			$warnings[] = __( 'Google Calendar sync is enabled, but no Google account is connected. Connect and test Google Calendar in Settings. Bookings will be saved locally and sync will retry.', 'next-class-services' );
+		}
 		if ( '' === $config['admin_title'] ) {
 			$config['admin_title'] = '' !== $config['title'] ? $config['title'] : __( 'Untitled service', 'next-class-services' );
 		}

@@ -71,7 +71,7 @@ class Retention {
 		// Only past appointments are removed. Future active bookings are never touched.
 		$appointments = (int) $wpdb->query(
 			$wpdb->prepare(
-				"DELETE FROM {$apt} WHERE created_at < %s AND end_utc < %s",
+				"DELETE FROM {$apt} WHERE created_at < %s AND end_utc < %s AND (google_sync_error IS NULL OR google_sync_error = '') AND NOT (status = 'cancelled' AND google_event_id <> '')",
 				$cutoff,
 				Helpers::now_utc()
 			)

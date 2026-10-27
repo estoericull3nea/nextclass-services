@@ -25,7 +25,7 @@ class Booking_Email {
 	 * @return array
 	 */
 	public static function placeholders() {
-		return array( 'customer_name', 'customer_email', 'customer_phone', 'service_name', 'appointment_date', 'appointment_time', 'timezone', 'booking_status', 'company', 'notes', 'manage_link', 'previous_date', 'previous_time' );
+		return array( 'customer_name', 'customer_email', 'customer_phone', 'service_name', 'appointment_date', 'appointment_time', 'timezone', 'booking_status', 'company', 'notes', 'manage_link', 'previous_date', 'previous_time', 'google_meet_link' );
 	}
 
 	/**
@@ -44,6 +44,7 @@ class Booking_Email {
 		$time_fmt = get_option( 'time_format' );
 		$link     = '' !== $token ? Appointment::manage_url( $appt, $token ) : '';
 		return array(
+			'google_meet_link' => 'cancelled' !== $appt['status'] && ! empty( $appt['google_meet_url'] ) ? $appt['google_meet_url'] : '',
 			'customer_name'    => $appt['customer_name'],
 			'customer_email'   => $appt['customer_email'],
 			'customer_phone'   => $appt['customer_phone'],
@@ -96,6 +97,9 @@ class Booking_Email {
 	 * @return bool
 	 */
 	private static function dispatch( array $tpl, array $vars, $to, array $cfg, $heading, array $opts = array() ) {
+		if ( ! empty( $vars['google_meet_link'] ) && false === strpos( $tpl['body'], '{google_meet_link}' ) ) {
+			$tpl['body'] .= "\n\n" . __( 'Join Google Meet:', 'next-class-services' ) . "\n{google_meet_link}";
+		}
 		$args = array( 'heading' => $heading );
 		if ( '' !== $vars['manage_link'] ) {
 			$args['cta_url']   = $vars['manage_link'];

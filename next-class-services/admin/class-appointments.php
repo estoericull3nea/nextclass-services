@@ -218,6 +218,20 @@ class Appointments {
 			echo '<dt>' . esc_html( $label ) . '</dt><dd>' . nl2br( esc_html( (string) $value ) ) . '</dd>';
 		}
 		echo '</dl></div>';
+		if ( ! empty( $a['google_sync_enabled'] ) ) {
+			echo '<div class="ncs-card"><h2 class="ncs-card-title">' . esc_html__( 'Google Calendar sync', 'next-class-services' ) . '</h2>';
+			if ( ! empty( $a['google_sync_error'] ) ) {
+				echo '<p role="status">' . esc_html( $a['google_sync_error'] ) . '</p>';
+			} else {
+				echo '<p>' . esc_html( 'cancelled' === $a['status'] ? __( 'Calendar event removed.', 'next-class-services' ) : __( 'Calendar sync enabled.', 'next-class-services' ) ) . '</p>';
+			}
+			if ( 'cancelled' !== $a['status'] && ! empty( $a['google_meet_url'] ) ) {
+				echo '<p><a class="ncs-btn" href="' . esc_url( $a['google_meet_url'] ) . '" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Join Google Meet', 'next-class-services' ) . '</a></p>';
+			}
+			echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '"><input type="hidden" name="action" value="ncs_google_retry"><input type="hidden" name="id" value="' . esc_attr( $id ) . '">';
+			wp_nonce_field( 'ncs_google_retry', '_ncs_nonce' );
+			echo '<button type="submit" class="ncs-btn">' . esc_html__( 'Retry calendar sync', 'next-class-services' ) . '</button></form></div>';
+		}
 
 		echo '<div class="ncs-card"><h2 class="ncs-card-title">' . esc_html__( 'Change status', 'next-class-services' ) . '</h2>';
 		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" class="ncs-form">';
@@ -270,8 +284,8 @@ class Appointments {
 	public static function handle_delete() {
 		$id = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : 0;
 		Admin::authorize( self::CAP, 'ncs_delete_appointment_' . $id );
-		Appointment::delete( $id );
-		Admin::flash( 'success', __( 'Appointment deleted.', 'next-class-services' ) );
+		$deleted = Appointment::delete( $id );
+		Admin::flash( $deleted ? 'success' : 'error', $deleted ? __( 'Appointment deleted.', 'next-class-services' ) : __( 'The appointment could not be deleted. If calendar cleanup is pending, retry sync before deleting again.', 'next-class-services' ) );
 		Admin::redirect( Admin::url( 'ncs-appointments' ) );
 	}
 

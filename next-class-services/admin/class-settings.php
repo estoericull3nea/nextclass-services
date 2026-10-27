@@ -51,7 +51,7 @@ class Settings {
 			$tz_options[ $tz ] = $tz;
 		}
 
-		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" class="ncs-form" data-ncs-warn-unsaved>';
+		echo '<form id="ncs-settings-form" method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" class="ncs-form" data-ncs-warn-unsaved>';
 		echo '<input type="hidden" name="action" value="ncs_save_settings">';
 		wp_nonce_field( 'ncs_save_settings', '_ncs_nonce' );
 
@@ -118,8 +118,8 @@ class Settings {
 		Form::checkbox( 's[debug_log]', __( 'Write technical errors to the PHP error log', 'next-class-services' ), $s['debug_log'], array( 'help' => __( 'Only enable while troubleshooting. Visitors never see technical details.', 'next-class-services' ) ) );
 		echo '</div>';
 
-		echo '<div class="ncs-savebar"><span class="ncs-savebar-status" id="ncs-dirty" role="status" hidden>' . esc_html__( 'You have unsaved changes.', 'next-class-services' ) . '</span><button type="submit" class="ncs-btn ncs-btn-primary">' . esc_html__( 'Save settings', 'next-class-services' ) . '</button></div>';
 		echo '</form>';
+		Google_Calendar_Settings::render();
 
 		echo '<div class="ncs-card"><h2 class="ncs-card-title">' . esc_html__( 'Run retention cleanup now', 'next-class-services' ) . '</h2>';
 		echo '<p class="ncs-help">' . esc_html__( 'Applies the saved retention period immediately. This permanently deletes data older than the period.', 'next-class-services' ) . '</p>';
@@ -146,6 +146,8 @@ class Settings {
 			echo '<li>' . esc_html( $line ) . '</li>';
 		}
 		echo '</ul></div>';
+
+		echo '<div class="ncs-savebar ncs-settings-savebar"><span class="ncs-savebar-status" id="ncs-dirty" role="status" hidden>' . esc_html__( 'You have unsaved changes.', 'next-class-services' ) . '</span><button type="submit" form="ncs-settings-form" class="ncs-btn ncs-btn-primary">' . esc_html__( 'Save settings', 'next-class-services' ) . '</button></div>';
 
 		Admin::footer();
 	}

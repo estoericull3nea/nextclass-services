@@ -4,7 +4,7 @@ Tags: assessment, lead generation, booking, appointments, calendly, tidycal
 Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -36,7 +36,7 @@ Choose a booking method for each service:
 * Custom URL or approved iframe embed
 * Native WordPress booking with working days, hours, buffers, minimum notice, maximum advance, blocked dates, timezone, daily limits, double booking protection, confirmation emails, cancellation and rescheduling through private links, and an appointment manager with CSV export.
 
-WordPress appointment data is the booking calendar for native bookings. No Google Calendar or Outlook synchronization is included. Hooks (`ncs_appointment_created`, `ncs_appointment_updated`, `ncs_appointment_cancelled`) are provided so a sync can be added later.
+WordPress controls native booking availability. Optional Google Calendar sync creates an event with Google Meet for new bookings, updates the same event on rescheduling, and deletes the event on cancellation. Configure OAuth credentials, connect and test under Settings, then enable sync per service in General. API keys alone are insufficient. Sync sends generic titles and booking times, without customer contact details or attendee invitations. Google Calendar busy events are not imported. See README.md for setup and operational details.
 
 External bookings made on Calendly, TidyCal or another provider are never reported as completed appointments, because those providers do not send this site a reliable confirmation. Analytics count views and interactions only.
 
@@ -133,10 +133,17 @@ Analytics and design
 
 == Changelog ==
 
+= 1.1.0 =
+* Added optional Google Calendar and Google Meet sync for native bookings, OAuth configuration, API lifecycle testing, encrypted credentials and background retries.
+* Booking services now use a three-dot actions menu.
+
 = 1.0.0 =
 * Initial release: assessments, lead capture, results, emails, lead management, booking (Calendly, TidyCal, custom, native), appointments, analytics, optional GA4 events, privacy tools, retention.
 
 == Upgrade Notice ==
+
+= 1.1.0 =
+Adds appointment sync fields automatically. Connect Google Calendar in Settings and enable sync per service. Existing appointments are not automatically exported.
 
 = 1.0.0 =
 First release.

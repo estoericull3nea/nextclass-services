@@ -272,7 +272,8 @@ class Booking_Handler {
 					'status'      => $appt['status'],
 					'statusLabel' => isset( $statuses[ $appt['status'] ] ) ? $statuses[ $appt['status'] ] : $appt['status'],
 				),
-				'manageUrl'   => ( '' !== $token && ( $cfg['native']['allow_cancel'] || $cfg['native']['allow_reschedule'] ) ) ? $vars['manage_link'] : '',
+				'manageUrl'   => ( '' !== $token && ( $cfg['native']['allow_cancel'] || $cfg['native']['allow_reschedule'] || ! empty( $cfg['native']['google_sync'] ) ) ) ? $vars['manage_link'] : '',
+				'meetUrl'     => $vars['google_meet_link'],
 				'redirect'    => $cfg['confirmation']['redirect_url'],
 			),
 			200
@@ -333,6 +334,7 @@ class Booking_Handler {
 					'status'      => $appt['status'],
 					'statusLabel' => isset( $statuses[ $appt['status'] ] ) ? $statuses[ $appt['status'] ] : $appt['status'],
 					'active'      => Appointment::is_active( $appt['status'] ),
+					'meetUrl'     => $vars['google_meet_link'],
 				),
 				'canCancel'        => $can_cancel,
 				'cancelReason'     => $can_cancel ? '' : $cancel_reason,

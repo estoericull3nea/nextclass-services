@@ -162,6 +162,9 @@ class Privacy {
 					array( 'name' => __( 'Appointment time (UTC)', 'next-class-services' ), 'value' => $r['start_utc'] ),
 					array( 'name' => __( 'Timezone', 'next-class-services' ), 'value' => $r['timezone'] ),
 					array( 'name' => __( 'Status', 'next-class-services' ), 'value' => isset( $statuses[ $r['status'] ] ) ? $statuses[ $r['status'] ] : $r['status'] ),
+					array( 'name' => __( 'Google Calendar ID', 'next-class-services' ), 'value' => isset( $r['google_calendar_id'] ) ? $r['google_calendar_id'] : '' ),
+					array( 'name' => __( 'Google event ID', 'next-class-services' ), 'value' => isset( $r['google_event_id'] ) ? $r['google_event_id'] : '' ),
+					array( 'name' => __( 'Google Meet link', 'next-class-services' ), 'value' => isset( $r['google_meet_url'] ) ? $r['google_meet_url'] : '' ),
 				),
 			);
 		}
@@ -192,12 +195,14 @@ class Privacy {
 			}
 			if ( Appointment::delete( $r['id'] ) ) {
 				$removed++;
+			} else {
+				$retained = true;
 			}
 		}
 		return array(
 			'items_removed'  => $removed > 0,
 			'items_retained' => $retained,
-			'messages'       => $retained ? array( __( 'Upcoming active appointments were kept so scheduling is not broken. Cancel them first, then run the eraser again.', 'next-class-services' ) ) : array(),
+			'messages'       => $retained ? array( __( 'Some appointments were kept because they are upcoming and active, or Google Calendar cleanup is pending. Cancel upcoming bookings or resolve calendar sync, then run the eraser again.', 'next-class-services' ) ) : array(),
 			'done'           => true,
 		);
 	}
@@ -212,6 +217,7 @@ class Privacy {
 		$content  = '<h3>' . esc_html__( 'Assessments and bookings (Next Class Services)', 'next-class-services' ) . '</h3>';
 		$content .= '<p>' . esc_html__( 'When you complete a diagnostic assessment we store your answers, your calculated score and result, and the contact details you enter in the lead form (which may include name, email, phone, company, job title and company size). We also store whether you agreed to the privacy and marketing consent statements and when. We do not store your IP address with your submission.', 'next-class-services' ) . '</p>';
 		$content .= '<p>' . esc_html__( 'When you book an appointment using the built-in scheduler we store your name, email, phone, company, job title and notes if provided, the chosen time and timezone, and the booking status. If you book with an external provider such as Calendly or TidyCal, that provider handles your data under its own privacy policy.', 'next-class-services' ) . '</p>';
+		$content .= '<p>' . esc_html__( 'If Google Calendar sync is enabled for a booking service, we send a generic event title and booking times to the connected Google calendar and request a Google Meet link. Customer contact details and notes are not sent to Google by this integration. Calendar event identifiers and Meet links are stored with the appointment. Google processes calendar and conferencing data under its own policies.', 'next-class-services' ) . '</p>';
 		$content .= '<p>' . esc_html__( 'We record anonymous interaction counts (for example views, starts and completions) without cookies, fingerprinting or visitor identifiers. If Google Analytics 4 is already installed on this site and the option is enabled, matching events are also sent to it.', 'next-class-services' ) . '</p>';
 		wp_add_privacy_policy_content( 'Next Class Services', wp_kses_post( $content ) );
 	}
