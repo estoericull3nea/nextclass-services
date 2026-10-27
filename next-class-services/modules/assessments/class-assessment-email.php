@@ -102,6 +102,7 @@ class Assessment_Email {
 			$vars,
 			array(
 				'heading'   => $e['heading'],
+				'greeting'  => ! empty( $vars['first_name'] ) ? __( 'Dear {first_name},', 'next-class-services' ) : __( 'Dear Customer,', 'next-class-services' ),
 				'cta_label' => $cta_label,
 				'cta_url'   => $cta_url,
 				'footer'    => $e['footer'],
@@ -137,7 +138,7 @@ class Assessment_Email {
 			'' !== $n['subject'] ? $n['subject'] : __( 'New assessment completed', 'next-class-services' ),
 			$n['message'],
 			$vars,
-			array( 'heading' => __( 'New assessment submission', 'next-class-services' ) )
+			array( 'heading' => __( 'New assessment submission', 'next-class-services' ), 'greeting' => __( 'Dear Team,', 'next-class-services' ), 'cta_url' => admin_url( 'admin.php?page=ncs-assessment-leads' ), 'cta_label' => __( 'View assessment leads', 'next-class-services' ) )
 		);
 		return Mailer::send( $to, $message, array( 'reply_to' => isset( $vars['email'] ) ? $vars['email'] : '', 'cc' => Helpers::setting( 'notification_cc', '' ) ) );
 	}

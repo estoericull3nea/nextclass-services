@@ -2,7 +2,7 @@
 
 WordPress plugin with two services for Next Class: an HR Diagnostic Assessment Tool and an Online Booking System.
 
-- Version: 1.2.3
+- Version: 1.3.0
 - Requires WordPress 6.0 or newer, PHP 7.4 or newer
 - Tested up to WordPress 6.8
 - Text domain: `next-class-services`, PHP prefix `ncs_`, namespace `NextClassServices`
@@ -86,6 +86,8 @@ Booking service editors include configurable placeholders for built-in and custo
 Synced calendar events also invite the global Notification email, falling back to WordPress Settings > General > Administration Email Address when blank. Client and admin recipients are deduplicated without regard to case and their existing RSVP responses are preserved. The Booking received screen uses matching decorative icons for the appointment, invitation, Meet and private-link actions.
 
 The admin receives an additional direct WordPress email containing the booking details, Meet link and an `.ics` file matching Google's event UID, organizer and sequence. This path is independent of Google guest-notification behavior and the service's optional admin notification template. Reschedules and cancellations send matching updates. A stored fingerprint prevents unchanged successful syncs from resending the same email; failed mail handoffs retry and appear as sync errors. WordPress mail acceptance is not confirmation of inbox delivery. On existing bookings, use Appointments > View > Retry calendar sync to send the admin calendar email. The Google API connection test sends no admin mail.
+
+All plugin-generated email uses a shared professional letter layout: company letterhead, recipient greeting, readable message paragraphs and detail tables, primary and meeting actions, a closing signature, and website footer. Existing plain-text templates are framed at send time without changing stored custom content. Authored HTML letters retain their own salutation and signature. Admin notices address the team; customer emails address the recipient. Both HTML and plain-text alternatives include the same letter elements. Google-generated invitations retain Google's formatting. Run `php tests/email-layout.php` to verify every plugin email path without sending mail; optionally pass an HTML output path to create a sample preview.
 
 Rescheduling patches the same event and retains its Meet conference. Cancellation deletes the event and removes the locally displayed Meet link. Deleting a Calendar event does not guarantee immediate invalidation of a previously shared Meet URL; Google's conference expiry rules apply. WordPress owns availability; busy events created in Google Calendar are not imported.
 

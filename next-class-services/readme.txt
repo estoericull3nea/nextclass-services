@@ -4,7 +4,7 @@ Tags: assessment, lead generation, booking, appointments, calendly, tidycal
 Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.2.3
+Stable tag: 1.3.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -132,6 +132,10 @@ Analytics and design
 * **Slots disappear after changing Settings.** Sharing one calendar across services blocks the same time for every native service. Turn it off if services use different staff.
 
 == Changelog ==
+
+= 1.3.0 =
+* Standardized plugin email as professional letters with branded letterhead, greetings, detail tables, action links and closing signatures in HTML and plain text.
+* Added recipient-appropriate admin booking update messages while preserving custom customer templates and calendar attachments.
 
 = 1.2.3 =
 * Send admin calendar emails directly through WordPress with matching .ics files, independent of Google guest notifications. Retry failed mail and show its handoff status.

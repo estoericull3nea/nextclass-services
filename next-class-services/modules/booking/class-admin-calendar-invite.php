@@ -39,11 +39,9 @@ class Admin_Calendar_Invite {
 			'when' => Helpers::format_utc( $appt['start_utc'], get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $appt['timezone'] ),
 			'timezone' => $appt['timezone'], 'meet' => $cancelled ? '' : $appt['google_meet_url'],
 		);
-		$body = __( "Service: {service}\nClient: {customer}\nEmail: {email}\nWhen: {when}\nTimezone: {timezone}\n\nThe matching calendar file is attached.", 'next-class-services' );
-		if ( ! $cancelled && ! empty( $vars['meet'] ) ) {
-			$body .= "\n\n" . __( 'Join Google Meet: {meet}', 'next-class-services' );
-		}
-		$message = Mailer::compose( $subject, $body, $vars, array( 'heading' => $subject, 'cta_label' => __( 'View Google Calendar event', 'next-class-services' ), 'cta_url' => $cancelled ? '' : $meta['url'] ) );
+		$body = $cancelled ? __( "Please note that the following appointment has been cancelled. The attached calendar file reflects this cancellation.\n\n", 'next-class-services' ) : __( "Please find the calendar invitation for the following client appointment. Review the details below and use the attached calendar file to update your schedule.\n\n", 'next-class-services' );
+		$body .= __( "Service: {service}\nClient: {customer}\nEmail: {email}\nDate and time: {when}\nTimezone: {timezone}\n\nPlease retain this email for your records.", 'next-class-services' );
+		$message = Mailer::compose( $subject, $body, $vars, array( 'heading' => $subject, 'greeting' => __( 'Dear Team,', 'next-class-services' ), 'cta_label' => __( 'View Google Calendar event', 'next-class-services' ), 'cta_url' => $cancelled ? '' : $meta['url'], 'secondary_label' => __( 'Join Google Meet', 'next-class-services' ), 'secondary_url' => $vars['meet'] ) );
 		$sent = Mailer::send( $to, $message, array( 'calendar' => self::ics( $appt, $meta, $to, $cancelled ), 'calendar_method' => $method, 'reply_to' => $appt['customer_email'] ) );
 		if ( ! $sent ) {
 			return new \WP_Error( 'admin_invite', __( 'The calendar event is synced, but WordPress could not send the admin invitation email. Check mail/SMTP configuration, then retry sync.', 'next-class-services' ) );
