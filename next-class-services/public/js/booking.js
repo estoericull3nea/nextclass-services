@@ -631,10 +631,10 @@
 					h( 'p', { 'class': 'ncs-lead-text', text: I18N.reviewHelp || 'Check your appointment and contact details before you confirm.' } ) ) ) );
 				var grid = h( 'div', { 'class': 'ncs-booking-grid' } );
 				var appointment = bookingCard( { service: s.name, date: longDate( chosen.date ), time: chosen.label, timezone: s.tzLabel }, true );
-				var editTime = h( 'button', { type: 'button', 'class': 'ncs-booking-edit', text: I18N.editTime || 'Edit date and time', onclick: function () {
+				var editTime = h( 'button', { type: 'button', 'class': 'ncs-booking-edit', 'aria-label': I18N.editTime || 'Edit date and time', title: I18N.editTime || 'Edit date and time', onclick: function () {
 					screen = 'pick'; draw(); focusEl( wrap.querySelector( '.ncs-step-label' ) );
 				} } );
-				reviewButtonLabel( editTime, I18N.editTime || 'Edit date and time', 'edit' );
+				editTime.appendChild( bookingIcon( 'edit' ) );
 				appointment.appendChild( editTime );
 				var rows = [];
 				s.fields.forEach( function ( f ) {
@@ -642,10 +642,10 @@
 						rows.push( [ f.label, values[ f.key ], f.key === 'email' ? 'mail' : ( f.key === 'name' ? 'user' : null ) ] );
 					}
 				} );
-				var editDetails = h( 'button', { type: 'button', 'class': 'ncs-booking-edit', text: I18N.editDetails || 'Edit details', onclick: function () {
+				var editDetails = h( 'button', { type: 'button', 'class': 'ncs-booking-edit', 'aria-label': I18N.editDetails || 'Edit details', title: I18N.editDetails || 'Edit details', onclick: function () {
 					screen = 'details'; draw(); focusEl( wrap.querySelector( '[data-ncs-focus]' ) );
 				} } );
-				reviewButtonLabel( editDetails, I18N.editDetails || 'Edit details', 'edit' );
+				editDetails.appendChild( bookingIcon( 'edit' ) );
 				grid.appendChild( appointment );
 				grid.appendChild( h( 'section', { 'class': 'ncs-booking-card' }, h( 'h3', { 'class': 'ncs-booking-card-title ncs-review-details-title' }, bookingIcon( 'user' ), h( 'span', { text: I18N.yourDetails || 'Your details' } ) ), summaryList( rows ), editDetails ) );
 				wrap.appendChild( grid );

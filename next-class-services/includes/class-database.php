@@ -135,6 +135,8 @@ class Database {
 			google_meet_url varchar(500) NOT NULL DEFAULT '',
 			google_sync_error text NULL,
 			google_sync_attempts smallint(5) unsigned NOT NULL DEFAULT 0,
+			google_calendar_meta text NULL,
+			google_admin_invite_signature char(64) NOT NULL DEFAULT '',
 			page_url varchar(500) NOT NULL DEFAULT '',
 			created_at datetime NOT NULL,
 			updated_at datetime NOT NULL,

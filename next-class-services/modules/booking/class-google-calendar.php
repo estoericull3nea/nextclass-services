@@ -219,11 +219,27 @@ class Google_Calendar {
 		$event_id = $a['google_event_id'];
 		$calendar = $a['google_calendar_id'];
 		if ( 'cancelled' === $a['status'] ) {
+			$meta = ! empty( $a['google_calendar_meta'] ) ? json_decode( $a['google_calendar_meta'], true ) : array();
+			$meta = is_array( $meta ) ? $meta : array();
 			if ( '' !== $event_id ) {
+				if ( empty( $meta['uid'] ) ) {
+					$existing = self::request( 'GET', self::events_path( $calendar, $event_id ) );
+					if ( is_wp_error( $existing ) && ! self::missing( $existing ) ) { return $existing; }
+					if ( is_array( $existing ) ) {
+						$meta = Admin_Calendar_Invite::metadata( $existing );
+						if ( ! Appointment::update( $id, array( 'google_calendar_meta' => wp_json_encode( $meta ) ) ) ) {
+							return new \WP_Error( 'storage', __( 'Could not save calendar cancellation metadata.', 'next-class-services' ) );
+						}
+					}
+				}
 				$result = self::request( 'DELETE', self::events_path( $calendar, $event_id ) . '?sendUpdates=all' );
 				if ( is_wp_error( $result ) && ! self::missing( $result ) ) {
 					return $result;
 				}
+			}
+			if ( ! empty( $meta['uid'] ) ) {
+				$mail = Admin_Calendar_Invite::send( $a, $meta, true );
+				if ( is_wp_error( $mail ) ) { return $mail; }
 			}
 			Appointment::update( $id, array( 'google_event_id' => '', 'google_meet_url' => '' ) );
 			return true;
@@ -317,8 +333,15 @@ class Google_Calendar {
 			return $event;
 		}
 		$url = self::meet_url( $event );
-		Appointment::update( $id, array( 'google_meet_url' => $url ) );
-		return '' !== $url ? true : new \WP_Error( 'meet_pending', __( 'The event exists, but the Google Meet link is pending or failed. Sync will retry.', 'next-class-services' ) );
+		$meta = Admin_Calendar_Invite::metadata( $event );
+		if ( ! Appointment::update( $id, array( 'google_meet_url' => $url, 'google_calendar_meta' => wp_json_encode( $meta ) ) ) ) {
+			return new \WP_Error( 'storage', __( 'Could not save Google calendar details.', 'next-class-services' ) );
+		}
+		if ( '' === $url ) {
+			return new \WP_Error( 'meet_pending', __( 'The event exists, but the Google Meet link is pending or failed. Sync will retry.', 'next-class-services' ) );
+		}
+		$a['google_meet_url'] = $url;
+		return Admin_Calendar_Invite::send( $a, $meta );
 	}
 
 	private static function same_time( array $event, array $a ) {

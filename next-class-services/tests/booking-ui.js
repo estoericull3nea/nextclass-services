@@ -53,7 +53,7 @@ function setup( manage = false ) {
 	} } };
 	const document = { readyState: 'complete', documentElement: { lang: 'en' }, querySelectorAll: () => [ root ], createElement: tag => new Element( tag ), createElementNS: ( ns, tag ) => new Element( tag ), createTextNode: text => { const node = new Element( '#text' ); node.textContent = text; return node; } };
 	vm.runInNewContext( fs.readFileSync( path.join( __dirname, '../public/js/booking.js' ), 'utf8' ), { document, window, navigator: {}, setTimeout() {} } );
-	const button = text => { const result = app.querySelectorAll( 'button' ).find( el => el.textContent === text ); assert.ok( result, 'Find button: ' + text ); return result; };
+	const button = text => { const result = app.querySelectorAll( 'button' ).find( el => el.textContent === text || el.getAttribute( 'aria-label' ) === text ); assert.ok( result, 'Find button: ' + text ); return result; };
 	return { app, calls, button };
 }
 const flush = () => new Promise( resolve => setImmediate( resolve ) );
@@ -66,6 +66,7 @@ async function chooseTime( ui ) { await flush(); ui.app.querySelector( '.ncs-cal
 	for ( const [ name, value ] of [ [ 'name', 'Alex Client' ], [ 'email', 'alex@example.test' ] ] ) { const input = ui.app.querySelector( '[name="' + name + '"]' ); input.value = value; input.fire( 'input' ); }
 	ui.app.querySelector( 'form' ).fire( 'submit' );
 	assert.ok( ui.app.textContent.includes( 'Review and confirm' ) );
+	assert.equal( ui.button( 'Edit details' ).textContent, '', 'Edit actions are icon-only with accessible labels' );
 	assert.ok( ui.app.querySelectorAll( 'svg[aria-hidden="true"]' ).length >= 6, 'Review icons are decorative and retain text labels' );
 	assert.equal( ui.app.querySelector( '[aria-current="step"]' ).textContent, '3Review and confirm', 'Progress indicates the current step' );
 	assert.equal( ui.app.querySelectorAll( '.ncs-booking-card' ).length >= 2, true );

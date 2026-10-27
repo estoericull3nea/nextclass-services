@@ -7,10 +7,16 @@ function wp_parse_args( $value, $defaults ) { return array_merge( $defaults, $va
 function sanitize_email( $email ) { return filter_var( $email, FILTER_SANITIZE_EMAIL ); }
 function is_email( $email ) { return (bool) filter_var( $email, FILTER_VALIDATE_EMAIL ); }
 function wp_strip_all_tags( $value ) { return strip_tags( $value ); }
-function add_action( ...$args ) {}
-function remove_action( ...$args ) {}
+function add_action( $name, $callback ) { $GLOBALS['mail_hooks'][$name] = $callback; }
+function remove_action( $name, $callback ) { unset( $GLOBALS['mail_hooks'][$name] ); }
 function wp_mail( $to, $subject, $html, $headers ) {
-	$GLOBALS['sent'][] = compact( 'to', 'subject', 'html', 'headers' );
+	$mailer = new class {
+		public $AltBody = '';
+		public $attachments = array();
+		public function addStringAttachment( ...$args ) { $this->attachments[] = $args; }
+	};
+	if ( isset( $GLOBALS['mail_hooks']['phpmailer_init'] ) ) { $GLOBALS['mail_hooks']['phpmailer_init']( $mailer ); }
+	$GLOBALS['sent'][] = array_merge( compact( 'to', 'subject', 'html', 'headers' ), array( 'attachments' => $mailer->attachments ) );
 	return true;
 }
 require __DIR__ . '/../includes/class-helpers.php';
@@ -30,4 +36,9 @@ $cc = array_values( array_filter( $GLOBALS['sent'][2]['headers'], function ( $he
 check( array( 'Cc: team@example.test' ) === $cc, 'Deduplicate CC and primary recipients without regard to case' );
 check( false === Mailer::send( 'invalid', $message, array( 'cc' => 'team@example.test' ) ), 'CC does not bypass missing primary recipients' );
 check( 3 === count( $GLOBALS['sent'] ), 'Invalid primary recipient never triggers a send' );
+	Mailer::send( 'admin@example.test', $message, array( 'calendar' => "BEGIN:VCALENDAR\r\nMETHOD:REQUEST\r\nEND:VCALENDAR\r\n", 'calendar_method' => 'REQUEST' ) );
+	check( 'booking.ics' === $GLOBALS['sent'][3]['attachments'][0][1] && false !== strpos( $GLOBALS['sent'][3]['attachments'][0][3], 'method=REQUEST' ), 'Admin calendar invitation is attached through PHPMailer' );
+	check( empty( $GLOBALS['mail_hooks'] ), 'Calendar mail hook is removed after sending' );
+	Mailer::send( 'admin@example.test', $message );
+	check( empty( $GLOBALS['sent'][4]['attachments'] ), 'Calendar attachments do not leak into unrelated messages' );
 echo "Optional CC mailer checks passed. No email was sent.\n";

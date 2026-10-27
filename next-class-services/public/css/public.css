@@ -943,7 +943,9 @@
 .ncs-root .ncs-review-header .ncs-lead-text { margin: 0; }
 .ncs-root .ncs-review .ncs-booking-kicker, .ncs-root .ncs-review .ncs-booking-time, .ncs-root .ncs-review .ncs-meta, .ncs-root .ncs-review-details-title, .ncs-root .ncs-review .ncs-booking-facts dt { display: flex; align-items: center; gap: 9px; }
 .ncs-root .ncs-review .ncs-booking-edit, .ncs-root .ncs-review .ncs-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
-.ncs-root .ncs-review .ncs-booking-edit { text-decoration: none; padding: 7px 10px; border-radius: 8px; background: var(--ncs-white); border: 1px solid rgba(57,57,57,0.18); }
+.ncs-root .ncs-review .ncs-booking-card { position: relative; }
+.ncs-root .ncs-review .ncs-booking-card > .ncs-booking-kicker, .ncs-root .ncs-review .ncs-booking-card > .ncs-review-details-title { padding-right: 44px; min-height: 36px; }
+.ncs-root .ncs-review .ncs-booking-edit { position: absolute; top: 16px; right: 16px; width: 36px; height: 36px; margin: 0; padding: 7px; text-decoration: none; border-radius: 8px; background: var(--ncs-white); border: 1px solid rgba(57,57,57,0.18); }
 .ncs-root .ncs-review .ncs-booking-edit:hover { border-color: var(--ncs-charcoal); }
 .ncs-root .ncs-review .ncs-booking-facts > div { padding-bottom: 12px; border-bottom: 1px solid rgba(57,57,57,0.1); }
 .ncs-root .ncs-review .ncs-booking-facts > div:last-child { border-bottom: 0; }

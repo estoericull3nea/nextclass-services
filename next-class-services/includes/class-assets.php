@@ -51,7 +51,7 @@ class Assets {
 		}
 		self::$public_registered = true;
 
-		wp_register_style( 'ncs-public', NCS_URL . 'public/css/public.css', array(), NCS_VERSION );
+		wp_register_style( 'ncs-public', NCS_URL . 'public/css/public.css', array(), NCS_VERSION . '.' . filemtime( NCS_PATH . 'public/css/public.css' ) );
 
 		wp_register_script( 'ncs-analytics', NCS_URL . 'public/js/analytics.js', array(), NCS_VERSION, true );
 		wp_localize_script(
@@ -68,7 +68,7 @@ class Assets {
 		);
 
 		wp_register_script( 'ncs-assessment', NCS_URL . 'public/js/assessment.js', array( 'ncs-analytics' ), NCS_VERSION, true );
-		wp_register_script( 'ncs-booking', NCS_URL . 'public/js/booking.js', array( 'ncs-analytics' ), NCS_VERSION, true );
+		wp_register_script( 'ncs-booking', NCS_URL . 'public/js/booking.js', array( 'ncs-analytics' ), NCS_VERSION . '.' . filemtime( NCS_PATH . 'public/js/booking.js' ), true );
 	}
 
 	/**

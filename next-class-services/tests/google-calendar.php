@@ -51,6 +51,7 @@ namespace {
 	function wp_unslash( $value ) { return $value; }
 	function sanitize_text_field( $value ) { return strip_tags( $value ); }
 	function is_email( $email ) { return (bool) filter_var( $email, FILTER_VALIDATE_EMAIL ); }
+	function sanitize_email( $email ) { return filter_var( $email, FILTER_SANITIZE_EMAIL ); }
 	function add_action( $hook, $callback ) { $GLOBALS['hooks'][ $hook ] = $callback; }
 	function admin_url( $path = '' ) { return 'https://example.test/wp-admin/' . $path; }
 	function add_query_arg( $args, $url ) { return $url . '?' . http_build_query( $args ); }
@@ -73,10 +74,20 @@ namespace NextClassServices {
 		public static function setting( $key ) { return false; }
 		public static function settings() { return array( 'retention_mode' => 'indefinite' ); }
 		public static function retention_days() { return 0; }
+		public static function single_line( $value ) { return trim( preg_replace( '/[\r\n]+/', ' ', $value ) ); }
+		public static function safe_url( $value ) { return $value; }
+		public static function format_utc( ...$args ) { return $args[0]; }
 		public static function notification_email() {
 			$settings = \get_option( 'ncs_settings', array() );
 			$email = $settings['default_notification_email'] ?? '';
 			return \is_email( $email ) ? $email : \get_option( 'admin_email' );
+		}
+	}
+	class Mailer {
+		public static function compose( $subject, $body, $vars, $args ) { return array( 'subject' => $subject, 'html' => $body, 'text' => $body ); }
+		public static function send( $to, $message, $options ) {
+			$GLOBALS['admin_calendar_mails'][] = array( 'to' => $to, 'message' => $message, 'options' => $options );
+			return empty( $GLOBALS['mail_fails'] );
 		}
 	}
 }
@@ -84,6 +95,7 @@ namespace {
 	require __DIR__ . '/../includes/class-database.php';
 	require __DIR__ . '/../modules/booking/class-appointment.php';
 	require __DIR__ . '/../modules/booking/class-google-calendar.php';
+	require __DIR__ . '/../modules/booking/class-admin-calendar-invite.php';
 	require __DIR__ . '/../admin/class-google-calendar-settings.php';
 	require __DIR__ . '/../admin/class-admin.php';
 	require __DIR__ . '/../admin/class-settings.php';
@@ -98,6 +110,7 @@ namespace {
 	function response( $code, $data = array() ) { return array( 'code' => $code, 'data' => $data ); }
 	function reset_test() {
 		$GLOBALS['options'] = array(); $GLOBALS['requests'] = array(); $GLOBALS['jobs'] = array();
+		$GLOBALS['admin_calendar_mails'] = array(); $GLOBALS['mail_fails'] = false;
 		$GLOBALS['options']['admin_email'] = 'site-admin@example.test';
 		$GLOBALS['wpdb']->busy = false;
 		$GLOBALS['wpdb']->rows = array( 1 => array(
@@ -105,11 +118,12 @@ namespace {
 			'customer_email' => 'client@example.test', 'customer_name' => 'Alex Client',
 			'service_title' => 'HR consultation',
 			'google_sync_enabled' => 1, 'google_calendar_id' => '', 'google_event_id' => '', 'google_meet_url' => '', 'google_sync_error' => '', 'google_sync_attempts' => 0,
+			'google_calendar_meta' => '', 'google_admin_invite_signature' => '',
 		) );
 		Calendar::save_config( array( 'client_id' => 'test-client', 'secret' => Calendar::encrypt( 'test-secret' ), 'calendar_id' => 'primary', 'tokens' => Calendar::encrypt( json_encode( array( 'refresh_token' => 'refresh-test', 'access_token' => 'access-test', 'expires_at' => time() + 3600 ) ) ) ) );
 	}
 	function calendar_metadata() { return response( 200, array( 'id' => 'calendar@example.test', 'conferenceProperties' => array( 'allowedConferenceSolutionTypes' => array( 'hangoutsMeet' ) ) ) ); }
-	function event_data() { return array( 'id' => 'event-test', 'attendees' => array( array( 'email' => 'client@example.test', 'responseStatus' => 'accepted' ), array( 'email' => 'site-admin@example.test', 'responseStatus' => 'tentative' ) ), 'hangoutLink' => 'https://meet.google.com/abc-defg-hij', 'start' => array( 'dateTime' => '2026-11-01T09:00:00Z' ), 'end' => array( 'dateTime' => '2026-11-01T09:30:00Z' ), 'conferenceData' => array( 'createRequest' => array( 'status' => array( 'statusCode' => 'success' ) ) ) ); }
+	function event_data() { return array( 'id' => 'event-test', 'iCalUID' => 'event-test@google.com', 'organizer' => array( 'email' => 'organizer@example.test' ), 'sequence' => 0, 'attendees' => array( array( 'email' => 'client@example.test', 'responseStatus' => 'accepted' ), array( 'email' => 'site-admin@example.test', 'responseStatus' => 'tentative' ) ), 'hangoutLink' => 'https://meet.google.com/abc-defg-hij', 'start' => array( 'dateTime' => '2026-11-01T09:00:00Z' ), 'end' => array( 'dateTime' => '2026-11-01T09:30:00Z' ), 'conferenceData' => array( 'createRequest' => array( 'status' => array( 'statusCode' => 'success' ) ) ) ); }
 	$GLOBALS['checks'] = 0;
 	reset_test();
 	$encrypted = Calendar::encrypt( 'private-token' );
@@ -134,6 +148,9 @@ namespace {
 	check( 'HR consultation' === $creation['summary'] && ! isset( $creation['description'] ), 'Use the service title without exporting notes' );
 	check( false !== strpos( $GLOBALS['requests'][1][0], 'sendUpdates=all' ), 'Request the Google Calendar invitation when creating the event' );
 	check( 'site-admin@example.test' === $creation['attendees'][1]['email'], 'Blank Notification email falls back to WordPress admin email' );
+	check( 1 === count( $GLOBALS['admin_calendar_mails'] ) && 'site-admin@example.test' === $GLOBALS['admin_calendar_mails'][0]['to'], 'Send a direct admin email even when Google does not send organizer invitations' );
+	$ical = $GLOBALS['admin_calendar_mails'][0]['options']['calendar'];
+	check( false !== strpos( $ical, 'METHOD:REQUEST' ) && false !== strpos( $ical, 'UID:event-test@google.com' ) && false !== strpos( $ical, 'https://meet.google.com/abc-defg-hij' ), 'Admin invitation includes the matching Google UID and Meet link' );
 	$event_id = $a['google_event_id'];
 	Appointment::update( 1, array( 'start_utc' => '2026-11-02 09:00:00', 'end_utc' => '2026-11-02 09:30:00' ) );
 	$GLOBALS['requests'] = array();
@@ -143,11 +160,13 @@ namespace {
 	check( 'accepted' === json_decode( $GLOBALS['requests'][1][1]['body'], true )['attendees'][0]['responseStatus'], 'Preserve RSVP when rescheduling' );
 	check( 'tentative' === json_decode( $GLOBALS['requests'][1][1]['body'], true )['attendees'][1]['responseStatus'], 'Preserve admin RSVP when rescheduling' );
 	check( false !== strpos( $GLOBALS['requests'][1][0], 'sendUpdates=all' ), 'Notify attendees when rescheduling' );
+	check( 2 === count( $GLOBALS['admin_calendar_mails'] ) && false !== strpos( $GLOBALS['admin_calendar_mails'][1]['options']['calendar'], 'DTSTART:20261102T090000Z' ), 'Rescheduling sends an updated calendar email to the admin' );
 	Appointment::update( 1, array( 'status' => 'cancelled' ) );
 	$GLOBALS['requests'] = array();
 	Calendar::sync( 1 );
 	check( 'DELETE' === $GLOBALS['requests'][0][1]['method'] && '' === Appointment::get( 1 )['google_meet_url'], 'Cancellation removes remote event and local Meet URL' );
 	check( false !== strpos( $GLOBALS['requests'][0][0], 'sendUpdates=all' ), 'Notify attendees of cancellation' );
+	check( 'CANCEL' === $GLOBALS['admin_calendar_mails'][2]['options']['calendar_method'] && false !== strpos( $GLOBALS['admin_calendar_mails'][2]['options']['calendar'], 'UID:event-test@google.com' ), 'Cancellation email matches the original calendar identity' );
 
 	reset_test();
 	$GLOBALS['http'] = function ( $url, $args ) {
@@ -161,6 +180,8 @@ namespace {
 	Calendar::sync( 1 );
 	check( 1 === count( $GLOBALS['requests'] ) && 'GET' === $GLOBALS['requests'][0][1]['method'], 'Recover timed-out successful POST without creating a duplicate' );
 	check( $event_id === Appointment::get( 1 )['google_event_id'], 'Retry keeps event identity' );
+	Calendar::sync( 1 );
+	check( 1 === count( $GLOBALS['admin_calendar_mails'] ), 'An unchanged retry does not resend a successful admin email' );
 
 	reset_test();
 	Appointment::update( 1, array( 'google_calendar_id' => 'fixed-calendar', 'google_event_id' => 'fixed-event', 'status' => 'cancelled' ) );
@@ -259,6 +280,15 @@ namespace {
 	Calendar::sync( 1 );
 	$body = json_decode( $GLOBALS['requests'][1][1]['body'], true );
 	check( array( 'client@example.test', 'bookings@example.test' ) === array_column( $body['attendees'], 'email' ), 'Invite client and the configured Notification email' );
+	check( 'bookings@example.test' === $GLOBALS['admin_calendar_mails'][0]['to'], 'Direct admin email uses the configured Notification email' );
+	reset_test();
+	$GLOBALS['mail_fails'] = true;
+	Calendar::sync( 1 );
+	check( '' === Appointment::get( 1 )['google_admin_invite_signature'] && '' !== Appointment::get( 1 )['google_sync_error'] && ! empty( $GLOBALS['jobs'] ), 'Mail failure retains unsent state and queues a retry' );
+	$GLOBALS['mail_fails'] = false;
+	$GLOBALS['requests'] = array();
+	Calendar::sync( 1 );
+	check( '' !== Appointment::get( 1 )['google_admin_invite_signature'] && 1 === count( $GLOBALS['requests'] ), 'Retry sends the admin mail without creating another Google event' );
 	reset_test();
 	$GLOBALS['options']['ncs_settings'] = array( 'default_notification_email' => 'CLIENT@example.test' );
 	Calendar::sync( 1 );

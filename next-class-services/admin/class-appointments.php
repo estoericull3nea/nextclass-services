@@ -228,6 +228,7 @@ class Appointments {
 			if ( 'cancelled' !== $a['status'] && ! empty( $a['google_meet_url'] ) ) {
 				echo '<p><a class="ncs-btn" href="' . esc_url( $a['google_meet_url'] ) . '" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Join Google Meet', 'next-class-services' ) . '</a></p>';
 			}
+			echo '<p class="ncs-help">' . esc_html( ! empty( $a['google_admin_invite_signature'] ) ? __( 'Admin calendar email accepted by WordPress for delivery.', 'next-class-services' ) : __( 'Admin calendar email not yet sent. Retry sync to send it.', 'next-class-services' ) ) . '</p>';
 			echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '"><input type="hidden" name="action" value="ncs_google_retry"><input type="hidden" name="id" value="' . esc_attr( $id ) . '">';
 			wp_nonce_field( 'ncs_google_retry', '_ncs_nonce' );
 			echo '<button type="submit" class="ncs-btn">' . esc_html__( 'Retry calendar sync', 'next-class-services' ) . '</button></form></div>';

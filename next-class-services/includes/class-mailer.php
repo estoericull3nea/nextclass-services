@@ -97,7 +97,7 @@ class Mailer {
 	 *
 	 * @param string|array $to       Recipient(s), validated.
 	 * @param array        $message  Output of compose().
-	 * @param array        $options  reply_to, from_name, cc (optional address list).
+	 * @param array        $options  reply_to, from_name, cc, calendar, calendar_method.
 	 * @return bool
 	 */
 	public static function send( $to, array $message, array $options = array() ) {
@@ -141,12 +141,20 @@ class Mailer {
 		}
 
 		$text     = $message['text'];
-		$alt_hook = function ( $phpmailer ) use ( $text ) {
+		$calendar = isset( $options['calendar'] ) ? (string) $options['calendar'] : '';
+		$method = isset( $options['calendar_method'] ) && 'CANCEL' === $options['calendar_method'] ? 'CANCEL' : 'REQUEST';
+		$alt_hook = function ( $phpmailer ) use ( $text, $calendar, $method ) {
 			$phpmailer->AltBody = $text; // phpcs:ignore WordPress.NamingConventions.ValidVariableName
+			if ( '' !== $calendar ) {
+				$phpmailer->addStringAttachment( $calendar, 'booking.ics', 'base64', 'text/calendar; charset=UTF-8; method=' . $method );
+			}
 		};
 		add_action( 'phpmailer_init', $alt_hook );
-		$sent = wp_mail( $recipients, Helpers::single_line( $message['subject'] ), $message['html'], $headers );
-		remove_action( 'phpmailer_init', $alt_hook );
+		try {
+			$sent = wp_mail( $recipients, Helpers::single_line( $message['subject'] ), $message['html'], $headers );
+		} finally {
+			remove_action( 'phpmailer_init', $alt_hook );
+		}
 
 		if ( ! $sent ) {
 			Helpers::log( 'wp_mail failed', array( 'subject' => $message['subject'] ) );
