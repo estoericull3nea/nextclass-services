@@ -403,6 +403,45 @@
 
 		/* ---------- native booking flow ---------- */
 
+		function summaryList( rows ) {
+			var list = h( 'dl', { 'class': 'ncs-booking-facts' } );
+			rows.forEach( function ( row ) {
+				if ( row[1] ) {
+					list.appendChild( h( 'div', {}, h( 'dt', { text: row[0] } ), h( 'dd', { text: row[1] } ) ) );
+				}
+			} );
+			return list;
+		}
+
+		function bookingCard( appointment ) {
+			return h( 'section', { 'class': 'ncs-booking-card ncs-appointment-card', 'aria-label': I18N.appointmentDetails || 'Appointment details' },
+				h( 'p', { 'class': 'ncs-booking-kicker', text: I18N.yourAppointment || 'Your appointment' } ),
+				h( 'h3', { 'class': 'ncs-booking-card-title', text: appointment.service } ),
+				h( 'p', { 'class': 'ncs-booking-date', text: appointment.date } ),
+				h( 'p', { 'class': 'ncs-booking-time', text: appointment.time } ),
+				appointment.timezone ? h( 'p', { 'class': 'ncs-meta', text: appointment.timezone } ) : null
+			);
+		}
+
+		function statusBadge( status, label ) {
+			return h( 'span', { 'class': 'ncs-booking-status' + ( status === 'cancelled' ? ' is-cancelled' : '' ), text: label || status } );
+		}
+
+		function calendarNotice( state, email ) {
+			if ( state === 'off' || state === 'cancelled' || ! state ) {
+				return null;
+			}
+			return h( 'div', { 'class': 'ncs-booking-notice' },
+				h( 'h3', { 'class': 'ncs-booking-card-title', text: state === 'pending' ? ( I18N.calendarPendingTitle || 'Calendar invitation is being prepared' ) : ( I18N.calendarReadyTitle || 'Your calendar invitation' ) } ),
+				h( 'p', { text: state === 'pending' ? ( I18N.calendarPending || 'Your booking is saved. Your calendar invitation and Meet link are still being prepared. Check your private booking page shortly.' ) : ( I18N.calendarReady || 'Check your inbox for the Google Calendar invitation. You may need to accept it to add the event to your calendar.' ) } ),
+				email ? h( 'p', { 'class': 'ncs-meta', text: email } ) : null
+			);
+		}
+
+		function meetButton( url ) {
+			return url ? h( 'a', { href: url, 'class': 'ncs-btn ncs-btn-primary', target: '_blank', rel: 'noopener noreferrer', text: I18N.joinMeet || 'Join Google Meet' } ) : null;
+		}
+
 		function renderNative( s ) {
 			var chosen = null;
 			var values = {};
@@ -421,7 +460,9 @@
 
 			function draw() {
 				wrap.innerHTML = '';
-				wrap.appendChild( serviceHeader( s ) );
+				if ( screen !== 'confirm' ) {
+					wrap.appendChild( serviceHeader( s ) );
+				}
 				if ( screen === 'pick' ) {
 					drawPick();
 				} else if ( screen === 'details' ) {
@@ -470,15 +511,16 @@
 					var errId = id + '-err';
 					var input;
 					if ( f.type === 'textarea' ) {
-						input = h( 'textarea', { id: id, name: f.key, rows: 4, 'class': 'ncs-input', 'aria-describedby': errId } );
+						input = h( 'textarea', { id: id, name: f.key, rows: 4, placeholder: f.placeholder || '', 'class': 'ncs-input', 'aria-describedby': errId } );
 					} else if ( f.type === 'select' ) {
-						input = h( 'select', { id: id, name: f.key, 'class': 'ncs-select', 'aria-describedby': errId }, h( 'option', { value: '', text: I18N.choose || 'Choose an option' } ) );
+						input = h( 'select', { id: id, name: f.key, 'class': 'ncs-select', 'aria-describedby': errId }, h( 'option', { value: '', text: f.placeholder || I18N.choose || 'Choose an option' } ) );
 						( f.options || [] ).forEach( function ( o ) {
 							input.appendChild( h( 'option', { value: o, text: o } ) );
 						} );
 					} else {
 						input = h( 'input', {
 							id: id, name: f.key, 'class': 'ncs-input', 'aria-describedby': errId,
+							placeholder: f.placeholder || '',
 							type: f.type === 'email' ? 'email' : ( f.type === 'tel' ? 'tel' : 'text' ),
 							autocomplete: { name: 'name', email: 'email', phone: 'tel', company: 'organization', job_title: 'organization-title' }[ f.key ] || 'off'
 						} );
@@ -547,25 +589,30 @@
 			}
 
 			function drawConfirm( serverErrors ) {
-				wrap.appendChild( h( 'p', { 'class': 'ncs-step-label', 'data-ncs-focus': '', text: stepLabel( 3 ) + ': ' + ( I18N.confirmTitle || 'Review and confirm' ) } ) );
-				var dl = h( 'dl', { 'class': 'ncs-summary' } );
-				var rows = [
-					[ I18N.service || 'Service', s.name ],
-					[ I18N.when || 'When', longDate( chosen.date ) + ', ' + chosen.label ],
-					[ 'Timezone', s.tzLabel || '' ]
-				];
+				wrap.appendChild( h( 'p', { 'class': 'ncs-step-label', text: stepLabel( 3 ) } ) );
+				wrap.appendChild( h( 'h2', { 'class': 'ncs-heading', 'data-ncs-focus': '', text: I18N.confirmTitle || 'Review and confirm' } ) );
+				wrap.appendChild( h( 'p', { 'class': 'ncs-lead-text', text: I18N.reviewHelp || 'Check your appointment and contact details before you confirm.' } ) );
+				var grid = h( 'div', { 'class': 'ncs-booking-grid' } );
+				var appointment = bookingCard( { service: s.name, date: longDate( chosen.date ), time: chosen.label, timezone: s.tzLabel } );
+				var editTime = h( 'button', { type: 'button', 'class': 'ncs-booking-edit', text: I18N.editTime || 'Edit date and time', onclick: function () {
+					screen = 'pick'; draw(); focusEl( wrap.querySelector( '.ncs-step-label' ) );
+				} } );
+				appointment.appendChild( editTime );
+				var rows = [];
 				s.fields.forEach( function ( f ) {
 					if ( values[ f.key ] ) {
 						rows.push( [ f.label, values[ f.key ] ] );
 					}
 				} );
-				rows.forEach( function ( r ) {
-					if ( r[ 1 ] ) {
-						dl.appendChild( h( 'dt', { text: r[ 0 ] } ) );
-						dl.appendChild( h( 'dd', { text: r[ 1 ] } ) );
-					}
-				} );
-				wrap.appendChild( dl );
+				var editDetails = h( 'button', { type: 'button', 'class': 'ncs-booking-edit', text: I18N.editDetails || 'Edit details', onclick: function () {
+					screen = 'details'; draw(); focusEl( wrap.querySelector( '[data-ncs-focus]' ) );
+				} } );
+				grid.appendChild( appointment );
+				grid.appendChild( h( 'section', { 'class': 'ncs-booking-card' }, h( 'h3', { 'class': 'ncs-booking-card-title', text: I18N.yourDetails || 'Your details' } ), summaryList( rows ), editDetails ) );
+				wrap.appendChild( grid );
+				if ( s.calendarSync ) {
+					wrap.appendChild( h( 'p', { 'class': 'ncs-booking-notice', text: I18N.invitationReview || 'Your name and email will be used to send a Google Calendar invitation with a Meet link.' } ) );
+				}
 				var msg = h( 'p', { 'class': 'ncs-error', role: 'alert', hidden: ! serverErrors, text: serverErrors || '' } );
 				wrap.appendChild( msg );
 				var hp = h( 'div', { 'class': 'ncs-hp', 'aria-hidden': 'true' }, h( 'input', { type: 'text', name: 'website', tabindex: '-1', autocomplete: 'off' } ) );
@@ -578,6 +625,10 @@
 				confirm.addEventListener( 'click', function () {
 					msg.hidden = true;
 					confirm.disabled = true;
+					back.disabled = true;
+					editTime.disabled = true;
+					editDetails.disabled = true;
+					wrap.setAttribute( 'aria-busy', 'true' );
 					confirm.textContent = I18N.working || 'Working...';
 					var body = {
 						service: s.id,
@@ -593,12 +644,14 @@
 					}
 					NCS.api( 'POST', 'booking/create', body, restOpts ).then( function ( res ) {
 						var d = res.data || {};
+						wrap.removeAttribute( 'aria-busy' );
 						if ( d.ok ) {
 							NCS.ga( 'booking_complete', { item_id: s.id, item_name: s.name, method: 'native' } );
 							done( d );
 							return;
 						}
 						confirm.disabled = false;
+						back.disabled = editTime.disabled = editDetails.disabled = false;
 						confirm.textContent = I18N.confirmBooking || 'Confirm booking';
 						msg.hidden = false;
 						msg.textContent = d.message || ( I18N.network || 'Something went wrong. Please try again.' );
@@ -615,36 +668,56 @@
 							draw();
 						}
 					} ).catch( function () {
+						wrap.removeAttribute( 'aria-busy' );
+						back.disabled = editTime.disabled = editDetails.disabled = false;
 						confirm.disabled = false;
 						confirm.textContent = I18N.confirmBooking || 'Confirm booking';
 						msg.hidden = false;
 						msg.textContent = I18N.network || 'Something went wrong. Please try again.';
 					} );
 				} );
-				wrap.appendChild( h( 'div', { 'class': 'ncs-actions' }, back, confirm ) );
+				wrap.appendChild( h( 'div', { 'class': 'ncs-actions ncs-booking-footer' }, back, confirm ) );
 			}
 
 			function done( d ) {
 				wrap.innerHTML = '';
-				wrap.appendChild( h( 'h2', { 'class': 'ncs-heading', 'data-ncs-focus': '', text: I18N.bookingDone || 'Booking received' } ) );
-				wrap.appendChild( h( 'p', { 'class': 'ncs-lead-text', text: d.message } ) );
 				var a = d.appointment || {};
-				var dl = h( 'dl', { 'class': 'ncs-summary' } );
-				[ [ I18N.service || 'Service', a.service ], [ I18N.when || 'When', ( a.date || '' ) + ( a.time ? ', ' + a.time : '' ) ], [ 'Timezone', a.timezone ], [ I18N.status || 'Status', a.statusLabel ] ].forEach( function ( r ) {
-					if ( r[ 1 ] ) {
-						dl.appendChild( h( 'dt', { text: r[ 0 ] } ) );
-						dl.appendChild( h( 'dd', { text: r[ 1 ] } ) );
-					}
-				} );
-				wrap.appendChild( dl );
+				wrap.appendChild( h( 'div', { 'class': 'ncs-booking-hero' },
+					h( 'p', { 'class': 'ncs-booking-kicker', text: d.preview ? ( I18N.preview || 'Preview' ) : ( I18N.bookingSaved || 'Booking saved' ) } ),
+					h( 'h2', { 'class': 'ncs-heading', 'data-ncs-focus': '', text: I18N.bookingDone || 'Booking received' } ),
+					statusBadge( a.status, a.statusLabel )
+				) );
+				wrap.appendChild( h( 'p', { 'class': 'ncs-lead-text', text: d.message } ) );
+				var next = h( 'section', { 'class': 'ncs-booking-card' }, h( 'h3', { 'class': 'ncs-booking-card-title', text: I18N.nextSteps || 'What happens next' } ) );
+				if ( a.status === 'pending' ) {
+					next.appendChild( h( 'p', { text: I18N.pendingBooking || 'Your booking is awaiting approval. Keep your private link to check its status.' } ) );
+				}
+				add( next, calendarNotice( d.calendarState, d.email ) );
+				if ( d.calendarState === 'off' || ! d.calendarState ) {
+					next.appendChild( h( 'p', { text: I18N.keepBookingLink || 'Keep your private booking link so you can view your appointment and available changes.' } ) );
+				}
+				var nextActions = h( 'div', { 'class': 'ncs-actions' } );
+				if ( d.manageUrl ) {
+					nextActions.appendChild( h( 'a', { 'class': d.meetUrl ? 'ncs-btn' : 'ncs-btn ncs-btn-primary', href: d.manageUrl, text: I18N.manageTitle || 'Manage your booking' } ) );
+				}
+				add( nextActions, meetButton( d.meetUrl ) );
+				next.appendChild( nextActions );
+				wrap.appendChild( h( 'div', { 'class': 'ncs-booking-grid' }, bookingCard( a ), next ) );
 				if ( d.preview ) {
 					wrap.appendChild( h( 'p', { 'class': 'ncs-note', text: I18N.previewDone || 'This is a preview, so nothing was saved.' } ) );
 				}
 				if ( d.manageUrl ) {
-					wrap.appendChild( h( 'p', { 'class': 'ncs-note' }, ( I18N.manageLink || 'Save this private link to cancel or reschedule your booking:' ) + ' ', h( 'a', { href: d.manageUrl, text: I18N.manageTitle || 'Manage your booking' } ) ) );
-				}
-				if ( d.meetUrl ) {
-					wrap.appendChild( h( 'p', {}, h( 'a', { href: d.meetUrl, target: '_blank', rel: 'noopener noreferrer', text: I18N.joinMeet || 'Join Google Meet' } ) ) );
+					var linkId = uid( 'private-link' );
+					var link = h( 'input', { id: linkId, type: 'url', readonly: true, 'class': 'ncs-input', value: d.manageUrl } );
+					var copyResult = h( 'p', { 'class': 'ncs-meta', role: 'status', 'aria-live': 'polite' } );
+					var copy = h( 'button', { type: 'button', 'class': 'ncs-btn', text: I18N.copyLink || 'Copy link', onclick: function () {
+						function manualCopy() { link.focus(); link.select(); copyResult.textContent = I18N.copyManually || 'Select and copy this link to keep it.'; }
+						if ( navigator.clipboard && navigator.clipboard.writeText ) {
+							navigator.clipboard.writeText( d.manageUrl ).then( function () { copyResult.textContent = I18N.linkCopied || 'Link copied.'; }, manualCopy );
+						} else { manualCopy(); }
+					} } );
+					wrap.appendChild( h( 'section', { 'class': 'ncs-booking-card ncs-private-link' }, h( 'label', { 'for': linkId, text: I18N.privateLink || 'Your private booking link' } ),
+						h( 'p', { 'class': 'ncs-meta', text: I18N.privateLinkHelp || 'Save this link and keep it private. Anyone with the link can manage this booking.' } ), h( 'div', { 'class': 'ncs-booking-link-row' }, link, copy ), copyResult ) );
 				}
 				focusEl( wrap.querySelector( '[data-ncs-focus]' ) );
 				if ( d.redirect && ! d.preview ) {
@@ -664,49 +737,58 @@
 			var wrap = h( 'div', { 'class': 'ncs-panel ncs-manage' }, h( 'p', { 'class': 'ncs-loading', text: I18N.loading || 'Loading...' } ) );
 			show( wrap, false );
 
-			NCS.api( 'POST', 'booking/manage', { token: token, website: '' } ).then( function ( res ) {
-				var d = res.data || {};
-				if ( ! d.ok ) {
-					show( h( 'div', { 'class': 'ncs-panel' }, h( 'p', { 'class': 'ncs-error', role: 'alert', 'data-ncs-focus': '', text: d.message || I18N.bookingNotFound || 'We could not find that booking.' } ) ), true );
-					return;
-				}
-				drawManage( d );
-			} ).catch( function () {
-				show( h( 'div', { 'class': 'ncs-panel' }, h( 'p', { 'class': 'ncs-error', role: 'alert', text: I18N.network || 'Something went wrong. Please try again.' } ) ), false );
-			} );
+			function loadManage( notice ) {
+				NCS.api( 'POST', 'booking/manage', { token: token, website: '' } ).then( function ( res ) {
+					var d = res.data || {};
+					if ( ! d.ok ) {
+						show( h( 'div', { 'class': 'ncs-panel' }, h( 'p', { 'class': 'ncs-error', role: 'alert', 'data-ncs-focus': '', text: d.message || I18N.bookingNotFound || 'We could not find that booking.' } ) ), true );
+						return;
+					}
+					drawManage( d, notice );
+				} ).catch( function () {
+					show( h( 'div', { 'class': 'ncs-panel' },
+						notice ? h( 'h2', { 'class': 'ncs-heading', 'data-ncs-focus': '', text: notice } ) : null,
+						h( 'p', { 'class': 'ncs-error', role: 'alert', text: I18N.network || 'Something went wrong. Please try again.' } ),
+						h( 'button', { type: 'button', 'class': 'ncs-btn', text: I18N.refreshBooking || 'Refresh booking details', onclick: function () { loadManage( notice ); } } )
+					), true );
+				} );
+			}
+			loadManage();
 
 			function summary( d ) {
 				var a = d.appointment;
-				var dl = h( 'dl', { 'class': 'ncs-summary' } );
-				[ [ I18N.service || 'Service', a.service ], [ I18N.when || 'When', a.date + ', ' + a.time ], [ 'Timezone', a.timezone ], [ I18N.status || 'Status', a.statusLabel ] ].forEach( function ( r ) {
-					dl.appendChild( h( 'dt', { text: r[ 0 ] } ) );
-					dl.appendChild( h( 'dd', { text: r[ 1 ] } ) );
-				} );
-				if ( a.meetUrl ) {
-					dl.appendChild( h( 'dt', { text: 'Google Meet' } ) );
-					dl.appendChild( h( 'dd', {}, h( 'a', { href: a.meetUrl, target: '_blank', rel: 'noopener noreferrer', text: I18N.joinMeet || 'Join Google Meet' } ) ) );
-				}
-				return dl;
+				var card = bookingCard( a );
+				card.appendChild( statusBadge( a.status, a.statusLabel ) );
+				return card;
 			}
 
-			function drawManage( d ) {
+			function drawManage( d, notice ) {
+				var a = d.appointment;
 				var panel = h( 'div', { 'class': 'ncs-panel ncs-manage' },
-					h( 'h2', { 'class': 'ncs-heading', 'data-ncs-focus': '', text: I18N.manageTitle || 'Manage your booking' } ),
-					summary( d )
+					h( 'div', { 'class': 'ncs-booking-hero' }, h( 'h2', { 'class': 'ncs-heading', 'data-ncs-focus': '', text: I18N.manageTitle || 'Manage your booking' } ), statusBadge( a.status, a.statusLabel ) ),
+					h( 'p', { 'class': 'ncs-lead-text', text: I18N.manageHelp || 'Your appointment details and available changes, all in one place.' } )
 				);
-				var actions = h( 'div', { 'class': 'ncs-actions' } );
+				if ( notice ) { panel.appendChild( h( 'p', { 'class': 'ncs-booking-notice', role: 'status', text: notice } ) ); }
+				var details = h( 'section', { 'class': 'ncs-booking-card' }, h( 'h3', { 'class': 'ncs-booking-card-title', text: I18N.yourDetails || 'Your details' } ), summaryList( [ [ I18N.name || 'Name', a.name ], [ I18N.email || 'Email', a.email ] ] ) );
+				add( details, calendarNotice( a.calendarState, '' ) );
+				if ( a.active ) { add( details, meetButton( a.meetUrl ) ); }
+				if ( a.calendarState === 'pending' ) {
+					details.appendChild( h( 'button', { type: 'button', 'class': 'ncs-booking-edit', text: I18N.refreshBooking || 'Refresh booking details', onclick: function ( event ) { event.currentTarget.disabled = true; loadManage(); } } ) );
+				}
+				panel.appendChild( h( 'div', { 'class': 'ncs-booking-grid' }, bookingCard( a ), details ) );
+				var actions = h( 'div', { 'class': 'ncs-booking-grid ncs-manage-actions' } );
 				if ( d.appointment.active ) {
 					if ( d.canReschedule ) {
-						actions.appendChild( h( 'button', { type: 'button', 'class': 'ncs-btn ncs-btn-primary', text: I18N.rescheduleBooking || 'Reschedule', onclick: function () {
+						actions.appendChild( h( 'section', { 'class': 'ncs-booking-card' }, h( 'h3', { 'class': 'ncs-booking-card-title', text: I18N.needDifferentTime || 'Need a different time?' } ), h( 'p', { text: I18N.rescheduleHelp || 'Choose another available slot. Your booking stays in place until the new time is confirmed.' } ), h( 'button', { type: 'button', 'class': 'ncs-btn', text: I18N.rescheduleBooking || 'Reschedule', onclick: function () {
 							drawReschedule( d );
-						} } ) );
+						} } ) ) );
 					} else if ( d.rescheduleReason ) {
 						panel.appendChild( h( 'p', { 'class': 'ncs-note', text: d.rescheduleReason } ) );
 					}
 					if ( d.canCancel ) {
-						actions.appendChild( h( 'button', { type: 'button', 'class': 'ncs-btn', text: I18N.cancelBooking || 'Cancel booking', onclick: function () {
+						actions.appendChild( h( 'section', { 'class': 'ncs-booking-card' }, h( 'h3', { 'class': 'ncs-booking-card-title', text: I18N.cantMakeIt || 'Can\'t make it?' } ), h( 'p', { text: I18N.cancelHelp || 'Cancel your appointment and release this time. You will review the cancellation first.' } ), h( 'button', { type: 'button', 'class': 'ncs-btn ncs-booking-cancel', text: I18N.cancelBooking || 'Cancel booking', onclick: function () {
 							drawCancel( d );
-						} } ) );
+						} } ) ) );
 					} else if ( d.cancelReason ) {
 						panel.appendChild( h( 'p', { 'class': 'ncs-note', text: d.cancelReason } ) );
 					}
@@ -723,7 +805,7 @@
 					NCS.api( 'POST', 'booking/cancel', { token: token, website: '' } ).then( function ( res ) {
 						var r = res.data || {};
 						if ( r.ok ) {
-							show( h( 'div', { 'class': 'ncs-panel' }, h( 'h2', { 'class': 'ncs-heading', 'data-ncs-focus': '', text: r.message } ) ), true );
+							loadManage( r.message );
 						} else {
 							yes.disabled = false;
 							msg.hidden = false;
@@ -750,31 +832,31 @@
 			function drawReschedule( d ) {
 				var s = d.service;
 				var chosen = null;
+				var moving = false;
 				var msg = h( 'p', { 'class': 'ncs-error', role: 'alert', hidden: true } );
 				var confirm = h( 'button', { type: 'button', 'class': 'ncs-btn ncs-btn-primary', text: I18N.confirmMove || 'Confirm new time', disabled: true } );
 				var pick = picker( s, token, function ( p ) {
 					chosen = p;
-					confirm.disabled = false;
+					confirm.disabled = moving;
 				}, null );
 				confirm.addEventListener( 'click', function () {
-					if ( ! chosen ) {
+					if ( ! chosen || moving ) {
 						return;
 					}
 					confirm.disabled = true;
+					moving = true;
 					NCS.api( 'POST', 'booking/reschedule', { token: token, date: chosen.date, time: chosen.time, website: '' } ).then( function ( res ) {
 						var r = res.data || {};
 						if ( r.ok ) {
-							var a = r.appointment || {};
-							show( h( 'div', { 'class': 'ncs-panel' },
-								h( 'h2', { 'class': 'ncs-heading', 'data-ncs-focus': '', text: r.message } ),
-								h( 'p', { text: ( a.date || '' ) + ', ' + ( a.time || '' ) + ' (' + ( a.timezone || '' ) + ')' } )
-							), true );
+							loadManage( r.message );
 						} else {
+							moving = false;
 							confirm.disabled = false;
 							msg.hidden = false;
 							msg.textContent = r.message || I18N.network;
 						}
 					} ).catch( function () {
+						moving = false;
 						confirm.disabled = false;
 						msg.hidden = false;
 						msg.textContent = I18N.network || 'Something went wrong.';

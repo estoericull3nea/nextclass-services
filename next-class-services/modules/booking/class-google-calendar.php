@@ -219,7 +219,7 @@ class Google_Calendar {
 		$calendar = $a['google_calendar_id'];
 		if ( 'cancelled' === $a['status'] ) {
 			if ( '' !== $event_id ) {
-				$result = self::request( 'DELETE', self::events_path( $calendar, $event_id ) . '?sendUpdates=none' );
+				$result = self::request( 'DELETE', self::events_path( $calendar, $event_id ) . '?sendUpdates=all' );
 				if ( is_wp_error( $result ) && ! self::missing( $result ) ) {
 					return $result;
 				}
@@ -257,10 +257,25 @@ class Google_Calendar {
 			$existing = null;
 		}
 		$body = array(
-			'summary' => __( 'Next Class booking', 'next-class-services' ),
+			'summary' => ! empty( $a['service_title'] ) ? $a['service_title'] : __( 'Next Class booking', 'next-class-services' ),
 			'start' => array( 'dateTime' => gmdate( 'Y-m-d\TH:i:s\Z', strtotime( $a['start_utc'] . ' UTC' ) ), 'timeZone' => $a['timezone'] ),
 			'end' => array( 'dateTime' => gmdate( 'Y-m-d\TH:i:s\Z', strtotime( $a['end_utc'] . ' UTC' ) ), 'timeZone' => $a['timezone'] ),
 		);
+		$has_attendee = false;
+		if ( ! empty( $a['customer_email'] ) && is_email( $a['customer_email'] ) ) {
+			$attendees = is_array( $existing ) && ! empty( $existing['attendees'] ) ? $existing['attendees'] : array();
+			foreach ( $attendees as $attendee ) {
+				if ( isset( $attendee['email'] ) && 0 === strcasecmp( $attendee['email'], $a['customer_email'] ) ) {
+					$has_attendee = true;
+				}
+			}
+			if ( ! $has_attendee ) {
+				$attendees[] = array( 'email' => $a['customer_email'], 'displayName' => isset( $a['customer_name'] ) ? $a['customer_name'] : '' );
+			}
+			$body['attendees'] = $attendees;
+		} else {
+			$has_attendee = true;
+		}
 		if ( ! is_array( $existing ) ) {
 			if ( '' === $event_id ) {
 				$event_id = bin2hex( random_bytes( 16 ) );
@@ -270,20 +285,20 @@ class Google_Calendar {
 			}
 			$body['id'] = $event_id;
 			$body['conferenceData'] = self::conference();
-			$event = self::request( 'POST', self::events_path( $calendar ) . '?conferenceDataVersion=1&sendUpdates=none', $body );
+			$event = self::request( 'POST', self::events_path( $calendar ) . '?conferenceDataVersion=1&sendUpdates=all', $body );
 			if ( is_wp_error( $event ) && 'google_409' === $event->get_error_code() ) {
 				unset( $body['id'], $body['conferenceData'] );
-				$event = self::request( 'PATCH', self::events_path( $calendar, $event_id ) . '?conferenceDataVersion=1&sendUpdates=none', $body );
+				$event = self::request( 'PATCH', self::events_path( $calendar, $event_id ) . '?conferenceDataVersion=1&sendUpdates=all', $body );
 			}
 		} else {
 			$status = isset( $existing['conferenceData']['createRequest']['status']['statusCode'] ) ? $existing['conferenceData']['createRequest']['status']['statusCode'] : '';
 			if ( empty( $existing['conferenceData'] ) || 'failure' === $status ) {
 				$body['conferenceData'] = self::conference();
 			}
-			if ( self::same_time( $existing, $a ) && empty( $body['conferenceData'] ) ) {
+			if ( self::same_time( $existing, $a ) && $has_attendee && empty( $body['conferenceData'] ) ) {
 				$event = $existing;
 			} else {
-				$event = self::request( 'PATCH', self::events_path( $calendar, $event_id ) . '?conferenceDataVersion=1&sendUpdates=none', $body );
+				$event = self::request( 'PATCH', self::events_path( $calendar, $event_id ) . '?conferenceDataVersion=1&sendUpdates=all', $body );
 			}
 		}
 		if ( is_wp_error( $event ) ) {

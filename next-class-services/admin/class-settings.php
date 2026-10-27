@@ -21,6 +21,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Settings {
 
 	const CAP = 'ncs_manage_settings';
+	private static $guides = array();
+	private static $current_guide = '';
 
 	/**
 	 * Init.
@@ -46,11 +48,79 @@ class Settings {
 
 	/** Associate settings fields with the shared form across independent tab panels. */
 	private static function field( $type, ...$args ) {
+		$labels = array(
+			's[default_notification_email]' => __( 'Notification email', 'next-class-services' ),
+			's[notification_cc]' => __( 'CC (optional)', 'next-class-services' ),
+			's[from_name]' => __( 'Sender name', 'next-class-services' ),
+			's[from_email]' => __( 'Sender email', 'next-class-services' ),
+			's[default_timezone]' => __( 'Timezone', 'next-class-services' ),
+			's[shared_calendar]' => __( 'Shared availability', 'next-class-services' ),
+			's[manage_page_url]' => __( 'Management URL', 'next-class-services' ),
+			's[embed_host_allowlist]' => __( 'Allowed embed hosts', 'next-class-services' ),
+			's[spam_trap_enabled]' => __( 'Spam trap', 'next-class-services' ),
+			's[min_seconds]' => __( 'Minimum completion time (seconds)', 'next-class-services' ),
+			's[rate_limit_enabled]' => __( 'Rate limiting', 'next-class-services' ),
+			's[rate_window_minutes]' => __( 'Limit window (minutes)', 'next-class-services' ),
+			's[rate_assessment]' => __( 'Assessments per window', 'next-class-services' ),
+			's[rate_booking_create]' => __( 'Bookings per window', 'next-class-services' ),
+			's[rate_booking_manage]' => __( 'Management requests per window', 'next-class-services' ),
+			's[rate_lookup_per_minute]' => __( 'Availability requests per minute', 'next-class-services' ),
+			's[trust_proxy_headers]' => __( 'Trust proxy headers', 'next-class-services' ),
+			's[frontend_radius]' => __( 'Corner radius (px)', 'next-class-services' ),
+			's[analytics_enabled]' => __( 'Record analytics', 'next-class-services' ),
+			's[ga4_enabled]' => __( 'Send GA4 events', 'next-class-services' ),
+			's[retention_mode]' => __( 'Keep data', 'next-class-services' ),
+			's[retention_custom_days]' => __( 'Custom days', 'next-class-services' ),
+			's[delete_on_uninstall]' => __( 'Delete data on uninstall', 'next-class-services' ),
+			's[debug_log]' => __( 'Debug logging', 'next-class-services' ),
+		);
+		$notes = array(
+			's[rate_window_minutes]' => __( 'Set how long each visitor rate-limit window lasts, from 1 to 1440 minutes. The limits below apply within this window.', 'next-class-services' ),
+			's[rate_assessment]' => __( 'Set the maximum assessment submissions per visitor within the limit window.', 'next-class-services' ),
+			's[rate_booking_create]' => __( 'Set the maximum new bookings per visitor within the limit window.', 'next-class-services' ),
+			's[rate_booking_manage]' => __( 'Set the maximum cancellation, reschedule and booking lookup requests per visitor within the limit window.', 'next-class-services' ),
+			's[rate_lookup_per_minute]' => __( 'Set the maximum calendar availability lookups per visitor per minute. This has its own one-minute window.', 'next-class-services' ),
+			's[frontend_radius]' => __( 'Choose a corner radius from 0 to 16 pixels for public forms. Use 0 for square corners.', 'next-class-services' ),
+			's[retention_custom_days]' => __( 'Used only when Keep data is set to Custom days. Choose between 1 and 3650 days, then save settings.', 'next-class-services' ),
+		);
+		$args[1] = isset( $labels[ $args[0] ] ) ? $labels[ $args[0] ] : $args[1];
 		$index = 'select' === $type ? 4 : 3;
 		$options = isset( $args[ $index ] ) ? $args[ $index ] : array();
+		$help = isset( $options['help'] ) ? $options['help'] : ( isset( $notes[ $args[0] ] ) ? $notes[ $args[0] ] : '' );
+		if ( '' !== $help ) {
+			self::guide_note( $args[1], $help );
+		}
+		unset( $options['help'] );
 		$options['attrs']['form'] = 'ncs-settings-form';
 		$args[ $index ] = $options;
 		call_user_func_array( array( Form::class, $type ), $args );
+	}
+
+	private static function card_start( $key, $title, $intro = '' ) {
+		self::$current_guide = $key;
+		self::$guides[ $key ] = array( 'title' => $title, 'items' => array(), 'html' => '' );
+		if ( $intro ) {
+			self::guide_note( '', $intro );
+		}
+		$id = 'ncs-settings-guide-' . $key;
+		/* translators: %s: settings section name */
+		$label = sprintf( __( 'Open %s guide', 'next-class-services' ), $title );
+		echo '<div class="ncs-card"><div class="ncs-guide-heading"><h2 class="ncs-card-title">' . esc_html( $title ) . '</h2><button type="button" class="ncs-guide-trigger" data-ncs-dialog-open="' . esc_attr( $id ) . '" aria-haspopup="dialog" aria-controls="' . esc_attr( $id ) . '" aria-label="' . esc_attr( $label ) . '" title="' . esc_attr__( 'Guide', 'next-class-services' ) . '"><span aria-hidden="true">?</span></button></div>';
+	}
+
+	private static function guide_note( $title, $text ) {
+		self::$guides[ self::$current_guide ]['items'][] = array( $title, $text );
+	}
+
+	private static function render_guides() {
+		foreach ( self::$guides as $key => $guide ) {
+			$id = 'ncs-settings-guide-' . $key;
+			echo '<dialog id="' . esc_attr( $id ) . '" class="ncs-guide-dialog" aria-labelledby="' . esc_attr( $id ) . '-title"><div class="ncs-guide-dialog-header"><h2 id="' . esc_attr( $id ) . '-title" tabindex="-1" autofocus>' . esc_html( $guide['title'] ) . '</h2><button type="button" class="ncs-btn ncs-btn-small" data-ncs-dialog-close>' . esc_html__( 'Close', 'next-class-services' ) . '</button></div><ol class="ncs-guide-steps">';
+			foreach ( $guide['items'] as $item ) {
+				echo '<li>' . ( $item[0] ? '<h3>' . esc_html( $item[0] ) . '</h3>' : '' ) . '<p>' . wp_kses( $item[1], array( 'code' => array(), 'strong' => array(), 'br' => array() ) ) . '</p></li>';
+			}
+			echo '</ol>' . $guide['html'] . '</dialog>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- trusted rendered capability table.
+		}
 	}
 
 	private static function panel_start( $key, $active ) {
@@ -64,6 +134,7 @@ class Settings {
 		if ( ! current_user_can( self::CAP ) ) {
 			wp_die( esc_html__( 'You do not have permission to view this page.', 'next-class-services' ), '', array( 'response' => 403 ) );
 		}
+		self::$guides = array();
 		$s = Helpers::settings();
 		Admin::header( 'ncs-settings', __( 'Settings', 'next-class-services' ) );
 		echo '<div id="ncs-settings-feedback" aria-live="polite" aria-atomic="true"></div>';
@@ -102,7 +173,7 @@ class Settings {
 		echo '</div>';
 
 		self::panel_start( 'notifications', $active );
-		echo '<div class="ncs-card"><h2 class="ncs-card-title">' . esc_html__( 'Notifications and email', 'next-class-services' ) . '</h2>';
+		self::card_start( 'notifications', __( 'Email', 'next-class-services' ) );
 		self::field( 'text', 's[default_notification_email]', __( 'Default notification email', 'next-class-services' ), $s['default_notification_email'], array( 'type' => 'email', 'help' => sprintf( /* translators: %s: email */ __( 'Used when an assessment or service has no recipient. Leave empty to use the site admin email (%s).', 'next-class-services' ), esc_html( get_option( 'admin_email' ) ) ) ) );
 		self::field( 'text', 's[notification_cc]', __( 'Email CC (optional)', 'next-class-services' ), $s['notification_cc'], array( 'help' => __( 'Copy these addresses on admin booking and assessment notifications. Separate multiple addresses with commas. Leave blank to disable.', 'next-class-services' ), 'placeholder' => 'team@example.com, manager@example.com' ) );
 		echo '<div class="ncs-cols">';
@@ -112,7 +183,7 @@ class Settings {
 		echo '</section>';
 
 		self::panel_start( 'booking', $active );
-		echo '<div class="ncs-card"><h2 class="ncs-card-title">' . esc_html__( 'Booking defaults', 'next-class-services' ) . '</h2>';
+		self::card_start( 'booking', __( 'Booking defaults', 'next-class-services' ) );
 		self::field( 'select', 's[default_timezone]', __( 'Default booking timezone', 'next-class-services' ), $tz_options, $s['default_timezone'], array( 'help' => __( 'Used by native services that do not choose their own timezone.', 'next-class-services' ) ) );
 		self::field( 'checkbox', 's[shared_calendar]', __( 'Share one calendar across all native booking services', 'next-class-services' ), $s['shared_calendar'], array( 'help' => __( 'When on, a booking for one service blocks the same time for every other native service. Turn off if each service has separate staff. Change this before taking bookings.', 'next-class-services' ) ) );
 		self::field( 'text', 's[manage_page_url]', __( 'Booking management page URL', 'next-class-services' ), $s['manage_page_url'], array( 'type' => 'url', 'placeholder' => 'https://', 'help' => __( 'Optional fallback for cancel and reschedule links. By default the link returns to the page where the customer booked, which already contains the booking shortcode.', 'next-class-services' ) ) );
@@ -122,8 +193,7 @@ class Settings {
 		echo '</section>';
 
 		self::panel_start( 'security', $active );
-		echo '<div class="ncs-card"><h2 class="ncs-card-title">' . esc_html__( 'Security and spam protection', 'next-class-services' ) . '</h2>';
-		echo '<p class="ncs-help">' . esc_html__( 'Public forms always verify a security token and validate every field on the server. These options tune the extra protections.', 'next-class-services' ) . '</p>';
+		self::card_start( 'security', __( 'Spam protection', 'next-class-services' ), __( 'Public forms always verify a security token and validate every field on the server. These options tune the extra protections.', 'next-class-services' ) );
 		self::field( 'checkbox', 's[spam_trap_enabled]', __( 'Enable the hidden spam trap field', 'next-class-services' ), $s['spam_trap_enabled'], array( 'help' => __( 'A hidden field real visitors never fill. Submissions that fill it are rejected as spam. Turn this off if a browser or password manager autofills the field and blocks real people.', 'next-class-services' ) ) );
 		self::field( 'number', 's[min_seconds]', __( 'Minimum seconds to complete an assessment', 'next-class-services' ), $s['min_seconds'], array( 'min' => 0, 'max' => 60, 'help' => __( 'Submissions faster than this are treated as bots. Use 0 to turn the check off.', 'next-class-services' ) ) );
 		self::field( 'checkbox', 's[rate_limit_enabled]', __( 'Limit how often one visitor can submit', 'next-class-services' ), $s['rate_limit_enabled'], array( 'help' => __( 'Limits are counted per visitor address and reset automatically. Turn this off while testing.', 'next-class-services' ) ) );
@@ -136,26 +206,26 @@ class Settings {
 		echo '</div>';
 		self::field( 'number', 's[rate_lookup_per_minute]', __( 'Calendar availability lookups per minute', 'next-class-services' ), $s['rate_lookup_per_minute'], array( 'min' => 10, 'max' => 1000 ) );
 		self::field( 'checkbox', 's[trust_proxy_headers]', __( 'Read the visitor address from proxy headers', 'next-class-services' ), $s['trust_proxy_headers'], array( 'help' => __( 'Turn on only if the site is behind a proxy or CDN such as Cloudflare or a load balancer. Otherwise all visitors can appear to share one address and hit the limits together. Do not enable it on a site that is directly reachable, because the header can be faked.', 'next-class-services' ) ) );
-		echo '<p class="ncs-help">' . esc_html__( 'Custom embeds can also be restricted to approved hosts under Booking, Allowed embed hosts.', 'next-class-services' ) . '</p></div>';
+		self::guide_note( __( 'Embed security', 'next-class-services' ), __( 'Custom embeds can also be restricted to approved hosts under Booking, Allowed embed hosts.', 'next-class-services' ) );
+		echo '</div>';
 		echo '</section>';
 
 		self::panel_start( 'appearance', $active );
-		echo '<div class="ncs-card"><h2 class="ncs-card-title">' . esc_html__( 'Frontend appearance', 'next-class-services' ) . '</h2>';
-		echo '<p class="ncs-help">' . esc_html__( 'Public assessments and booking forms inherit typography from your theme by default.', 'next-class-services' ) . '</p>';
+		self::card_start( 'appearance', __( 'Appearance', 'next-class-services' ), __( 'Public assessments and booking forms inherit typography from your theme by default.', 'next-class-services' ) );
 		echo '<div class="ncs-cols">';
 		self::field( 'number', 's[frontend_radius]', __( 'Corner radius (pixels)', 'next-class-services' ), $s['frontend_radius'], array( 'min' => 0, 'max' => 16 ) );
 		echo '</div></div>';
 		echo '</section>';
 
 		self::panel_start( 'analytics', $active );
-		echo '<div class="ncs-card"><h2 class="ncs-card-title">' . esc_html__( 'Analytics', 'next-class-services' ) . '</h2>';
+		self::card_start( 'analytics', __( 'Analytics', 'next-class-services' ) );
 		self::field( 'checkbox', 's[analytics_enabled]', __( 'Record first-party analytics', 'next-class-services' ), $s['analytics_enabled'], array( 'help' => __( 'Stores anonymous counts such as views, starts and completions. No cookies, IP addresses or visitor identifiers are stored.', 'next-class-services' ) ) );
 		self::field( 'checkbox', 's[ga4_enabled]', __( 'Send events to Google Analytics 4 when it is already installed', 'next-class-services' ), $s['ga4_enabled'], array( 'help' => __( 'This plugin never installs Google Analytics. Events are sent only if gtag is available on the page. Event names: nc_assessment_viewed, nc_assessment_started, nc_assessment_completed, nc_lead_captured, nc_result_viewed, nc_booking_viewed, nc_booking_started, nc_booking_completed, nc_booking_external_click.', 'next-class-services' ) ) );
 		echo '</div>';
 		echo '</section>';
 
 		self::panel_start( 'privacy', $active );
-		echo '<div class="ncs-card"><h2 class="ncs-card-title">' . esc_html__( 'Data retention', 'next-class-services' ) . '</h2>';
+		self::card_start( 'retention', __( 'Data retention', 'next-class-services' ) );
 		self::field( 'select',
 			's[retention_mode]',
 			__( 'Keep personal data', 'next-class-services' ),
@@ -164,7 +234,7 @@ class Settings {
 				'90'         => __( '90 days', 'next-class-services' ),
 				'180'        => __( '180 days', 'next-class-services' ),
 				'365'        => __( '365 days', 'next-class-services' ),
-				'custom'     => __( 'Custom number of days', 'next-class-services' ),
+				'custom'     => __( 'Custom days', 'next-class-services' ),
 			),
 			(string) $s['retention_mode'],
 			array( 'help' => __( 'A daily task removes older assessment submissions and past appointments. Upcoming and active appointments are never removed. Anonymous analytics counts are kept.', 'next-class-services' ) )
@@ -172,17 +242,18 @@ class Settings {
 		self::field( 'number', 's[retention_custom_days]', __( 'Custom retention (days)', 'next-class-services' ), $s['retention_custom_days'], array( 'min' => 1, 'max' => 3650 ) );
 		echo '</div>';
 
-		echo '<div class="ncs-card"><h2 class="ncs-card-title">' . esc_html__( 'Run retention cleanup now', 'next-class-services' ) . '</h2>';
-		echo '<p class="ncs-help">' . esc_html__( 'Applies the saved retention period immediately. This permanently deletes data older than the period.', 'next-class-services' ) . '</p>';
+		self::card_start( 'cleanup', __( 'Cleanup', 'next-class-services' ), __( 'Save your retention period first, then click Run cleanup to apply it immediately. This permanently deletes eligible data older than the saved period. Cleanup is disabled when data is kept indefinitely.', 'next-class-services' ) );
+		echo '<p class="ncs-help">' . esc_html__( 'Permanently deletes older records.', 'next-class-services' ) . '</p>';
 		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" data-ncs-settings-ajax data-ncs-confirm-submit="' . esc_attr__( 'Permanently delete personal data older than the retention period?', 'next-class-services' ) . '"><input type="hidden" name="action" value="ncs_run_cleanup">';
 		wp_nonce_field( 'ncs_run_cleanup', '_ncs_nonce' );
 		echo '<button class="ncs-btn ncs-btn-danger" type="submit" data-ncs-cleanup' . disabled( Helpers::retention_days() < 1, true, false ) . '>' . esc_html__( 'Run cleanup', 'next-class-services' ) . '</button></form></div>';
 
-		echo '<div class="ncs-card"><h2 class="ncs-card-title">' . esc_html__( 'Uninstall data', 'next-class-services' ) . '</h2>';
+		self::card_start( 'uninstall', __( 'Uninstall', 'next-class-services' ) );
 		self::field( 'checkbox', 's[delete_on_uninstall]', __( 'Delete all Next Class Services data when the plugin is uninstalled', 'next-class-services' ), $s['delete_on_uninstall'], array( 'help' => __( 'Off by default. Deactivating never deletes data. When on, deleting the plugin removes tables, options, scheduled tasks, assessments, booking services and capabilities.', 'next-class-services' ) ) );
 		echo '</div>';
 
-		echo '<div class="ncs-card"><h2 class="ncs-card-title">' . esc_html__( 'Data stored by this plugin', 'next-class-services' ) . '</h2><ul class="ncs-list">';
+		self::card_start( 'stored-data', __( 'Stored data', 'next-class-services' ) );
+		echo '<p class="ncs-help">' . esc_html__( 'Assessment, booking and analytics records.', 'next-class-services' ) . '</p>';
 		foreach ( array(
 			__( 'Assessment submissions: lead fields you enable (name, email, phone, company, job title, company size, custom fields), answers, score, result, recommended programs, consent status and wording, page URL, date.', 'next-class-services' ),
 			__( 'Appointments: name, email, phone, company, job title, notes and custom fields you enable, time, timezone, status, page URL, date. Management links are stored as one-way hashes.', 'next-class-services' ),
@@ -190,22 +261,26 @@ class Settings {
 			__( 'Temporary rate limit counters use a one-way hash of the visitor IP for a few minutes and then expire.', 'next-class-services' ),
 			__( 'Personal data is included in WordPress export and erase tools (Tools, Export Personal Data and Erase Personal Data).', 'next-class-services' ),
 		) as $line ) {
-			echo '<li>' . esc_html( $line ) . '</li>';
+			self::guide_note( '', $line );
 		}
-		echo '</ul></div>';
+		echo '</div>';
 		echo '</section>';
 
 		self::panel_start( 'advanced', $active );
-		echo '<div class="ncs-card"><h2 class="ncs-card-title">' . esc_html__( 'Troubleshooting', 'next-class-services' ) . '</h2>';
+		self::card_start( 'troubleshooting', __( 'Troubleshooting', 'next-class-services' ) );
 		self::field( 'checkbox', 's[debug_log]', __( 'Write technical errors to the PHP error log', 'next-class-services' ), $s['debug_log'], array( 'help' => __( 'Only enable while troubleshooting. Visitors never see technical details.', 'next-class-services' ) ) );
 		echo '</div>';
-		echo '<div class="ncs-card"><h2 class="ncs-card-title">' . esc_html__( 'Roles and capabilities', 'next-class-services' ) . '</h2>';
-		echo '<p class="ncs-help">' . esc_html__( 'Administrators receive every capability on activation. Use a role editor plugin to grant them to other roles.', 'next-class-services' ) . '</p>';
+		self::card_start( 'roles', __( 'Access', 'next-class-services' ), __( 'Administrators receive every capability on activation. Use a role editor plugin to grant them to other roles. The table below lists the plugin permissions.', 'next-class-services' ) );
+		echo '<p class="ncs-help">' . esc_html__( 'Manage access through WordPress roles.', 'next-class-services' ) . '</p>';
+		ob_start();
 		echo '<table class="ncs-table"><thead><tr><th scope="col">' . esc_html__( 'Capability', 'next-class-services' ) . '</th><th scope="col">' . esc_html__( 'Allows', 'next-class-services' ) . '</th></tr></thead><tbody>';
 		foreach ( Capabilities::all() as $cap => $desc ) {
 			echo '<tr><td><code>' . esc_html( $cap ) . '</code></td><td>' . esc_html( $desc ) . '</td></tr>';
 		}
-		echo '</tbody></table></div></section>';
+		echo '</tbody></table>';
+		self::$guides['roles']['html'] = ob_get_clean();
+		echo '</div></section>';
+		self::render_guides();
 
 		echo '<div class="ncs-savebar ncs-settings-savebar"><span class="ncs-savebar-status" id="ncs-dirty" role="status" hidden>' . esc_html__( 'You have unsaved changes.', 'next-class-services' ) . '</span><button type="submit" form="ncs-settings-form" class="ncs-btn ncs-btn-primary">' . esc_html__( 'Save settings', 'next-class-services' ) . '</button></div>';
 

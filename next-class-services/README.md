@@ -2,7 +2,7 @@
 
 WordPress plugin with two services for Next Class: an HR Diagnostic Assessment Tool and an Online Booking System.
 
-- Version: 1.1.0
+- Version: 1.2.0
 - Requires WordPress 6.0 or newer, PHP 7.4 or newer
 - Tested up to WordPress 6.8
 - Text domain: `next-class-services`, PHP prefix `ncs_`, namespace `NextClassServices`
@@ -79,7 +79,9 @@ All tables use the WordPress prefix.
 4. Click **Connect / reconnect Google**, grant Calendar event and calendar metadata permissions, then click **Test Calendar and Meet API**. The test creates a temporary event with a Meet request, changes its time, and deletes it. Pending Meet generation is reported as unverified. Failed cleanup retains the test event ID and the next test retries deletion first.
 5. Edit a booking service, select Native WordPress booking in General, and enable **Sync to Google Calendar and create a Google Meet**. This applies to new bookings, including pending bookings. Existing synced appointments continue syncing after the toggle is turned off.
 
-Sync sends generic event titles and booking times. Customer contact details and notes are not exported and Google attendee invitations are not sent. Ready Meet links appear in plugin booking emails, the confirmation screen, private booking management and the appointment detail. Use `{google_meet_link}` to position the link within an email template. If Google generates the link asynchronously, it appears on the private management page after the scheduled retry; the original confirmation email is not resent.
+Sync saves the service title and booking times on the connected Google calendar, adds the client name and email as an attendee, and uses `sendUpdates=all` for invitations, rescheduling and cancellation. Client calendar appearance depends on their Google invitation settings and may require an RSVP. Phone numbers, notes and custom answers are not exported. Retries skip unchanged events with the correct attendee to avoid repeated invitation notifications, and preserve existing RSVP responses. Ready Meet links appear in plugin booking emails, the confirmation screen, private booking management and the appointment detail. Use `{google_meet_link}` to position the link within an email template. If Google generates the link asynchronously, it appears on the private management page after the scheduled retry; the original confirmation email is not resent. The API connection test remains attendee-free.
+
+Booking service editors include configurable placeholders for built-in and custom customer fields. Existing fields fall back to sensible examples until saved. The frontend uses placeholders for text and textarea fields, and as the initial prompt for dropdowns. Review shows separate appointment and customer cards with edit actions. Confirmation provides calendar status, Meet and management actions, and a private-link copy control. Management refreshes current server state after cancellation and rescheduling. Run `node tests/booking-ui.js` for the mocked frontend flow. `tests/booking-preview.html` is an optional local-only visual fixture; all its booking API calls are mocked.
 
 Rescheduling patches the same event and retains its Meet conference. Cancellation deletes the event and removes the locally displayed Meet link. Deleting a Calendar event does not guarantee immediate invalidation of a previously shared Meet URL; Google's conference expiry rules apply. WordPress owns availability; busy events created in Google Calendar are not imported.
 
@@ -90,6 +92,8 @@ Run mocked API regression checks with `php tests/google-calendar.php` (OpenSSL e
 Settings actions use authenticated, nonce-protected AJAX and show results inline. Google authorization opens in a popup so the Settings page stays open. The green/red connection badge and action buttons update after configuration changes, authorization and disconnect. Connect is disabled while connected; Test and Disconnect are disabled while disconnected. Run `node tests/settings.js` for the Settings UI regressions.
 
 Settings are organized into Booking (including Google Calendar), Notifications, Appearance, Analytics, Security, Privacy & data, and Advanced tabs. The sticky Save settings button saves configuration across all tabs; Google configuration retains its own save and connection actions. Run `php tests/settings-render.php` to verify panel grouping and form ownership.
+
+Each Settings card has a question-mark guide icon. Short field labels keep configuration compact; the guides contain field explanations, privacy details and the permissions reference. All guides support keyboard navigation, Escape, outside-click closing and focus return. Cleanup retains a visible deletion warning.
 
 Notifications includes an optional Email CC field for admin booking and assessment notices, including admin cancellation and reschedule notices. Use comma-separated email addresses; leave it blank to disable. Duplicate recipients are omitted. Customer emails do not use this setting. Run `php tests/mailer.php` for CC checks without sending real email. Google API test timestamps follow the site's WordPress date/time format and timezone, and booking editors show the Google connection state with a Settings shortcut.
 - Filter: `ncs_capability_slugs`.

@@ -227,7 +227,7 @@ $embed_value = 'embed' === $ex['custom_mode'] ? $ex['url'] : '';
 			<h2 class="ncs-card-title"><?php esc_html_e( 'Customer form', 'next-class-services' ); ?></h2>
 			<p class="ncs-help"><?php esc_html_e( 'Choose the fields for native bookings. Name and email are always required.', 'next-class-services' ); ?></p>
 			<table class="ncs-table ncs-table-fields">
-				<thead><tr><th scope="col"><?php esc_html_e( 'Field', 'next-class-services' ); ?></th><th scope="col"><?php esc_html_e( 'Label', 'next-class-services' ); ?></th><th scope="col"><?php esc_html_e( 'Enabled', 'next-class-services' ); ?></th><th scope="col"><?php esc_html_e( 'Required', 'next-class-services' ); ?></th></tr></thead>
+				<thead><tr><th scope="col"><?php esc_html_e( 'Field', 'next-class-services' ); ?></th><th scope="col"><?php esc_html_e( 'Label', 'next-class-services' ); ?></th><th scope="col"><?php esc_html_e( 'Placeholder', 'next-class-services' ); ?></th><th scope="col"><?php esc_html_e( 'Enabled', 'next-class-services' ); ?></th><th scope="col"><?php esc_html_e( 'Required', 'next-class-services' ); ?></th></tr></thead>
 				<tbody>
 				<?php
 				$builtin_names = array(
@@ -249,6 +249,7 @@ $embed_value = 'embed' === $ex['custom_mode'] ? $ex['url'] : '';
 					<tr>
 						<th scope="row"><?php echo esc_html( $builtin_names[ $f['key'] ] ); ?></th>
 						<td><label class="screen-reader-text" for="ncs-fl-<?php echo esc_attr( $f['key'] ); ?>"><?php esc_html_e( 'Label', 'next-class-services' ); ?></label><input type="text" id="ncs-fl-<?php echo esc_attr( $f['key'] ); ?>" name="cfg[native][fields][<?php echo esc_attr( $f['key'] ); ?>][label]" value="<?php echo esc_attr( $f['label'] ); ?>"></td>
+						<td><label class="screen-reader-text" for="ncs-fp-<?php echo esc_attr( $f['key'] ); ?>"><?php esc_html_e( 'Placeholder', 'next-class-services' ); ?></label><input type="text" maxlength="200" id="ncs-fp-<?php echo esc_attr( $f['key'] ); ?>" name="cfg[native][fields][<?php echo esc_attr( $f['key'] ); ?>][placeholder]" value="<?php echo esc_attr( isset( $f['placeholder'] ) ? $f['placeholder'] : Booking_Service::field_placeholder( $f['key'] ) ); ?>"></td>
 						<td><label><input type="checkbox" name="cfg[native][fields][<?php echo esc_attr( $f['key'] ); ?>][enabled]" value="1"<?php checked( $f['enabled'] ); ?><?php disabled( $locked ); ?>> <span class="screen-reader-text"><?php esc_html_e( 'Enabled', 'next-class-services' ); ?></span></label><?php if ( $locked ) : ?><input type="hidden" name="cfg[native][fields][<?php echo esc_attr( $f['key'] ); ?>][enabled]" value="1"><?php endif; ?></td>
 						<td><label><input type="checkbox" name="cfg[native][fields][<?php echo esc_attr( $f['key'] ); ?>][required]" value="1"<?php checked( $f['required'] ); ?><?php disabled( $locked ); ?>> <span class="screen-reader-text"><?php esc_html_e( 'Required', 'next-class-services' ); ?></span></label><?php if ( $locked ) : ?><input type="hidden" name="cfg[native][fields][<?php echo esc_attr( $f['key'] ); ?>][required]" value="1"><?php endif; ?></td>
 					</tr>
@@ -262,6 +263,7 @@ $embed_value = 'embed' === $ex['custom_mode'] ? $ex['url'] : '';
 					<div class="ncs-custom-row">
 						<input type="hidden" name="cfg[native][custom][<?php echo esc_attr( $i ); ?>][key]" value="<?php echo esc_attr( $f['key'] ); ?>">
 						<div class="ncs-field"><label><?php esc_html_e( 'Label', 'next-class-services' ); ?><input type="text" name="cfg[native][custom][<?php echo esc_attr( $i ); ?>][label]" value="<?php echo esc_attr( $f['label'] ); ?>"></label></div>
+						<div class="ncs-field"><label><?php esc_html_e( 'Placeholder', 'next-class-services' ); ?><input type="text" maxlength="200" name="cfg[native][custom][<?php echo esc_attr( $i ); ?>][placeholder]" value="<?php echo esc_attr( isset( $f['placeholder'] ) ? $f['placeholder'] : '' ); ?>"></label></div>
 						<div class="ncs-field"><label><?php esc_html_e( 'Type', 'next-class-services' ); ?>
 							<select name="cfg[native][custom][<?php echo esc_attr( $i ); ?>][type]">
 								<option value="text"<?php selected( $f['type'], 'text' ); ?>><?php esc_html_e( 'Text', 'next-class-services' ); ?></option>
@@ -279,6 +281,7 @@ $embed_value = 'embed' === $ex['custom_mode'] ? $ex['url'] : '';
 				<div class="ncs-custom-row">
 					<input type="hidden" name="cfg[native][custom][__i__][key]" value="">
 					<div class="ncs-field"><label><?php esc_html_e( 'Label', 'next-class-services' ); ?><input type="text" name="cfg[native][custom][__i__][label]" value="" placeholder="e.g. Team size"></label></div>
+					<div class="ncs-field"><label><?php esc_html_e( 'Placeholder', 'next-class-services' ); ?><input type="text" maxlength="200" name="cfg[native][custom][__i__][placeholder]" value="" placeholder="e.g. Enter your team size"></label></div>
 					<div class="ncs-field"><label><?php esc_html_e( 'Type', 'next-class-services' ); ?>
 						<select name="cfg[native][custom][__i__][type]">
 							<option value="text"><?php esc_html_e( 'Text', 'next-class-services' ); ?></option>

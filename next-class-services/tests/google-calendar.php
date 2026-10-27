@@ -50,6 +50,7 @@ namespace {
 	function wp_doing_ajax() { return true; }
 	function wp_unslash( $value ) { return $value; }
 	function sanitize_text_field( $value ) { return strip_tags( $value ); }
+	function is_email( $email ) { return (bool) filter_var( $email, FILTER_VALIDATE_EMAIL ); }
 	function add_action( $hook, $callback ) { $GLOBALS['hooks'][ $hook ] = $callback; }
 	function admin_url( $path = '' ) { return 'https://example.test/wp-admin/' . $path; }
 	function add_query_arg( $args, $url ) { return $url . '?' . http_build_query( $args ); }
@@ -95,12 +96,14 @@ namespace {
 		$GLOBALS['wpdb']->busy = false;
 		$GLOBALS['wpdb']->rows = array( 1 => array(
 			'id' => 1, 'service_id' => 9, 'status' => 'confirmed', 'start_utc' => '2026-11-01 09:00:00', 'end_utc' => '2026-11-01 09:30:00', 'timezone' => 'Asia/Shanghai',
+			'customer_email' => 'client@example.test', 'customer_name' => 'Alex Client',
+			'service_title' => 'HR consultation',
 			'google_sync_enabled' => 1, 'google_calendar_id' => '', 'google_event_id' => '', 'google_meet_url' => '', 'google_sync_error' => '', 'google_sync_attempts' => 0,
 		) );
 		Calendar::save_config( array( 'client_id' => 'test-client', 'secret' => Calendar::encrypt( 'test-secret' ), 'calendar_id' => 'primary', 'tokens' => Calendar::encrypt( json_encode( array( 'refresh_token' => 'refresh-test', 'access_token' => 'access-test', 'expires_at' => time() + 3600 ) ) ) ) );
 	}
 	function calendar_metadata() { return response( 200, array( 'id' => 'calendar@example.test', 'conferenceProperties' => array( 'allowedConferenceSolutionTypes' => array( 'hangoutsMeet' ) ) ) ); }
-	function event_data() { return array( 'id' => 'event-test', 'hangoutLink' => 'https://meet.google.com/abc-defg-hij', 'start' => array( 'dateTime' => '2026-11-01T09:00:00Z' ), 'end' => array( 'dateTime' => '2026-11-01T09:30:00Z' ), 'conferenceData' => array( 'createRequest' => array( 'status' => array( 'statusCode' => 'success' ) ) ) ); }
+	function event_data() { return array( 'id' => 'event-test', 'attendees' => array( array( 'email' => 'client@example.test', 'responseStatus' => 'accepted' ) ), 'hangoutLink' => 'https://meet.google.com/abc-defg-hij', 'start' => array( 'dateTime' => '2026-11-01T09:00:00Z' ), 'end' => array( 'dateTime' => '2026-11-01T09:30:00Z' ), 'conferenceData' => array( 'createRequest' => array( 'status' => array( 'statusCode' => 'success' ) ) ) ); }
 	$GLOBALS['checks'] = 0;
 	reset_test();
 	$encrypted = Calendar::encrypt( 'private-token' );
@@ -110,7 +113,9 @@ namespace {
 	check( '' === Calendar::meet_url( array( 'hangoutLink' => 'https://evil.example/' ) ), 'Reject non-Meet URLs' );
 	$GLOBALS['http'] = function ( $url, $args ) {
 		if ( false === strpos( $url, '/events' ) ) { return calendar_metadata(); }
-		check( ! isset( json_decode( $args['body'] ?? '{}', true )['attendees'] ), 'No attendee export' );
+		if ( 'POST' === $args['method'] || 'PATCH' === $args['method'] ) {
+			check( 'client@example.test' === json_decode( $args['body'], true )['attendees'][0]['email'], 'Include the authorized client attendee' );
+		}
 		check( 0 === $args['redirection'], 'Bearer requests must not redirect' );
 		return response( 200, event_data() );
 	};
@@ -120,17 +125,21 @@ namespace {
 	check( 'https://meet.google.com/abc-defg-hij' === $a['google_meet_url'] && '' === $a['google_sync_error'], 'Save created Meet URL' );
 	$creation = json_decode( $GLOBALS['requests'][1][1]['body'], true );
 	check( 'hangoutsMeet' === $creation['conferenceData']['createRequest']['conferenceSolutionKey']['type'], 'Request Meet conference' );
-	check( 'Next Class booking' === $creation['summary'] && ! isset( $creation['description'] ), 'Use generic event data' );
+	check( 'HR consultation' === $creation['summary'] && ! isset( $creation['description'] ), 'Use the service title without exporting notes' );
+	check( false !== strpos( $GLOBALS['requests'][1][0], 'sendUpdates=all' ), 'Request the Google Calendar invitation when creating the event' );
 	$event_id = $a['google_event_id'];
 	Appointment::update( 1, array( 'start_utc' => '2026-11-02 09:00:00', 'end_utc' => '2026-11-02 09:30:00' ) );
 	$GLOBALS['requests'] = array();
 	Calendar::sync( 1 );
 	check( 'PATCH' === $GLOBALS['requests'][1][1]['method'] && false !== strpos( $GLOBALS['requests'][1][0], $event_id ), 'Reschedule the same event' );
 	check( ! isset( json_decode( $GLOBALS['requests'][1][1]['body'], true )['conferenceData'] ), 'Retain existing Meet on reschedule' );
+	check( 'accepted' === json_decode( $GLOBALS['requests'][1][1]['body'], true )['attendees'][0]['responseStatus'], 'Preserve RSVP when rescheduling' );
+	check( false !== strpos( $GLOBALS['requests'][1][0], 'sendUpdates=all' ), 'Notify attendees when rescheduling' );
 	Appointment::update( 1, array( 'status' => 'cancelled' ) );
 	$GLOBALS['requests'] = array();
 	Calendar::sync( 1 );
 	check( 'DELETE' === $GLOBALS['requests'][0][1]['method'] && '' === Appointment::get( 1 )['google_meet_url'], 'Cancellation removes remote event and local Meet URL' );
+	check( false !== strpos( $GLOBALS['requests'][0][0], 'sendUpdates=all' ), 'Notify attendees of cancellation' );
 
 	reset_test();
 	$GLOBALS['http'] = function ( $url, $args ) {
@@ -186,6 +195,7 @@ namespace {
 	};
 	$result = Settings::test_connection();
 	check( ! is_wp_error( $result ) && 4 === count( $GLOBALS['requests'] ), 'API test checks calendar then creates, updates, deletes' );
+	check( ! isset( json_decode( $GLOBALS['requests'][1][1]['body'], true )['attendees'] ), 'Connection testing never invites real clients' );
 	check( ! get_option( 'ncs_google_test_event' ), 'Successful test cleans tracking record' );
 	reset_test();
 	$GLOBALS['http'] = function ( $url, $args ) {

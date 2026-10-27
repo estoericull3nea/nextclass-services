@@ -4,7 +4,7 @@ Tags: assessment, lead generation, booking, appointments, calendly, tidycal
 Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.1.0
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -36,7 +36,7 @@ Choose a booking method for each service:
 * Custom URL or approved iframe embed
 * Native WordPress booking with working days, hours, buffers, minimum notice, maximum advance, blocked dates, timezone, daily limits, double booking protection, confirmation emails, cancellation and rescheduling through private links, and an appointment manager with CSV export.
 
-WordPress controls native booking availability. Optional Google Calendar sync creates an event with Google Meet for new bookings, updates the same event on rescheduling, and deletes the event on cancellation. Configure OAuth credentials, connect and test under Settings, then enable sync per service in General. API keys alone are insufficient. Sync sends generic titles and booking times, without customer contact details or attendee invitations. Google Calendar busy events are not imported. See README.md for setup and operational details.
+WordPress controls native booking availability. Optional Google Calendar sync creates an event with Google Meet for new bookings, updates the same event on rescheduling, and deletes the event on cancellation. Configure OAuth credentials, connect and test under Settings, then enable sync per service in General. API keys alone are insufficient. Sync sends service titles, booking times, and client names and emails for attendee invitations. Rescheduling and cancellation notify attendees. Google Calendar busy events are not imported. See README.md for setup and operational details.
 
 External bookings made on Calendly, TidyCal or another provider are never reported as completed appointments, because those providers do not send this site a reliable confirmation. Analytics count views and interactions only.
 
@@ -132,6 +132,11 @@ Analytics and design
 * **Slots disappear after changing Settings.** Sharing one calendar across services blocks the same time for every native service. Turn it off if services use different staff.
 
 == Changelog ==
+
+= 1.2.0 =
+* Native Google Calendar bookings now invite clients and notify them of reschedules and cancellations.
+* Added editable placeholders for built-in and custom booking fields.
+* Improved frontend review, booking confirmation and private management screens.
 
 = 1.1.0 =
 * Added optional Google Calendar and Google Meet sync for native bookings, OAuth configuration, API lifecycle testing, encrypted credentials and background retries.

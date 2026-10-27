@@ -274,10 +274,23 @@ class Booking_Handler {
 				),
 				'manageUrl'   => ( '' !== $token && ( $cfg['native']['allow_cancel'] || $cfg['native']['allow_reschedule'] || ! empty( $cfg['native']['google_sync'] ) ) ) ? $vars['manage_link'] : '',
 				'meetUrl'     => $vars['google_meet_link'],
+				'calendarState' => self::calendar_state( $appt ),
+				'email'       => isset( $appt['customer_email'] ) ? $appt['customer_email'] : '',
 				'redirect'    => $cfg['confirmation']['redirect_url'],
 			),
 			200
 		);
+	}
+
+	/** Public sync state without exposing provider errors or remote identifiers. */
+	private static function calendar_state( array $appt ) {
+		if ( empty( $appt['google_sync_enabled'] ) ) {
+			return 'off';
+		}
+		if ( 'cancelled' === $appt['status'] ) {
+			return 'cancelled';
+		}
+		return empty( $appt['google_sync_error'] ) && ! empty( $appt['google_event_id'] ) && ! empty( $appt['google_meet_url'] ) ? 'ready' : 'pending';
 	}
 
 	/**
@@ -327,6 +340,7 @@ class Booking_Handler {
 				'service'     => Booking_Service::public_config( $appt['service_id'], $cfg ),
 				'appointment' => array(
 					'name'        => $appt['customer_name'],
+					'email'       => $appt['customer_email'],
 					'service'     => $vars['service_name'],
 					'date'        => $vars['appointment_date'],
 					'time'        => $vars['appointment_time'],
@@ -335,6 +349,7 @@ class Booking_Handler {
 					'statusLabel' => isset( $statuses[ $appt['status'] ] ) ? $statuses[ $appt['status'] ] : $appt['status'],
 					'active'      => Appointment::is_active( $appt['status'] ),
 					'meetUrl'     => $vars['google_meet_link'],
+					'calendarState' => self::calendar_state( $appt ),
 				),
 				'canCancel'        => $can_cancel,
 				'cancelReason'     => $can_cancel ? '' : $cancel_reason,

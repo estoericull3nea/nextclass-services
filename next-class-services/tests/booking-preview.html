@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Next Class booking UI preview</title>
+<link rel="stylesheet" href="../public/css/public.css">
+<style>body{margin:0;background:#f1efe7;padding:32px 16px}main{max-width:1000px;margin:auto}.preview-note{font:14px sans-serif;margin:0 0 16px;color:#393939}.mobile-preview{max-width:390px}</style>
+</head><body><main><p class="preview-note">Local UI preview. All bookings and calendar requests are mocked; nothing is sent.</p><div class="ncs-root ncs-booking-root"><script type="application/json" class="ncs-config"></script><div class="ncs-app"></div></div></main>
+<script>
+document.querySelector('.ncs-root').setAttribute('data-ncs-booking','');
+var fields=[{key:'name',label:'Name',type:'text',required:true,placeholder:'Your full name'},{key:'email',label:'Email',type:'email',required:true,placeholder:'you@example.com'},{key:'notes',label:'Notes',type:'textarea',required:false,placeholder:'What would you like to discuss?'}];
+var service={id:1,name:'HR Strategy Consultation',description:'A focused conversation about your team and next steps.',method:'native',duration:30,showDuration:true,showTimezone:true,tzLabel:'Asia/Shanghai',timezone:'Asia/Shanghai',fields:fields,calendarSync:true,allowCancel:true,allowReschedule:true};
+document.querySelector('.ncs-config').textContent=JSON.stringify({services:[service]});
+var mockState={status:'confirmed',date:'Tuesday, November 3, 2026',time:'10:00 AM',name:'Alex Morgan',email:'alex@example.test'};
+var mockCalls=[];
+window.ncsPublic={i18n:{}};
+window.NCS={ga:function(){},track:function(){},api:function(method,route,body){mockCalls.push({route:route,body:body});var result={ok:true};
+if(route==='booking/availability'){var days={};for(var i=1;i<=31;i++){days[body.month+'-'+String(i).padStart(2,'0')]=3;}result.days=days;}
+if(route==='booking/slots'){result.slots=[{time:'10:00',label:'10:00 AM'},{time:'11:00',label:'11:00 AM'}];}
+if(route==='booking/create'){mockState.name=body.fields.name;mockState.email=body.fields.email;result={ok:true,message:'Your appointment is booked. We look forward to speaking with you.',appointment:{service:service.name,date:mockState.date,time:mockState.time,timezone:'Asia/Shanghai',status:'confirmed',statusLabel:'Confirmed'},calendarState:'ready',email:mockState.email,meetUrl:'https://meet.google.com/abc-defg-hij',manageUrl:location.pathname+'?ncs_manage='+ 'a'.repeat(40)};}
+if(route==='booking/cancel'){mockState.status='cancelled';result.message='Your appointment has been cancelled.';}
+if(route==='booking/reschedule'){mockState.date='Wednesday, November 4, 2026';mockState.time='11:00 AM';result.message='Your appointment has been rescheduled.';}
+if(route==='booking/manage'){var active=mockState.status==='confirmed';result={ok:true,service:service,appointment:{name:mockState.name,email:mockState.email,service:service.name,date:mockState.date,time:mockState.time,timezone:'Asia/Shanghai',status:mockState.status,statusLabel:active?'Confirmed':'Cancelled',active:active,meetUrl:active?'https://meet.google.com/abc-defg-hij':'',calendarState:active?'ready':'cancelled'},canCancel:active,canReschedule:active};}
+return Promise.resolve({data:result});}};
+if(location.search.indexOf('mobile=1')!==-1){document.querySelector('main').className='mobile-preview';}
+</script><script src="../public/js/booking.js"></script></body></html>

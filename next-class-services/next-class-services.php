@@ -3,7 +3,7 @@
  * Plugin Name:       Next Class Services
  * Plugin URI:        https://nextclass.com/
  * Description:       HR Diagnostic Assessment Tool and Online Booking System for Next Class. Build multi-step assessments with scoring, lead capture and personalized results, and offer bookings through Calendly, TidyCal, a custom embed, or native WordPress scheduling.
- * Version:           1.1.0
+ * Version:           1.2.0
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Author:            DEV
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'NCS_VERSION', '1.1.0' );
+define( 'NCS_VERSION', '1.2.0' );
 define( 'NCS_DB_VERSION', '1.1.0' );
 define( 'NCS_MIN_PHP', '7.4' );
 define( 'NCS_MIN_WP', '6.0' );

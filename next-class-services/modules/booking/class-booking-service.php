@@ -52,6 +52,18 @@ class Booking_Service {
 		);
 	}
 
+	public static function field_placeholder( $key ) {
+		$examples = array(
+			'name' => __( 'Your full name', 'next-class-services' ),
+			'email' => 'you@example.com',
+			'phone' => __( 'Your phone number', 'next-class-services' ),
+			'company' => __( 'Your company', 'next-class-services' ),
+			'job_title' => __( 'Your role', 'next-class-services' ),
+			'notes' => __( 'Anything you would like us to know?', 'next-class-services' ),
+		);
+		return isset( $examples[ $key ] ) ? $examples[ $key ] : '';
+	}
+
 	/**
 	 * Default configuration.
 	 *
@@ -407,6 +419,7 @@ class Booking_Service {
 				$def['label'] = $lab;
 			}
 			$def['enabled']  = ! empty( $in['enabled'] );
+			$def['placeholder'] = isset( $in['placeholder'] ) && is_scalar( $in['placeholder'] ) ? substr( sanitize_text_field( (string) $in['placeholder'] ), 0, 200 ) : self::field_placeholder( $def['key'] );
 			$def['required'] = ! empty( $in['required'] );
 			if ( in_array( $def['key'], array( 'name', 'email' ), true ) ) {
 				$def['enabled']  = true;
@@ -441,6 +454,7 @@ class Booking_Service {
 				$out[] = array(
 					'key'      => $key,
 					'label'    => $label,
+					'placeholder' => isset( $row['placeholder'] ) && is_scalar( $row['placeholder'] ) ? substr( sanitize_text_field( (string) $row['placeholder'] ), 0, 200 ) : '',
 					'type'     => $type,
 					'enabled'  => true,
 					'required' => ! empty( $row['required'] ),
@@ -683,6 +697,7 @@ class Booking_Service {
 			$fields = array();
 			foreach ( $c['native']['fields'] as $f ) {
 				if ( $f['enabled'] ) {
+					$f['placeholder'] = isset( $f['placeholder'] ) ? $f['placeholder'] : self::field_placeholder( $f['key'] );
 					$fields[] = $f;
 				}
 			}
@@ -691,6 +706,7 @@ class Booking_Service {
 			$out['tzLabel']  = $tz->getName();
 			$out['fields']   = $fields;
 			$out['allowCancel']     = (bool) $c['native']['allow_cancel'];
+			$out['calendarSync']    = ! empty( $c['native']['google_sync'] );
 			$out['allowReschedule'] = (bool) $c['native']['allow_reschedule'];
 			$out['redirect']        = $c['confirmation']['redirect_url'];
 		} else {

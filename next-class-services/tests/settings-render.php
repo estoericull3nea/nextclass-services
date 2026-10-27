@@ -18,6 +18,7 @@ namespace {
 	function wp_nonce_field( $action, $name ) { echo '<input type="hidden" name="' . esc_attr( $name ) . '" value="test-nonce">'; }
 	function wp_create_nonce( $action ) { return 'test-nonce'; }
 	function wp_kses( $text, $allowed ) { return $text; }
+	function sanitize_text_field( $value ) { return trim( strip_tags( $value ) ); }
 	function checked( $value, $expected, $echo = true ) { return $value === $expected ? ' checked' : ''; }
 	function selected( $value, $expected, $echo = true ) { return $value === $expected ? ' selected' : ''; }
 	function disabled( $value, $expected, $echo = true ) { return $value === $expected ? ' disabled' : ''; }
@@ -38,6 +39,7 @@ namespace {
 	require __DIR__ . '/../admin/class-settings.php';
 	require __DIR__ . '/../modules/booking/class-google-calendar.php';
 	require __DIR__ . '/../admin/class-google-calendar-settings.php';
+	require __DIR__ . '/../modules/booking/class-booking-service.php';
 	function check( $value, $message ) { if ( ! $value ) { throw new \RuntimeException( $message ); } }
 	function render_page( $tab = null ) {
 		$GLOBALS['page_args'] = null === $tab ? array() : array( 'tab' => $tab );
@@ -52,6 +54,11 @@ namespace {
 	list( $xpath, $html ) = render_page();
 	check( 7 === $xpath->query( '//*[@role="tab"]' )->length, 'Seven settings categories' );
 	check( 7 === $xpath->query( '//*[@role="tabpanel"]' )->length, 'One panel per category' );
+	check( 12 === $xpath->query( '//dialog[contains(@class,"ncs-guide-dialog")]' )->length, 'Every settings card has its own guide, including Google Calendar' );
+	foreach ( $xpath->query( '//*[@data-ncs-dialog-open]' ) as $trigger ) {
+		$id = $trigger->getAttribute( 'data-ncs-dialog-open' );
+		check( 1 === $xpath->query( '//dialog[@id="' . $id . '"]' )->length, 'Every guide icon opens an existing modal' );
+	}
 	check( 1 === $xpath->query( '//*[@role="tabpanel" and not(@hidden)]' )->length, 'Only one panel is initially visible' );
 	check( 1 === $xpath->query( '//*[@id="ncs-settings-panel-booking" and not(@hidden)]' )->length, 'Booking is the default panel' );
 	check( 1 === $xpath->query( '//*[@id="ncs-settings-panel-booking"]//*[@id="ncs-google-calendar"]' )->length, 'Google Calendar is grouped with booking' );
@@ -61,6 +68,10 @@ namespace {
 	foreach ( $controls as $control ) {
 		check( 'ncs-settings-form' === $control->getAttribute( 'form' ), 'Shared save form owns ' . $control->getAttribute( 'name' ) );
 	}
+	check( 0 === $xpath->query( '//*[contains(concat(" ",normalize-space(@class)," ")," ncs-field ")]//p[contains(@class,"ncs-help") and not(ancestor::*[@id="ncs-google-calendar"])]' )->length, 'Detailed field descriptions moved from settings fields into guides' );
+	check( 1 === $xpath->query( '//dialog[@id="ncs-settings-guide-notifications"]//*[text()="CC (optional)"]' )->length, 'The email guide explains optional CC' );
+	check( 1 === $xpath->query( '//dialog[@id="ncs-settings-guide-security"]//*[text()="Trust proxy headers"]' )->length, 'The security guide retains proxy guidance' );
+	check( 1 === $xpath->query( '//dialog[@id="ncs-settings-guide-roles"]//table' )->length, 'The access guide retains the permissions table' );
 	check( 0 === $xpath->query( '//form//form' )->length, 'Independent AJAX forms are never nested' );
 	check( 1 === $xpath->query( '//*[@id="ncs-settings-panel-privacy"]//*[@data-ncs-cleanup]' )->length, 'Cleanup is grouped with privacy' );
 	check( 1 === $xpath->query( '//*[@id="ncs-settings-panel-privacy"]//input[@name="s[delete_on_uninstall]"]' )->length, 'Uninstall data setting is grouped with privacy' );
@@ -79,5 +90,18 @@ namespace {
 	$GLOBALS['render_options']['time_format'] = 'H:i';
 	$test = \NextClassServices\Admin\Google_Calendar_Settings::test_result();
 	check( '27/10/2026 14:27' === $test['dateLabel'], 'Respect WordPress date/time format for stored timestamps' );
+	$method = new \ReflectionMethod( \NextClassServices\Booking\Booking_Service::class, 'sanitize_fields' );
+	if ( PHP_VERSION_ID < 80100 ) { $method->setAccessible( true ); }
+	$fields = $method->invoke( null, array( 'name' => array( 'placeholder' => '<b>Your name</b>' ), 'email' => array( 'placeholder' => '' ) ), array( array( 'key' => 'custom_team', 'label' => 'Team', 'type' => 'select', 'placeholder' => '<b>Choose a team</b>', 'options' => "People\nOperations" ) ) );
+	check( 'Your name' === $fields[0]['placeholder'], 'Sanitize configurable built-in placeholders' );
+	check( '' === $fields[1]['placeholder'], 'Allow an explicitly blank placeholder' );
+	check( 'Choose a team' === $fields[6]['placeholder'], 'Custom dropdown placeholders are sanitized and saved' );
+	$config = \NextClassServices\Booking\Booking_Service::defaults();
+	$config['native']['fields'] = $fields;
+	$public = \NextClassServices\Booking\Booking_Service::public_config( 1, $config );
+	check( 'Your name' === $public['fields'][0]['placeholder'], 'Public field configuration exposes the saved placeholder' );
+	$config['native']['fields'] = \NextClassServices\Booking\Booking_Service::default_fields();
+	$public = \NextClassServices\Booking\Booking_Service::public_config( 1, $config );
+	check( 'Your full name' === $public['fields'][0]['placeholder'], 'Legacy configurations receive a useful default placeholder' );
 	echo "Settings rendering passed: categories, field ownership, independent forms and direct URLs.\n";
 }
