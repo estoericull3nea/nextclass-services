@@ -99,7 +99,7 @@ class Booking_Services {
 			return;
 		}
 
-		echo '<div class="ncs-table-wrap"><table class="ncs-table"><thead><tr>';
+		echo '<div class="ncs-table-wrap ncs-overflow-visible"><table class="ncs-table"><thead><tr>';
 		foreach ( array( __( 'Service', 'next-class-services' ), __( 'Method', 'next-class-services' ), __( 'Duration', 'next-class-services' ), __( 'Status', 'next-class-services' ), __( 'Upcoming', 'next-class-services' ), __( 'Shortcode', 'next-class-services' ), __( 'Actions', 'next-class-services' ) ) as $h ) {
 			echo '<th scope="col">' . esc_html( $h ) . '</th>';
 		}
@@ -122,13 +122,20 @@ class Booking_Services {
 			echo '<td>' . ( 'native' === $cfg['method'] ? esc_html( (string) ( isset( $counts[ $post->ID ] ) ? $counts[ $post->ID ] : 0 ) ) : '<span class="ncs-muted">' . esc_html__( 'Tracked by provider', 'next-class-services' ) . '</span>' ) . '</td>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo '<td>';
 			Admin::shortcode_box( Booking_Service::shortcode( $post->ID ) );
-			echo '</td><td class="ncs-actions">';
+			echo '</td><td><details class="ncs-menu">';
+			/* translators: %s: service name */
+			echo '<summary class="ncs-menu-btn" aria-label="' . esc_attr( sprintf( __( 'Actions for %s', 'next-class-services' ), $cfg['admin_title'] ) ) . '"><span class="ncs-dots" aria-hidden="true"><i></i><i></i><i></i></span></summary>';
+			echo '<ul class="ncs-menu-list"><li>';
 			echo '<a href="' . esc_url( Admin::url( 'ncs-booking', array( 'action' => 'edit', 'id' => $post->ID ) ) ) . '">' . esc_html__( 'Edit', 'next-class-services' ) . '</a>';
+			echo '</li><li>';
 			echo '<a href="' . esc_url( Admin::url( 'ncs-booking', array( 'action' => 'preview', 'id' => $post->ID ) ) ) . '">' . esc_html__( 'Preview', 'next-class-services' ) . '</a>';
+			echo '</li><li>';
 			echo '<a href="' . esc_url( self::action_url( 'duplicate', $post->ID ) ) . '">' . esc_html__( 'Duplicate', 'next-class-services' ) . '</a>';
+			echo '</li><li>';
 			echo '<a href="' . esc_url( self::action_url( $published ? 'unpublish' : 'publish', $post->ID ) ) . '">' . esc_html( $published ? __( 'Unpublish', 'next-class-services' ) : __( 'Publish', 'next-class-services' ) ) . '</a>';
+			echo '</li><li>';
 			echo '<a class="ncs-danger" data-ncs-confirm="' . esc_attr__( 'Delete this booking service? Existing appointments are kept.', 'next-class-services' ) . '" href="' . esc_url( self::action_url( 'delete', $post->ID ) ) . '">' . esc_html__( 'Delete', 'next-class-services' ) . '</a>';
-			echo '</td></tr>';
+			echo '</li></ul></details></td></tr>';
 		}
 		echo '</tbody></table></div>';
 		Admin::pagination( (int) $query->found_posts, 20, $paged, array_filter( array( 'page' => 'ncs-booking', 's' => $search ) ) );
