@@ -33,6 +33,7 @@ class Helpers {
 	public static function default_settings() {
 		return array(
 			'default_notification_email' => '',
+			'notification_cc'            => '',
 			'from_name'                  => '',
 			'from_email'                 => '',
 			'default_timezone'           => '',

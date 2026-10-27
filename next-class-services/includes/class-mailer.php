@@ -97,7 +97,7 @@ class Mailer {
 	 *
 	 * @param string|array $to       Recipient(s), validated.
 	 * @param array        $message  Output of compose().
-	 * @param array        $options  reply_to, from_name.
+	 * @param array        $options  reply_to, from_name, cc (optional address list).
 	 * @return bool
 	 */
 	public static function send( $to, array $message, array $options = array() ) {
@@ -113,6 +113,13 @@ class Mailer {
 		}
 
 		$headers   = array( 'Content-Type: text/html; charset=UTF-8' );
+		$seen = array_map( 'strtolower', $recipients );
+		foreach ( Helpers::parse_emails( isset( $options['cc'] ) ? $options['cc'] : '' ) as $cc ) {
+			if ( ! in_array( strtolower( $cc ), $seen, true ) ) {
+				$headers[] = 'Cc: ' . $cc;
+				$seen[] = strtolower( $cc );
+			}
+		}
 		$from_name = Helpers::single_line( ! empty( $options['from_name'] ) ? $options['from_name'] : Helpers::setting( 'from_name', '' ) );
 		$from_mail = sanitize_email( (string) Helpers::setting( 'from_email', '' ) );
 		if ( '' !== $from_name ) {

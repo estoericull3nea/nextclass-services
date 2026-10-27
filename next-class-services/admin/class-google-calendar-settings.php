@@ -27,7 +27,23 @@ class Google_Calendar_Settings {
 	/** Only return public connection metadata, never secrets or tokens. */
 	public static function state() {
 		$c = Google_Calendar::config();
-		return array( 'connected' => Google_Calendar::connected(), 'secretSaved' => '' !== $c['secret'], 'clientId' => $c['client_id'], 'calendarId' => $c['calendar_id'], 'test' => get_option( 'ncs_google_test_result', array() ) );
+		return array( 'connected' => Google_Calendar::connected(), 'secretSaved' => '' !== $c['secret'], 'clientId' => $c['client_id'], 'calendarId' => $c['calendar_id'], 'test' => self::test_result() );
+	}
+
+	/** Format current and legacy test timestamps using the WordPress date and time settings. */
+	public static function test_result() {
+		$result = get_option( 'ncs_google_test_result', array() );
+		$result = is_array( $result ) ? $result : array();
+		$result['dateLabel'] = '';
+		$timestamp = isset( $result['timestamp'] ) ? (int) $result['timestamp'] : 0;
+		if ( ! $timestamp && ! empty( $result['date'] ) ) {
+			$date = \DateTimeImmutable::createFromFormat( '!Y-m-d H:i:s', $result['date'], wp_timezone() );
+			$timestamp = $date ? $date->getTimestamp() : 0;
+		}
+		if ( $timestamp ) {
+			$result['dateLabel'] = wp_date( get_option( 'date_format', 'M j, Y' ) . ' ' . get_option( 'time_format', 'g:i a' ), $timestamp, wp_timezone() );
+		}
+		return $result;
 	}
 
 	public static function handle_status() {
@@ -86,8 +102,8 @@ class Google_Calendar_Settings {
 			echo '<button type="submit" class="ncs-btn" data-ncs-google-action="' . esc_attr( $action ) . '"' . disabled( 'connect' === $action ? $connected : ! $connected, true, false ) . '>' . esc_html( $label ) . '</button></form>';
 		}
 		echo '</div>';
-		$test = get_option( 'ncs_google_test_result', array() );
-		echo '<p role="status" data-ncs-google-test-result' . ( empty( $test['message'] ) ? ' hidden' : '' ) . '>' . ( ! empty( $test['message'] ) ? esc_html( $test['date'] . ': ' . $test['message'] ) : '' ) . '</p>';
+		$test = self::test_result();
+		echo '<p role="status" data-ncs-google-test-result' . ( empty( $test['message'] ) ? ' hidden' : '' ) . '>' . ( ! empty( $test['message'] ) ? esc_html( ( $test['dateLabel'] ? $test['dateLabel'] . ' | ' : '' ) . $test['message'] ) : '' ) . '</p>';
 		echo '</div>';
 		self::render_guide();
 	}
@@ -285,7 +301,7 @@ class Google_Calendar_Settings {
 		}
 		$result = self::test_connection();
 		$message = is_wp_error( $result ) ? $result->get_error_message() : $result;
-		update_option( 'ncs_google_test_result', array( 'date' => current_time( 'mysql' ), 'message' => $message ), false );
+		update_option( 'ncs_google_test_result', array( 'date' => current_time( 'mysql' ), 'timestamp' => time(), 'message' => $message ), false );
 		self::finish( $message, is_wp_error( $result ) ? 'error' : 'success' );
 	}
 

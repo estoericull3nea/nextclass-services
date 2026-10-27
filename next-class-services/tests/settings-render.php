@@ -10,9 +10,10 @@ namespace {
 	function esc_attr__( $text, $domain = '' ) { return esc_attr( $text ); }
 	function esc_html__( $text, $domain = '' ) { return esc_html( $text ); }
 	function current_user_can( $cap ) { return true; }
-	function get_option( $key, $default = false ) { return $key === 'admin_email' ? 'admin@example.test' : $default; }
+	function get_option( $key, $default = false ) { return $GLOBALS['render_options'][$key] ?? ( $key === 'admin_email' ? 'admin@example.test' : $default ); }
 	function wp_parse_args( $in, $defaults ) { return array_merge( $defaults, $in ); }
-	function wp_timezone() { return new \DateTimeZone( 'UTC' ); }
+	function wp_timezone() { return new \DateTimeZone( $GLOBALS['render_timezone'] ?? 'UTC' ); }
+	function wp_date( $format, $timestamp, $timezone ) { return ( new \DateTimeImmutable( '@' . $timestamp ) )->setTimezone( $timezone )->format( $format ); }
 	function admin_url( $path = '' ) { return 'https://example.test/wp-admin/' . $path; }
 	function wp_nonce_field( $action, $name ) { echo '<input type="hidden" name="' . esc_attr( $name ) . '" value="test-nonce">'; }
 	function wp_create_nonce( $action ) { return 'test-nonce'; }
@@ -55,7 +56,8 @@ namespace {
 	check( 1 === $xpath->query( '//*[@id="ncs-settings-panel-booking" and not(@hidden)]' )->length, 'Booking is the default panel' );
 	check( 1 === $xpath->query( '//*[@id="ncs-settings-panel-booking"]//*[@id="ncs-google-calendar"]' )->length, 'Google Calendar is grouped with booking' );
 	$controls = $xpath->query( '//input[starts-with(@name,"s[")] | //select[starts-with(@name,"s[")] | //textarea[starts-with(@name,"s[")]' );
-	check( 23 === $controls->length, 'All existing configuration fields remain present' );
+	check( 24 === $controls->length, 'All configuration fields and optional CC remain present' );
+	check( 1 === $xpath->query( '//*[@id="ncs-settings-panel-notifications"]//input[@name="s[notification_cc]" and not(@required)]' )->length, 'CC is optional and grouped with notifications' );
 	foreach ( $controls as $control ) {
 		check( 'ncs-settings-form' === $control->getAttribute( 'form' ), 'Shared save form owns ' . $control->getAttribute( 'name' ) );
 	}
@@ -68,5 +70,14 @@ namespace {
 	check( 1 === $xpath->query( '//*[@id="ncs-settings-panel-privacy" and not(@hidden)]' )->length, 'A category can be opened directly by URL' );
 	list( $xpath ) = render_page( 'unknown' );
 	check( 1 === $xpath->query( '//*[@id="ncs-settings-panel-booking" and not(@hidden)]' )->length, 'Invalid category falls back to Booking' );
+	$GLOBALS['render_timezone'] = 'Asia/Shanghai';
+	$GLOBALS['render_options']['ncs_google_test_result'] = array( 'date' => '2026-10-27 14:27:30', 'message' => 'Passed' );
+	$test = \NextClassServices\Admin\Google_Calendar_Settings::test_result();
+	check( 'Oct 27, 2026 2:27 pm' === $test['dateLabel'], 'Format legacy local timestamps without a timezone shift' );
+	$GLOBALS['render_options']['ncs_google_test_result']['timestamp'] = ( new \DateTimeImmutable( '2026-10-27 14:27:30', wp_timezone() ) )->getTimestamp();
+	$GLOBALS['render_options']['date_format'] = 'd/m/Y';
+	$GLOBALS['render_options']['time_format'] = 'H:i';
+	$test = \NextClassServices\Admin\Google_Calendar_Settings::test_result();
+	check( '27/10/2026 14:27' === $test['dateLabel'], 'Respect WordPress date/time format for stored timestamps' );
 	echo "Settings rendering passed: categories, field ownership, independent forms and direct URLs.\n";
 }

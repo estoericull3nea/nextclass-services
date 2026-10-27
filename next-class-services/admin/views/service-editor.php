@@ -85,6 +85,13 @@ $embed_value = 'embed' === $ex['custom_mode'] ? $ex['url'] : '';
 			?>
 			<div data-show-method="native"<?php echo 'native' === $cfg['method'] ? '' : ' hidden'; ?>>
 				<?php Form::checkbox( 'cfg[native][google_sync]', __( 'Sync to Google Calendar and create a Google Meet', 'next-class-services' ), $n['google_sync'], array( 'class' => 'ncs-calendar-toggle', 'help' => __( 'Connect Google Calendar in Settings first. New bookings create an event with a Meet link. Cancellations remove the event; rescheduling updates the same event. Existing synced bookings continue syncing when this is turned off.', 'next-class-services' ) ) ); ?>
+				<div class="ncs-booking-calendar-status">
+					<?php $google_connected = \NextClassServices\Booking\Google_Calendar::connected(); ?>
+					<span class="ncs-connection-badge <?php echo $google_connected ? 'is-connected' : 'is-disconnected'; ?>" role="status"><?php echo esc_html( $google_connected ? __( 'Connected', 'next-class-services' ) : __( 'Not connected', 'next-class-services' ) ); ?></span>
+					<?php if ( current_user_can( 'ncs_manage_settings' ) && current_user_can( 'manage_options' ) ) : ?>
+						<a class="ncs-btn ncs-btn-small" href="<?php echo esc_url( Admin::url( 'ncs-settings', array( 'tab' => 'booking' ) ) . '#ncs-google-calendar' ); ?>"><?php esc_html_e( 'Google Calendar settings', 'next-class-services' ); ?></a>
+					<?php endif; ?>
+				</div>
 			</div>
 		</div>
 		<div class="ncs-card">

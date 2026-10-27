@@ -59,7 +59,7 @@
 			var test = google.querySelector( '[data-ncs-google-test-result]' );
 			var result = state.google.test || {};
 			test.hidden = ! result.message;
-			test.textContent = result.message ? result.date + ': ' + result.message : '';
+			test.textContent = result.message ? ( result.dateLabel ? result.dateLabel + ' | ' : '' ) + result.message : '';
 			var secret = google.querySelector( '[name="client_secret"]' );
 			var help = document.getElementById( secret.id + '-help' );
 			if ( help ) {

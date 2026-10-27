@@ -90,6 +90,8 @@ Run mocked API regression checks with `php tests/google-calendar.php` (OpenSSL e
 Settings actions use authenticated, nonce-protected AJAX and show results inline. Google authorization opens in a popup so the Settings page stays open. The green/red connection badge and action buttons update after configuration changes, authorization and disconnect. Connect is disabled while connected; Test and Disconnect are disabled while disconnected. Run `node tests/settings.js` for the Settings UI regressions.
 
 Settings are organized into Booking (including Google Calendar), Notifications, Appearance, Analytics, Security, Privacy & data, and Advanced tabs. The sticky Save settings button saves configuration across all tabs; Google configuration retains its own save and connection actions. Run `php tests/settings-render.php` to verify panel grouping and form ownership.
+
+Notifications includes an optional Email CC field for admin booking and assessment notices, including admin cancellation and reschedule notices. Use comma-separated email addresses; leave it blank to disable. Duplicate recipients are omitted. Customer emails do not use this setting. Run `php tests/mailer.php` for CC checks without sending real email. Google API test timestamps follow the site's WordPress date/time format and timezone, and booking editors show the Google connection state with a Settings shortcut.
 - Filter: `ncs_capability_slugs`.
 
 ## Design rules enforced in code

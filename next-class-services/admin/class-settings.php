@@ -104,6 +104,7 @@ class Settings {
 		self::panel_start( 'notifications', $active );
 		echo '<div class="ncs-card"><h2 class="ncs-card-title">' . esc_html__( 'Notifications and email', 'next-class-services' ) . '</h2>';
 		self::field( 'text', 's[default_notification_email]', __( 'Default notification email', 'next-class-services' ), $s['default_notification_email'], array( 'type' => 'email', 'help' => sprintf( /* translators: %s: email */ __( 'Used when an assessment or service has no recipient. Leave empty to use the site admin email (%s).', 'next-class-services' ), esc_html( get_option( 'admin_email' ) ) ) ) );
+		self::field( 'text', 's[notification_cc]', __( 'Email CC (optional)', 'next-class-services' ), $s['notification_cc'], array( 'help' => __( 'Copy these addresses on admin booking and assessment notifications. Separate multiple addresses with commas. Leave blank to disable.', 'next-class-services' ), 'placeholder' => 'team@example.com, manager@example.com' ) );
 		echo '<div class="ncs-cols">';
 		self::field( 'text', 's[from_name]', __( 'Default sender name', 'next-class-services' ), $s['from_name'], array( 'help' => __( 'Optional. Overrides the WordPress default sender name on plugin emails.', 'next-class-services' ) ) );
 		self::field( 'text', 's[from_email]', __( 'Sender email address', 'next-class-services' ), $s['from_email'], array( 'type' => 'email', 'help' => __( 'Optional. Use an address on your own domain so mail is not marked as spam. Many mail plugins override this.', 'next-class-services' ) ) );
@@ -225,8 +226,11 @@ class Settings {
 		$email = sanitize_email( $get( 'default_notification_email' ) );
 		$from  = sanitize_email( $get( 'from_email' ) );
 		$mode  = $get( 'retention_mode' );
+		$cc_parts = preg_split( '/[\s,;]+/', $get( 'notification_cc' ), -1, PREG_SPLIT_NO_EMPTY );
+		$cc_valid = array_filter( $cc_parts, 'is_email' );
 		$new   = array(
 			'default_notification_email' => $email && is_email( $email ) ? $email : '',
+			'notification_cc'            => implode( ', ', Helpers::parse_emails( implode( ', ', $cc_valid ) ) ),
 			'from_name'                  => Helpers::single_line( $get( 'from_name' ) ),
 			'from_email'                 => $from && is_email( $from ) ? $from : '',
 			'default_timezone'           => Helpers::sanitize_timezone( $get( 'default_timezone' ) ),
@@ -252,6 +256,12 @@ class Settings {
 			'trust_proxy_headers'        => ! empty( $in['trust_proxy_headers'] ) ? 1 : 0,
 		);
 		Helpers::save_settings( $new );
+		foreach ( $cc_parts as $cc_address ) {
+			if ( ! is_email( $cc_address ) ) {
+				Admin::flash( 'warning', __( 'Invalid CC addresses were omitted. Review the saved CC field.', 'next-class-services' ) );
+				break;
+			}
+		}
 
 		if ( '' !== $get( 'default_notification_email' ) && '' === $new['default_notification_email'] ) {
 			Admin::flash( 'warning', __( 'The default notification email was not valid and was not saved.', 'next-class-services' ) );

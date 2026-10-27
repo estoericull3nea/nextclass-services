@@ -137,7 +137,7 @@ class Booking_Email {
 		if ( empty( $tpl['enabled'] ) ) {
 			return false;
 		}
-		return self::dispatch( $tpl, self::vars( $appt, $cfg ), self::admin_recipients( $cfg ), $cfg, __( 'New booking', 'next-class-services' ), array( 'reply_to' => $appt['customer_email'] ) );
+		return self::dispatch( $tpl, self::vars( $appt, $cfg ), self::admin_recipients( $cfg ), $cfg, __( 'New booking', 'next-class-services' ), array( 'reply_to' => $appt['customer_email'], 'cc' => Helpers::setting( 'notification_cc', '' ) ) );
 	}
 
 	/**
@@ -155,7 +155,7 @@ class Booking_Email {
 		$vars = self::vars( $appt, $cfg );
 		$ok   = self::dispatch( $tpl, $vars, $appt['customer_email'], $cfg, __( 'Booking cancelled', 'next-class-services' ) );
 		if ( ! empty( $tpl['notify_admin'] ) ) {
-			self::dispatch( $tpl, $vars, self::admin_recipients( $cfg ), $cfg, __( 'Booking cancelled', 'next-class-services' ), array( 'reply_to' => $appt['customer_email'] ) );
+			self::dispatch( $tpl, $vars, self::admin_recipients( $cfg ), $cfg, __( 'Booking cancelled', 'next-class-services' ), array( 'reply_to' => $appt['customer_email'], 'cc' => Helpers::setting( 'notification_cc', '' ) ) );
 		}
 		return $ok;
 	}
@@ -176,7 +176,7 @@ class Booking_Email {
 		}
 		$ok = self::dispatch( $tpl, self::vars( $appt, $cfg, $token, $prev ), $appt['customer_email'], $cfg, __( 'Booking rescheduled', 'next-class-services' ) );
 		if ( ! empty( $tpl['notify_admin'] ) ) {
-			self::dispatch( $tpl, self::vars( $appt, $cfg, '', $prev ), self::admin_recipients( $cfg ), $cfg, __( 'Booking rescheduled', 'next-class-services' ), array( 'reply_to' => $appt['customer_email'] ) );
+			self::dispatch( $tpl, self::vars( $appt, $cfg, '', $prev ), self::admin_recipients( $cfg ), $cfg, __( 'Booking rescheduled', 'next-class-services' ), array( 'reply_to' => $appt['customer_email'], 'cc' => Helpers::setting( 'notification_cc', '' ) ) );
 		}
 		return $ok;
 	}

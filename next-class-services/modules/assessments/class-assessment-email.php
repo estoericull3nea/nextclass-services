@@ -139,7 +139,7 @@ class Assessment_Email {
 			$vars,
 			array( 'heading' => __( 'New assessment submission', 'next-class-services' ) )
 		);
-		return Mailer::send( $to, $message, array( 'reply_to' => isset( $vars['email'] ) ? $vars['email'] : '' ) );
+		return Mailer::send( $to, $message, array( 'reply_to' => isset( $vars['email'] ) ? $vars['email'] : '', 'cc' => Helpers::setting( 'notification_cc', '' ) ) );
 	}
 
 	/**
